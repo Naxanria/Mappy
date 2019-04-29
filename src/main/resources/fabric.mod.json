@@ -1,0 +1,28 @@
+{
+  "schemaVersion": 1,
+  "id": "mappy",
+  "version": "${version}",
+
+  "name": "Mappy",
+  "description": "A map mod.",
+  "authors": [
+    "Naxanria"
+  ],
+  "contact": {
+    "sources": ""
+  },
+  "environment": "client",
+  "entrypoints": {
+    "client": [
+      "com.naxanria.mappy.Mappy"
+    ]
+  },
+  "mixins": [
+    "mappy.mixins.json"
+  ],
+
+  "requires": {
+    "fabricloader": ">=0.4.0",
+    "fabric": "*"
+  }
+}

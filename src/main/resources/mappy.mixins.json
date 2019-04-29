@@ -1,0 +1,13 @@
+{
+  "required": true,
+  "package": "com.naxanria.mappy.mixin",
+  "compatibilityLevel": "JAVA_8",
+  "mixins": [
+  ],
+  "client": [
+    "HudMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}
