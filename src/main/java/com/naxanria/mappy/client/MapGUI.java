@@ -2,15 +2,14 @@ package com.naxanria.mappy.client;
 
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.naxanria.mappy.Map;
+import com.naxanria.mappy.MapIcon;
 import com.naxanria.mappy.Mappy;
 import com.naxanria.mappy.config.Config;
-import com.naxanria.mappy.util.BiValue;
 import com.naxanria.mappy.util.TriValue;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.DrawableHelper;
 import net.minecraft.client.render.BufferBuilder;
 import net.minecraft.client.render.Tessellator;
 import net.minecraft.client.render.VertexFormats;
@@ -24,7 +23,7 @@ import org.lwjgl.opengl.GL11;
 
 
 @Environment(EnvType.CLIENT)
-public class MapGUI extends DrawableHelper
+public class MapGUI extends DrawableHelperBase
 {
   public static MapGUI instance;
   
@@ -112,20 +111,19 @@ public class MapGUI extends DrawableHelper
     }
   
     fill(x - border, y - border, x + iw + border, y + ih + border, borderColor);
+    
+    // draw the map
+    drawMap(client, x, y, iw, ih);
+    
+    // draw the icons
   
-    client.getTextureManager().bindTexture(textureIdentifier);
-    
-    Tessellator tessellator = Tessellator.getInstance();
-    BufferBuilder builder = tessellator.getBufferBuilder();
-    builder.begin(GL11.GL_QUADS, VertexFormats.POSITION_UV_COLOR);
-    
-    double z = 0.09;
-    
-    builder.vertex(x, y + ih, z).texture(0, 1).color(255, 255, 255, 255).next();
-    builder.vertex(x + iw, y + ih, z).texture(1, 1).color(255, 255, 255, 255).next();
-    builder.vertex(x + iw, y, z).texture(1, 0).color(255, 255, 255, 255).next();
-    builder.vertex(x, y, z).texture(0, 0).color(255, 255, 255, 255).next();
-    tessellator.draw();
+    GlStateManager.disableDepthTest();
+    for (MapIcon.Player player:
+         map.getPlayerIcons())
+    {
+      player.draw(x, y);
+    }
+    GlStateManager.enableDepthTest();
     
 //    int s = 4;
 //    fill(x + iw / 2 - s, y + ih / 2 - s, x + iw / 2 + s, y + ih / 2 + s, 0xff00ff00);
@@ -139,8 +137,7 @@ public class MapGUI extends DrawableHelper
     {
       String p = I18n.translate(biome.getTranslationKey());
   
-      drawCenteredString(client.textRenderer, p, x + iw / 2, y + ih + 8 + 2 + border, 0xffffffff);
-      
+      drawStringCenteredBound(client.textRenderer, p, x + iw / 2, y + ih + 8 + 2 + border, 0, client.window.getScaledWidth(), WHITE);
     }
     
     if (Mappy.debugMode)
@@ -163,7 +160,25 @@ public class MapGUI extends DrawableHelper
       
       fill(drawX, drawY, drawX + size, drawY + size, debugData.C);
       drawString(client.textRenderer, posString, drawX + size + 2, drawY, 0xff5688cd);
-      drawRightAlignedString(client.textRenderer, stateString, client.window.getScaledWidth(), drawY + 16, 0xff5688cd);
+      drawStringCenteredBound(client.textRenderer, stateString, x + iw / 2, drawY + 16, 0, client.window.getScaledWidth(), 0xff5688cd);
+//      drawStringCenteredBound(client.textRenderer, client.window.getScaledWidth() + ":" + client.window.getWidth(), x, drawY + 26, WHITE);
     }
+  }
+  
+  private void drawMap(MinecraftClient client, int x, int y, int iw, int ih)
+  {
+    client.getTextureManager().bindTexture(textureIdentifier);
+    
+    Tessellator tessellator = Tessellator.getInstance();
+    BufferBuilder builder = tessellator.getBufferBuilder();
+    builder.begin(GL11.GL_QUADS, VertexFormats.POSITION_UV_COLOR);
+    
+    double z = 0.09;
+    
+    builder.vertex(x, y + ih, z).texture(0, 1).color(255, 255, 255, 255).next();
+    builder.vertex(x + iw, y + ih, z).texture(1, 1).color(255, 255, 255, 255).next();
+    builder.vertex(x + iw, y, z).texture(1, 0).color(255, 255, 255, 255).next();
+    builder.vertex(x, y, z).texture(0, 0).color(255, 255, 255, 255).next();
+    tessellator.draw();
   }
 }

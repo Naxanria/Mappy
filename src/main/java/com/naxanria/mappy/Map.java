@@ -1,7 +1,6 @@
 package com.naxanria.mappy;
 
 import com.naxanria.mappy.client.MapGUI;
-import com.naxanria.mappy.util.BiValue;
 import com.naxanria.mappy.util.MathUtil;
 import com.naxanria.mappy.util.TriValue;
 import net.minecraft.block.BlockState;
@@ -13,9 +12,9 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.Heightmap;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
-import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.chunk.WorldChunk;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Map
@@ -33,6 +32,9 @@ public class Map
   
   private NativeImage image;
   
+  private List<MapIcon.Player> players = new ArrayList<>();
+  private MapIcon.Player playerIcon;
+  
   public Map()
   {
     // todo: check what that boolean value actually does.
@@ -44,6 +46,13 @@ public class Map
     PlayerEntity player = client.player;
     if (player != null)
     {
+      if (playerIcon == null)
+      {
+        playerIcon = new MapIcon.Player(this, player, true);
+      }
+      
+      playerIcon.setPosition(size / 2, size / 2);
+      
       generate(player);
   
       MapGUI.instance.markDirty();
@@ -113,8 +122,9 @@ public class Map
       }
     }
     
-    int s = 2;
-    image.fillRGBA(width / 2 - s, height / 2 - s, s, s, 0xff00ff00);
+    // todo: make option to show players or not.
+    players.clear();
+    players.add(playerIcon);
     
     List<? extends PlayerEntity> players = world.getPlayers();
     for (PlayerEntity p :
@@ -137,16 +147,50 @@ public class Map
       
       if (x >= startX && x <= endX && z >= startZ && z <= endZ)
       {
-        int drawX = MathUtil.clamp((int) (((x - startX) / ((float)sizeX)) * width) - s, 0, width - s);
-        int drawZ = MathUtil.clamp((int) (((z - startZ) / ((float)sizeZ)) * height) - s, 0, height - s);
+        MapIcon.Player playerIcon1 = new MapIcon.Player(this, p, false);
+        playerIcon1.setPosition(MapIcon.getScaled(x, startX, endX, size), MapIcon.getScaled(z, startZ, endZ, size));
+        this.players.add(playerIcon1);
         
-        image.fillRGBA(drawX, drawZ, s, s, 0xff009900);
+//        int drawX = MathUtil.clamp((int) (((x - startX) / ((float)sizeX)) * width) - s, 0, width - s);
+//        int drawZ = MathUtil.clamp((int) (((z - startZ) / ((float)sizeZ)) * height) - s, 0, height - s);
+//
+//        image.fillRGBA(drawX, drawZ, s, s, 0xff009900);
       }
     }
+  }
+  
+  public List<MapIcon.Player> getPlayerIcons()
+  {
+    return players;
   }
   
   public NativeImage getImage()
   {
     return image;
+  }
+  
+  public int getSize()
+  {
+    return size;
+  }
+  
+  public int getWidth()
+  {
+    return width;
+  }
+  
+  public int getHeight()
+  {
+    return height;
+  }
+  
+  public int getSizeX()
+  {
+    return sizeX;
+  }
+  
+  public int getSizeZ()
+  {
+    return sizeZ;
   }
 }
