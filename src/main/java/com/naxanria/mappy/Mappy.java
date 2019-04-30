@@ -13,6 +13,7 @@ import net.minecraft.text.StringTextComponent;
 import net.minecraft.text.Style;
 import net.minecraft.text.TextFormat;
 import net.minecraft.util.Identifier;
+import net.minecraft.world.Heightmap;
 import org.lwjgl.glfw.GLFW;
 
 import java.io.File;
@@ -24,6 +25,8 @@ public class Mappy implements ClientModInitializer
   
   public static Map map = new Map();
   private File output;
+  
+  public static boolean debugMode = false;
   
   @Override
   public void onInitializeClient()
@@ -73,6 +76,54 @@ public class Mappy implements ClientModInitializer
       }
     });
     
+    
+    FabricKeyBinding debug = FabricKeyBinding.Builder.create
+    (
+      new Identifier(MODID, "debug"),
+      InputUtil.Type.KEYSYM,
+      GLFW.GLFW_KEY_F12,
+      MODID
+    ).build();
+    
+    KeyHandler.INSTANCE.register(new KeyParser(debug)
+    {
+      @Override
+      public void onKeyUp()
+      {
+        debugMode = !debugMode;
+        mc.player.sendMessage(new StringTextComponent("Mappy debug mode " + (debugMode ? "enabled" : "disabled")));
+      }
+  
+      @Override
+      public boolean isListening()
+      {
+        return mc.player != null;
+      }
+    });
+    
+//    FabricKeyBinding typeCycle = FabricKeyBinding.Builder.create
+//    (
+//      new Identifier(MODID, "cycle_type"),
+//      InputUtil.Type.KEYSYM,
+//      GLFW.GLFW_KEY_BACKSPACE,
+//      MODID
+//    ).build();
+//
+//    KeyHandler.INSTANCE.register(new KeyParser(typeCycle)
+//    {
+//      @Override
+//      public void onKeyUp()
+//      {
+//        Heightmap.Type type = map.nextType();
+//        mc.player.sendMessage(new StringTextComponent("Heightmap type changed to " + type.getName()));
+//      }
+//
+//      @Override
+//      public boolean isListening()
+//      {
+//        return mc.currentScreen == null && mc.player != null;
+//      }
+//    });
 //    KeyHandler.INSTANCE.register(new KeyParser(generate)
 //    {
 //      @Override

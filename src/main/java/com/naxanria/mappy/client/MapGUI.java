@@ -4,17 +4,22 @@ import com.mojang.blaze3d.platform.GlStateManager;
 import com.naxanria.mappy.Map;
 import com.naxanria.mappy.Mappy;
 import com.naxanria.mappy.config.Config;
+import com.naxanria.mappy.util.BiValue;
+import com.naxanria.mappy.util.TriValue;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.block.BlockState;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawableHelper;
 import net.minecraft.client.render.BufferBuilder;
 import net.minecraft.client.render.Tessellator;
 import net.minecraft.client.render.VertexFormats;
+import net.minecraft.client.resource.language.I18n;
 import net.minecraft.client.texture.NativeImage;
 import net.minecraft.client.texture.NativeImageBackedTexture;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.biome.Biome;
 import org.lwjgl.opengl.GL11;
 
 
@@ -127,5 +132,38 @@ public class MapGUI extends DrawableHelper
     BlockPos playerPos = client.player.getBlockPos();
     String details =  playerPos.getX() + " " + playerPos.getY() + " " + playerPos.getZ();
     drawCenteredString(client.textRenderer, details, x + iw / 2, y + ih + 2 + border, 0xffffffff);
+  
+    Biome biome = map.getBiome();
+    
+    if (biome != null)
+    {
+      String p = I18n.translate(biome.getTranslationKey());
+  
+      drawCenteredString(client.textRenderer, p, x + iw / 2, y + ih + 8 + 2 + border, 0xffffffff);
+      
+    }
+    
+    if (Mappy.debugMode)
+    {
+      TriValue<BlockPos, BlockState, Integer> debugData = map.getDebugData();
+      if (debugData == null)
+      {
+        return;
+      }
+  
+      String stateString = debugData.B.toString();
+      String posString = debugData.A.toString();
+      
+      int posStringWidth = client.textRenderer.getStringWidth(posString);
+      
+      int size = 16;
+      
+      int drawY = y + ih + 2 + border + 16;
+      int drawX = x + iw - size - 2 - posStringWidth;
+      
+      fill(drawX, drawY, drawX + size, drawY + size, debugData.C);
+      drawString(client.textRenderer, posString, drawX + size + 2, drawY, 0xff5688cd);
+      drawRightAlignedString(client.textRenderer, stateString, client.window.getScaledWidth(), drawY + 16, 0xff5688cd);
+    }
   }
 }
