@@ -1,9 +1,9 @@
-package com.naxanria.mappy.client;
+package com.naxanria.mappy.map;
 
 import com.mojang.blaze3d.platform.GlStateManager;
-import com.naxanria.mappy.Map;
-import com.naxanria.mappy.MapIcon;
 import com.naxanria.mappy.Mappy;
+import com.naxanria.mappy.client.DrawPosition;
+import com.naxanria.mappy.client.DrawableHelperBase;
 import com.naxanria.mappy.config.Config;
 import com.naxanria.mappy.util.TriValue;
 import net.fabricmc.api.EnvType;

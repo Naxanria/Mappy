@@ -1,7 +1,6 @@
 package com.naxanria.mappy.mixin;
 
-import com.naxanria.mappy.client.DrawPosition;
-import com.naxanria.mappy.client.MapGUI;
+import com.naxanria.mappy.map.MapGUI;
 import net.minecraft.client.gui.hud.InGameHud;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;

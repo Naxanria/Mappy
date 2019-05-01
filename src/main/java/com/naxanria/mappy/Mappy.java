@@ -1,23 +1,19 @@
 package com.naxanria.mappy;
 
-import com.mojang.brigadier.Command;
-import com.mojang.brigadier.CommandDispatcher;
 import com.naxanria.mappy.client.*;
 import com.naxanria.mappy.config.Config;
+import com.naxanria.mappy.map.Map;
+import com.naxanria.mappy.map.MapGUI;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.keybinding.FabricKeyBinding;
 import net.fabricmc.fabric.api.client.keybinding.KeyBindingRegistry;
 import net.fabricmc.fabric.api.event.client.ClientTickCallback;
-import net.fabricmc.fabric.api.registry.CommandRegistry;
 import net.fabricmc.loader.api.FabricLoader;
-import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.util.InputUtil;
-import net.minecraft.server.command.CommandManager;
 import net.minecraft.text.StringTextComponent;
 import net.minecraft.text.Style;
 import net.minecraft.text.TextFormat;
 import net.minecraft.util.Identifier;
-import net.minecraft.world.Heightmap;
 import org.lwjgl.glfw.GLFW;
 
 import java.io.File;

@@ -1,8 +1,6 @@
-package com.naxanria.mappy;
+package com.naxanria.mappy.map;
 
 import com.naxanria.mappy.client.DrawableHelperBase;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.font.TextRenderer;
 import net.minecraft.entity.player.PlayerEntity;
 
 public abstract class MapIcon<T extends MapIcon<T>> extends DrawableHelperBase

@@ -1,8 +1,7 @@
-package com.naxanria.mappy;
+package com.naxanria.mappy.map;
 
-import com.naxanria.mappy.client.MapGUI;
+import com.naxanria.mappy.Mappy;
 import com.naxanria.mappy.util.ColorUtil;
-import com.naxanria.mappy.util.MathUtil;
 import com.naxanria.mappy.util.TriValue;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
