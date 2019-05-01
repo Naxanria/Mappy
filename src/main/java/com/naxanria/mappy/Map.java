@@ -1,6 +1,7 @@
 package com.naxanria.mappy;
 
 import com.naxanria.mappy.client.MapGUI;
+import com.naxanria.mappy.util.ColorUtil;
 import com.naxanria.mappy.util.MathUtil;
 import com.naxanria.mappy.util.TriValue;
 import net.minecraft.block.BlockState;
@@ -13,6 +14,7 @@ import net.minecraft.world.Heightmap;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.chunk.WorldChunk;
+import net.minecraft.world.dimension.DimensionType;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,7 +22,10 @@ import java.util.List;
 public class Map
 {
   private static final BlockState AIR_STATE = Blocks.AIR.getDefaultState();
+  private static final BlockState CAVE_AIR_STATE = Blocks.CAVE_AIR.getDefaultState();
+  private static final BlockState VOID_AIR_STATE = Blocks.VOID_AIR.getDefaultState();
   private static final MinecraftClient client = MinecraftClient.getInstance();
+  
   
   private int size = 64;
   private int width = size, height = size;
@@ -75,6 +80,9 @@ public class Map
     BlockPos pos = player.getBlockPos();
   
     biome = world.getBiome(pos);
+    DimensionType type = world.dimension.getType();
+    
+    boolean nether = type == DimensionType.THE_NETHER;
     
     int startX = pos.getX() - sizeX / 2;
     int startZ = pos.getZ() - sizeZ / 2;
@@ -86,29 +94,68 @@ public class Map
       for (int z = startZ, pz = 0; z < endZ; z++, pz++)
       {
         int col;
+        int y;
         
-        BlockPos blockPos = new BlockPos(x, 64, z);
-        WorldChunk chunk = world.getWorldChunk(blockPos);
-        Heightmap heightmap = chunk.getHeightmap(Heightmap.Type.MOTION_BLOCKING);
-        
-        int y = heightmap.get(x & 15, z & 15) - 1;
+        if (!nether)
+        {
+          BlockPos blockPos = new BlockPos(x, 64, z);
+          WorldChunk chunk = world.getWorldChunk(blockPos);
+          Heightmap heightmap = chunk.getHeightmap(Heightmap.Type.MOTION_BLOCKING);
+  
+          y = heightmap.get(x & 15, z & 15) - 1;
+        }
+        else
+        {
+          y = pos.getY();
+        }
 
         BlockPos bpos = new BlockPos(x, y, z);
-        BlockState state;
+        BlockState state =  world.getBlockState(bpos);
+        
+        boolean up = !isAir(state);
+        
+//        col = up ? 0xffffff00 : 0xff00ffff;
+        
+        int tries = 100;
         do
         {
-          state = world.getBlockState(bpos);
-          if (state != AIR_STATE)
+          if (!nether)
           {
-            break;
+            bpos = new BlockPos(x, y, z);
+            state = world.getBlockState(bpos);
+            
+            if (!isAir(state))
+            {
+              break;
+            }
+            y--;
           }
-          y--;
+          else
+          {
+            y += (up) ? 1 : -1;
+            bpos = new BlockPos(x, y, z);
+            state = world.getBlockState(bpos);
+            
+            if (up && isAir(state) || !isAir(state))
+            {
+              if (up)
+              {
+                bpos = bpos.down();
+                state = world.getBlockState(bpos);
+              }
+              break;
+            }
+          }
         }
-        while (y >= 0);
+        while (y >= 0 && y <= world.getHeight() && tries-- > 0);
         
 
 //        col = state.getMaterial().getColor().getRenderColor(2);
         col = state.getBlock().getMapColor(state, world, bpos).getRenderColor(2);
+        if (nether)
+        {
+          col = ColorUtil.multiply(col, (up) ? 0.5f : 1);
+        }
         
         if (Mappy.debugMode)
         {
@@ -157,6 +204,11 @@ public class Map
 //        image.fillRGBA(drawX, drawZ, s, s, 0xff009900);
       }
     }
+  }
+  
+  protected boolean isAir(BlockState state)
+  {
+    return state.isAir() || state == AIR_STATE || state == CAVE_AIR_STATE || state == VOID_AIR_STATE;
   }
   
   public List<MapIcon.Player> getPlayerIcons()

@@ -6,4 +6,9 @@ public class MathUtil
   {
     return val < min ? min : val > max ? max : val;
   }
+  
+  public static float clamp(float val, float min, float max)
+  {
+    return val < min ? min : val > max ? max : val;
+  }
 }
