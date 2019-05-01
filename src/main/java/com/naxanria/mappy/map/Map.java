@@ -1,11 +1,13 @@
 package com.naxanria.mappy.map;
 
 import com.naxanria.mappy.Mappy;
+import com.naxanria.mappy.client.Alignment;
 import com.naxanria.mappy.util.ColorUtil;
 import com.naxanria.mappy.util.TriValue;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.resource.language.I18n;
 import net.minecraft.client.texture.NativeImage;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.math.BlockPos;
@@ -23,8 +25,14 @@ public class Map
   private static final BlockState AIR_STATE = Blocks.AIR.getDefaultState();
   private static final BlockState CAVE_AIR_STATE = Blocks.CAVE_AIR.getDefaultState();
   private static final BlockState VOID_AIR_STATE = Blocks.VOID_AIR.getDefaultState();
+  
   private static final MinecraftClient client = MinecraftClient.getInstance();
   
+  private MapInfoLineManager manager;
+  private MapInfoLine playerPositionInfo = new MapInfoLine(Alignment.Center, "0 0 0");
+  private MapInfoLine biomeInfo = new MapInfoLine(Alignment.Center, "plains");
+  private MapInfoLine inGameTimeInfo = new MapInfoLine(Alignment.Center, "00:00");
+  private MapInfoLine fpsInfo = new MapInfoLine(Alignment.Center, "60 fps");
   
   private int size = 64;
   private int width = size, height = size;
@@ -39,10 +47,13 @@ public class Map
   private List<MapIcon.Player> players = new ArrayList<>();
   private MapIcon.Player playerIcon;
   
+  
   public Map()
   {
     // todo: check what that boolean value actually does.
     image = new NativeImage(NativeImage.Format.RGBA, width, height, false);
+    
+    manager = new MapInfoLineManager(this);
   }
   
   public void update()
@@ -59,7 +70,41 @@ public class Map
       
       generate(player);
   
+      updateInfo();
+
+
       MapGUI.instance.markDirty();
+    }
+  }
+  
+  private void updateInfo()
+  {
+    manager.clear();
+    
+    BlockPos playerPos = client.player.getBlockPos();
+    playerPositionInfo.setText(playerPos.getX() + " " + playerPos.getY() + " " + playerPos.getZ());
+    manager.add(playerPositionInfo);
+    
+    biomeInfo.setText(I18n.translate(biome.getTranslationKey()));
+    manager.add(biomeInfo);
+    
+    fpsInfo.setText(MinecraftClient.getCurrentFps() + " fps");
+    manager.add(fpsInfo);
+  
+    if (Mappy.debugMode)
+    {
+      TriValue<BlockPos, BlockState, Integer> debugData = getDebugData();
+      if (debugData == null)
+      {
+        return;
+      }
+    
+      String stateString = debugData.B.toString();
+      String posString = debugData.A.toString();
+      
+      manager.add(new MapInfoLine("##########", debugData.C));
+      manager.add(new MapInfoLine(Alignment.Center, posString));
+      manager.add(new MapInfoLine(Alignment.Center, stateString));
     }
   }
   
@@ -243,5 +288,10 @@ public class Map
   public int getSizeZ()
   {
     return sizeZ;
+  }
+  
+  public MapInfoLineManager getManager()
+  {
+    return manager;
   }
 }

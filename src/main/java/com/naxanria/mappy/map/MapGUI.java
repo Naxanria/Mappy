@@ -2,6 +2,7 @@ package com.naxanria.mappy.map;
 
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.naxanria.mappy.Mappy;
+import com.naxanria.mappy.client.Alignment;
 import com.naxanria.mappy.client.DrawPosition;
 import com.naxanria.mappy.client.DrawableHelperBase;
 import com.naxanria.mappy.config.Config;
@@ -39,6 +40,8 @@ public class MapGUI extends DrawableHelperBase
   private NativeImageBackedTexture texture;
   private Identifier textureIdentifier;
   
+  private MapInfoLineManager manager;
+  
   private Config config;
   
   public MapGUI(Map map, int offset, DrawPosition position)
@@ -48,6 +51,8 @@ public class MapGUI extends DrawableHelperBase
     instance = this;
     this.offset = offset;
     drawPosition = position;
+    
+    manager = map.getManager();
   }
   
   public void markDirty()
@@ -90,6 +95,8 @@ public class MapGUI extends DrawableHelperBase
     
     int iw = backingImage.getWidth();
     int ih = backingImage.getHeight();
+  
+    MapInfoLineManager.Direction direction = MapInfoLineManager.Direction.DOWN;
     
     switch (drawPosition)
     {
@@ -102,13 +109,19 @@ public class MapGUI extends DrawableHelperBase
         x = w - offset - iw;
         break;
       case BOTTOM_LEFT:
+        direction = MapInfoLineManager.Direction.UP;
         y = h - offset - ih;
         break;
       case BOTTOM_RIGHT:
+        direction = MapInfoLineManager.Direction.UP;
         x = w - offset - iw;
         y = h - offset - ih;
         break;
     }
+    
+    manager.setPosition(x, y + (direction == MapInfoLineManager.Direction.DOWN ? ih + border + 2 : -border - 2));
+    manager.setDirection(direction);
+    manager.setSpacing(12);
   
     fill(x - border, y - border, x + iw + border, y + ih + border, borderColor);
     
@@ -116,7 +129,6 @@ public class MapGUI extends DrawableHelperBase
     drawMap(client, x, y, iw, ih);
     
     // draw the icons
-  
     GlStateManager.disableDepthTest();
     for (MapIcon.Player player:
          map.getPlayerIcons())
@@ -124,45 +136,28 @@ public class MapGUI extends DrawableHelperBase
       player.draw(x, y);
     }
     GlStateManager.enableDepthTest();
-    
+
+    // draw info for the map
+    manager.draw();
 //    int s = 4;
 //    fill(x + iw / 2 - s, y + ih / 2 - s, x + iw / 2 + s, y + ih / 2 + s, 0xff00ff00);
-    BlockPos playerPos = client.player.getBlockPos();
-    String details =  playerPos.getX() + " " + playerPos.getY() + " " + playerPos.getZ();
-    drawCenteredString(client.textRenderer, details, x + iw / 2, y + ih + 2 + border, 0xffffffff);
+//    BlockPos playerPos = client.player.getBlockPos();
+//    String details =  playerPos.getX() + " " + playerPos.getY() + " " + playerPos.getZ();
+//    drawCenteredString(client.textRenderer, details, x + iw / 2, y + ih + 2 + border, 0xffffffff);
   
-    Biome biome = map.getBiome();
+    //todo: check what info to show or not.
     
-    if (biome != null)
-    {
-      String p = I18n.translate(biome.getTranslationKey());
-  
-      drawStringCenteredBound(client.textRenderer, p, x + iw / 2, y + ih + 8 + 2 + border, 0, client.window.getScaledWidth(), WHITE);
-    }
     
-    if (Mappy.debugMode)
-    {
-      TriValue<BlockPos, BlockState, Integer> debugData = map.getDebugData();
-      if (debugData == null)
-      {
-        return;
-      }
+//    Biome biome = map.getBiome();
+//
+//    if (biome != null)
+//    {
+//      String p = I18n.translate(biome.getTranslationKey());
+//
+//      drawStringCenteredBound(client.textRenderer, p, x + iw / 2, y + ih + 8 + 2 + border, 0, client.window.getScaledWidth(), WHITE);
+//    }
+    
   
-      String stateString = debugData.B.toString();
-      String posString = debugData.A.toString();
-      
-      int posStringWidth = client.textRenderer.getStringWidth(posString);
-      
-      int size = 16;
-      
-      int drawY = y + ih + 2 + border + 16;
-      int drawX = x + iw - size - 2 - posStringWidth;
-      
-      fill(drawX, drawY, drawX + size, drawY + size, debugData.C);
-      drawString(client.textRenderer, posString, drawX + size + 2, drawY, 0xff5688cd);
-      drawStringCenteredBound(client.textRenderer, stateString, x + iw / 2, drawY + 16, 0, client.window.getScaledWidth(), 0xff5688cd);
-//      drawStringCenteredBound(client.textRenderer, client.window.getScaledWidth() + ":" + client.window.getWidth(), x, drawY + 26, WHITE);
-    }
   }
   
   private void drawMap(MinecraftClient client, int x, int y, int iw, int ih)
