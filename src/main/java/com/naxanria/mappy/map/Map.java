@@ -242,6 +242,7 @@ public class Map
         BlockState state =  world.getBlockState(bpos);
         
         boolean up = !isAir(state);
+        int yStart = y;
         
         // todo: use cached height maps?
         int tries = mapTriesLimit;
@@ -277,8 +278,9 @@ public class Map
         }
         while (y >= 0 && y <= world.getHeight() && tries-- > 0);
         
-        col = state.getBlock().getMapColor(state, world, bpos).getRenderColor(2);
-        
+//        col = state.getBlock().getMapColor(state, world, bpos).getRenderColor(2);
+        col = state.getTopMaterialColor(world, bpos).getRenderColor(2);//.color | 0xff000000;
+//
         if (nether)
         {
           col = ColorUtil.multiply(col, (up) ? 0.5f : 1);
