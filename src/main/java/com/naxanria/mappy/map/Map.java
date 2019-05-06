@@ -2,7 +2,11 @@ package com.naxanria.mappy.map;
 
 import com.naxanria.mappy.Mappy;
 import com.naxanria.mappy.client.Alignment;
+import com.naxanria.mappy.config.Config;
+import com.naxanria.mappy.map.waypoint.WayPoint;
+import com.naxanria.mappy.map.waypoint.WayPointManager;
 import com.naxanria.mappy.util.ColorUtil;
+import com.naxanria.mappy.util.MathUtil;
 import com.naxanria.mappy.util.TriValue;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
@@ -10,6 +14,7 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.resource.language.I18n;
 import net.minecraft.client.texture.NativeImage;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.text.StringTextComponent;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.Heightmap;
 import net.minecraft.world.World;
@@ -19,6 +24,7 @@ import net.minecraft.world.dimension.DimensionType;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 public class Map
 {
@@ -46,7 +52,9 @@ public class Map
   
   private List<MapIcon.Player> players = new ArrayList<>();
   private MapIcon.Player playerIcon;
+  private List<MapIcon.Waypoint> waypoints = new ArrayList<>();
   
+  private PlayerEntity locPlayer = null;
   
   public Map()
   {
@@ -66,6 +74,12 @@ public class Map
         playerIcon = new MapIcon.Player(this, player, true);
       }
       
+      if (locPlayer == null)
+      {
+        WayPointManager.INSTANCE.load();
+        locPlayer = player;
+      }
+      
       playerIcon.setPosition(size / 2, size / 2);
       
       generate(player);
@@ -75,22 +89,42 @@ public class Map
 
       MapGUI.instance.markDirty();
     }
+    else
+    {
+      locPlayer = null;
+    }
   }
   
   private void updateInfo()
   {
     manager.clear();
+    Config config = Config.instance;
     
-    BlockPos playerPos = client.player.getBlockPos();
-    playerPositionInfo.setText(playerPos.getX() + " " + playerPos.getY() + " " + playerPos.getZ());
-    manager.add(playerPositionInfo);
+    if (config.showPosition())
+    {
+      BlockPos playerPos = client.player.getBlockPos();
+      playerPositionInfo.setText(playerPos.getX() + " " + playerPos.getY() + " " + playerPos.getZ());
+      manager.add(playerPositionInfo);
+    }
     
-    biomeInfo.setText(I18n.translate(biome.getTranslationKey()));
-    manager.add(biomeInfo);
+    if (config.showBiome())
+    {
+      biomeInfo.setText(I18n.translate(biome.getTranslationKey()));
+      manager.add(biomeInfo);
+    }
     
-    fpsInfo.setText(MinecraftClient.getCurrentFps() + " fps");
-    manager.add(fpsInfo);
-  
+    if (config.showFPS())
+    {
+      fpsInfo.setText(MinecraftClient.getCurrentFps() + " fps");
+      manager.add(fpsInfo);
+    }
+    
+//    if (config.showTime())
+//    {
+//      inGameTimeInfo.setText(client.world.getTime() + "");
+//      manager.add(inGameTimeInfo);
+//    }
+    
     if (Mappy.debugMode)
     {
       TriValue<BlockPos, BlockState, Integer> debugData = getDebugData();
@@ -105,17 +139,13 @@ public class Map
       manager.add(new MapInfoLine("##########", debugData.C));
       manager.add(new MapInfoLine(Alignment.Center, posString));
       manager.add(new MapInfoLine(Alignment.Center, stateString));
+      manager.add(new MapInfoLine(Alignment.Center, (locPlayer.headYaw * -1 % 360) + ""));
     }
   }
   
   public TriValue<BlockPos, BlockState, Integer> getDebugData()
   {
     return debugData;
-  }
-  
-  public Biome getBiome()
-  {
-    return biome;
   }
   
   public void generate(PlayerEntity player)
@@ -248,6 +278,28 @@ public class Map
 //        image.fillRGBA(drawX, drawZ, s, s, 0xff009900);
       }
     }
+    
+    if (Config.instance.alphaFeatures())
+    {
+      waypoints.clear();
+      List<WayPoint> wps = WayPointManager.INSTANCE.getWaypoints(world.dimension.getType().getRawId());
+      if (wps != null)
+      {
+        wps.stream()
+          .filter
+            (
+              wp -> !wp.hidden && (wp.showAlways || MathUtil.getDistance(pos, wp.pos, true) <= wp.showRange)
+            )
+          .forEach(wp ->
+          {
+            MapIcon.Waypoint waypoint = new MapIcon.Waypoint(this, wp);
+            waypoint.setPosition(
+              MathUtil.clamp(MapIcon.getScaled(wp.pos.getX(), startX, endX, size), 0, size),
+              MathUtil.clamp(MapIcon.getScaled(wp.pos.getZ(), startZ, endZ, size), 0, size));
+            waypoints.add(waypoint);
+          });
+      }
+    }
   }
   
   protected boolean isAir(BlockState state)
@@ -258,6 +310,56 @@ public class Map
   public List<MapIcon.Player> getPlayerIcons()
   {
     return players;
+  }
+  
+  public List<MapIcon.Waypoint> getWaypoints()
+  {
+    return waypoints;
+  }
+  
+  public void createWayPoint()
+  {
+    PlayerEntity player = client.player;
+    
+    WayPoint wayPoint = new WayPoint();
+    wayPoint.dimension = player.world.dimension.getType().getRawId();
+    Random random = player.world.random;
+    wayPoint.color = ColorUtil.rgb(random.nextInt(255), random.nextInt(255), random.nextInt(255));
+    wayPoint.pos = player.getBlockPos();
+  
+    WayPointManager.INSTANCE.add(wayPoint);
+    WayPointManager.INSTANCE.save();
+    
+    player.sendMessage(new StringTextComponent("Created waypoint " + wayPoint.pos.getX() + " " + wayPoint.pos.getY() + " " + wayPoint.pos.getZ()));
+  }
+  
+  public void removeWayPoint()
+  {
+    int removeRange = 32;
+    PlayerEntity player = client.player;
+    
+    List<WayPoint> wayPoints = WayPointManager.INSTANCE.getWaypoints(player.world.dimension.getType().getRawId());
+    if (wayPoints != null)
+    {
+      int r = 0;
+      int size = wayPoints.size();
+      for (int i = 0; i < size; i++)
+      {
+        WayPoint wp = wayPoints.get(i);
+        if (MathUtil.getDistance(wp.pos, player.getBlockPos()) <= removeRange)
+        {
+          r++;
+          wayPoints.remove(i);
+          size = wayPoints.size();
+          i--;
+        }
+      }
+//      wayPoints.stream().filter(wp -> MathUtil.getDistance(wp.pos, player.getBlockPos()) <= removeRange).forEach(wayPoints::remove);
+  
+      WayPointManager.INSTANCE.save();
+      
+      player.sendMessage(new StringTextComponent("Removed " + r + " waypoints"));
+    }
   }
   
   public NativeImage getImage()

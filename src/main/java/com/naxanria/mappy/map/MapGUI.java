@@ -135,6 +135,12 @@ public class MapGUI extends DrawableHelperBase
     {
       player.draw(x, y);
     }
+  
+    for (MapIcon.Waypoint waypoint :
+      map.getWaypoints())
+    {
+      waypoint.draw(x, y);
+    }
     GlStateManager.enableDepthTest();
 
     // draw info for the map

@@ -1,6 +1,8 @@
 package com.naxanria.mappy.mixin;
 
+import com.mojang.blaze3d.platform.GlStateManager;
 import com.naxanria.mappy.map.MapGUI;
+import com.naxanria.mappy.map.waypoint.WayPointRenderer;
 import net.minecraft.client.gui.hud.InGameHud;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -18,5 +20,9 @@ public class HudMixin
     {
       map.draw();
     }
+  
+    GlStateManager.disableDepthTest();
+    WayPointRenderer.render(delta);
+    GlStateManager.enableDepthTest();
   }
 }

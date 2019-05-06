@@ -49,7 +49,7 @@ public class MapInfoLine extends DrawableHelperBase
         drawString(textRenderer, text, x, y, color);
         break;
       case Center:
-        drawStringCenteredBound(textRenderer, text, x, y, 0, width, color);
+        drawStringCenteredBound(textRenderer, text, x, y, 0, width - 2, color);
         break;
       case Right:
         drawRightAlignedString(textRenderer, text, x, y, color);

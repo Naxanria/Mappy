@@ -5,7 +5,8 @@
   "mixins": [
   ],
   "client": [
-    "HudMixin"
+    "HudMixin",
+    "WorldRenderMixin"
   ],
   "injectors": {
     "defaultRequire": 1

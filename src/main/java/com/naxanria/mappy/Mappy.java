@@ -1,6 +1,9 @@
 package com.naxanria.mappy;
 
-import com.naxanria.mappy.client.*;
+import com.naxanria.mappy.client.ClientHandler;
+import com.naxanria.mappy.client.DrawPosition;
+import com.naxanria.mappy.client.KeyHandler;
+import com.naxanria.mappy.client.KeyParser;
 import com.naxanria.mappy.config.Config;
 import com.naxanria.mappy.map.Map;
 import com.naxanria.mappy.map.MapGUI;
@@ -33,7 +36,7 @@ public class Mappy implements ClientModInitializer
   {
     output = new File(FabricLoader.getInstance().getGameDirectory(), "/map/image.png");
     output.getParentFile().mkdirs();
-    
+  
     KeyBindingRegistry.INSTANCE.addCategory(MODID);
   
     File configFile = new File(FabricLoader.getInstance().getConfigDirectory(), MODID + "/" + MODID + ".cfg");
@@ -43,24 +46,15 @@ public class Mappy implements ClientModInitializer
       try
       {
         configFile.createNewFile();
-      }
-      catch (IOException e)
+      } catch (IOException e)
       {
         e.printStackTrace();
       }
     }
-    
-    Config config = new Config(configFile);
-    
-    FabricKeyBinding reload = FabricKeyBinding.Builder.create
-    (
-      new Identifier(MODID, "reload"),
-      InputUtil.Type.KEYSYM,
-      GLFW.GLFW_KEY_G,
-      MODID
-    ).build();
   
-    KeyHandler.INSTANCE.register(new KeyParser(reload)
+    Config config = new Config(configFile);
+  
+    KeyHandler.INSTANCE.register(new KeyParser(createKeyBinding("reload", GLFW.GLFW_KEY_G))
     {
       @Override
       public void onKeyUp()
@@ -75,17 +69,8 @@ public class Mappy implements ClientModInitializer
         return mc.currentScreen == null && mc.player != null;
       }
     });
-    
-    
-    FabricKeyBinding debug = FabricKeyBinding.Builder.create
-    (
-      new Identifier(MODID, "debug"),
-      InputUtil.Type.KEYSYM,
-      GLFW.GLFW_KEY_F12,
-      MODID
-    ).build();
-    
-    KeyHandler.INSTANCE.register(new KeyParser(debug)
+  
+    KeyHandler.INSTANCE.register(new KeyParser(createKeyBinding("debug", GLFW.GLFW_KEY_F12))
     {
       @Override
       public void onKeyUp()
@@ -100,69 +85,49 @@ public class Mappy implements ClientModInitializer
         return mc.player != null;
       }
     });
-    
-//    FabricKeyBinding typeCycle = FabricKeyBinding.Builder.create
-//    (
-//      new Identifier(MODID, "cycle_type"),
-//      InputUtil.Type.KEYSYM,
-//      GLFW.GLFW_KEY_BACKSPACE,
-//      MODID
-//    ).build();
-//
-//    KeyHandler.INSTANCE.register(new KeyParser(typeCycle)
-//    {
-//      @Override
-//      public void onKeyUp()
-//      {
-//        Heightmap.Type type = map.nextType();
-//        mc.player.sendMessage(new StringTextComponent("Heightmap type changed to " + type.getName()));
-//      }
-//
-//      @Override
-//      public boolean isListening()
-//      {
-//        return mc.currentScreen == null && mc.player != null;
-//      }
-//    });
-//    KeyHandler.INSTANCE.register(new KeyParser(generate)
-//    {
-//      @Override
-//      public void onKeyUp()
-//      {
-//        mc.player.sendMessage(new StringTextComponent("Generating image!"));
-//        map.generate(mc.player);
-//
-//        try
-//        {
-//          if (!output.exists())
-//          {
-//            output.createNewFile();
-//          }
-//
-//          ImageIO.write(map.getImage(), "png", output);
-//          mc.player.sendMessage(new StringTextComponent("Generated and saved to " + output.getAbsolutePath()));
-//        }
-//        catch (IOException e)
-//        {
-//          e.printStackTrace();
-//        }
-//      }
-//
-//      @Override
-//      public void onKeyDown()
-//      {
-//
-//      }
-//
-//      @Override
-//      public boolean isListening()
-//      {
-//        return  (mc.currentScreen == null && mc.player != null);
-//      }
-//    });
   
+  
+    if (config.alphaFeatures())
+    {
+      KeyHandler.INSTANCE.register(new KeyParser(createKeyBinding("waypoint_create", GLFW.GLFW_KEY_B))
+      {
+        @Override
+        public void onKeyUp()
+        {
+          map.createWayPoint();
+        }
+  
+        @Override
+        public boolean isListening()
+        {
+          return mc.player != null && mc.currentScreen == null;
+        }
+      });
+  
+  
+      KeyHandler.INSTANCE.register(new KeyParser(createKeyBinding("waypoint_delete", GLFW.GLFW_KEY_BACKSPACE))
+      {
+        @Override
+        public void onKeyUp()
+        {
+          map.removeWayPoint();
+        }
+    
+        @Override
+        public boolean isListening()
+        {
+          return mc.player != null && mc.currentScreen == null;
+        }
+      });
+    }
+    
     ClientTickCallback.EVENT.register(ClientHandler::tick);
   
     MapGUI mapGUI = new MapGUI(map, 4, DrawPosition.TOP_RIGHT);
+  }
+  
+  private FabricKeyBinding createKeyBinding(String name, int key)
+  {
+    return FabricKeyBinding.Builder.create(new Identifier(MODID, name), InputUtil.Type.KEYSYM, key, MODID).build();
   }
 }

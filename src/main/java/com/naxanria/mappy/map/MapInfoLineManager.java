@@ -30,6 +30,7 @@ public class MapInfoLineManager
   
   public void draw()
   {
+    spacing = 10;
     int yp = y;
     if (direction == Direction.UP)
     {

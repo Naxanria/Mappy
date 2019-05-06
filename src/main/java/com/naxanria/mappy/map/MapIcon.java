@@ -1,6 +1,9 @@
 package com.naxanria.mappy.map;
 
+import com.mojang.blaze3d.platform.GlStateManager;
 import com.naxanria.mappy.client.DrawableHelperBase;
+import com.naxanria.mappy.config.Config;
+import com.naxanria.mappy.map.waypoint.WayPoint;
 import net.minecraft.entity.player.PlayerEntity;
 
 public abstract class MapIcon<T extends MapIcon<T>> extends DrawableHelperBase
@@ -46,15 +49,64 @@ public abstract class MapIcon<T extends MapIcon<T>> extends DrawableHelperBase
     @Override
     public void draw(int mapX, int mapY)
     {
-      int size = 2;
+      boolean alpha = Config.instance.alphaFeatures();
+  
+      int size = (self) ? 4 : PlayerHeadIcon.HEAD_SIZE;
+  
       int drawX = mapX + x - size / 2;
       int drawY = mapY + y - size / 2;
+  
+      if (self)
+      {
+        fill(drawX, drawY, drawX + size, drawY + size, PLAYER_SELF);
+        
+        if (alpha)
+        {
+          int l = 4;
+          double angle = Math.toRadians((player.headYaw + 90) % 360);
+          line(drawX + size / 2, drawY + size / 2, (int) (drawX + size / 2 + Math.cos(angle) * l), (int) (drawY + size / 2 + Math.sin(angle) * l), RED);
+        }
+      }
+      else
+      {
+        if (Config.instance.showPlayerHeads())
+        {
+          PlayerHeadIcon.drawHead(player, drawX, drawY);
+        }
+        else
+        {
+          fill(drawX, drawY, drawX + size, drawY + size, PLAYER_OTHER);
+        }
+      }
       
-      fill(drawX, drawY, drawX + size, drawY + size, self ? PLAYER_SELF : PLAYER_OTHER);
-      if (!self)
+      if (!self && Config.instance.showPlayerNames())
       {
         drawStringCenteredBound(client.textRenderer, player.getName().getString(), drawX + size / 2, drawY - size / 2 - 10, 0, client.window.getScaledWidth(), WHITE);
       }
+    }
+  }
+  
+  public static class Waypoint extends MapIcon<Waypoint>
+  {
+    private WayPoint wayPoint;
+    public Waypoint(Map map, WayPoint wayPoint)
+    {
+      super(map);
+      this.wayPoint = wayPoint;
+    }
+  
+    @Override
+    public void draw(int mapX, int mapY)
+    {
+      int size = 8;
+      int col = wayPoint.color;
+      
+      int drawX = mapX + x - size / 2;
+      int drawY = mapY + y - size / 2;
+  
+      GlStateManager.pushMatrix();
+      diamond(drawX, drawY, size, size, col);
+      GlStateManager.popMatrix();
     }
   }
 }
