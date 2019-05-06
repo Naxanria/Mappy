@@ -4,6 +4,7 @@ import com.mojang.blaze3d.platform.GlStateManager;
 import com.naxanria.mappy.client.DrawableHelperBase;
 import com.naxanria.mappy.config.Config;
 import com.naxanria.mappy.map.waypoint.WayPoint;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 
 public abstract class MapIcon<T extends MapIcon<T>> extends DrawableHelperBase
@@ -107,6 +108,38 @@ public abstract class MapIcon<T extends MapIcon<T>> extends DrawableHelperBase
       GlStateManager.pushMatrix();
       diamond(drawX, drawY, size, size, col);
       GlStateManager.popMatrix();
+    }
+  }
+  
+  public static class Entity extends MapIcon<Entity>
+  {
+  
+    private final net.minecraft.entity.Entity entity;
+    boolean hostile;
+    
+    public Entity(Map map, net.minecraft.entity.Entity entity, boolean hostile)
+    {
+      super(map);
+      
+      this.entity = entity;
+      this.hostile = hostile;
+    }
+  
+    @Override
+    public void draw(int mapX, int mapY)
+    {
+      int size = 1;
+      int col = (hostile) ? 0xFFFF8800 : 0xFFFFFF00;
+  
+//      int x1 = mapX + x - size / 2;
+//      int y1 = mapY + y + size / 2;
+//      int x2 = mapX + x + size / 2;
+//      int y2 = mapY + y + size / 2;
+//      int x3 = mapX + x;
+//      int y3 = mapY + y;
+//
+      fill(mapX + x - size, mapY + y - size, mapX + x + size, mapY + y + size, col);
+      //triangle(x1, y1, x2, y2, x3, y3, col);
     }
   }
 }

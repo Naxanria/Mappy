@@ -147,34 +147,23 @@ public class MapGUI extends DrawableHelperBase
       player.draw(x, y);
     }
   
+    for (MapIcon.Entity entity :
+      map.getEntities())
+    {
+      entity.draw(x, y);
+    }
+    
     for (MapIcon.Waypoint waypoint :
       map.getWaypoints())
     {
       waypoint.draw(x, y);
     }
+    
+    
     GlStateManager.enableDepthTest();
 
     // draw info for the map
     manager.draw();
-//    int s = 4;
-//    fill(x + iw / 2 - s, y + ih / 2 - s, x + iw / 2 + s, y + ih / 2 + s, 0xff00ff00);
-//    BlockPos playerPos = client.player.getBlockPos();
-//    String details =  playerPos.getX() + " " + playerPos.getY() + " " + playerPos.getZ();
-//    drawCenteredString(client.textRenderer, details, x + iw / 2, y + ih + 2 + border, 0xffffffff);
-  
-    //todo: check what info to show or not.
-    
-    
-//    Biome biome = map.getBiome();
-//
-//    if (biome != null)
-//    {
-//      String p = I18n.translate(biome.getTranslationKey());
-//
-//      drawStringCenteredBound(client.textRenderer, p, x + iw / 2, y + ih + 8 + 2 + border, 0, client.window.getScaledWidth(), WHITE);
-//    }
-    
-  
   }
   
   private void drawMap(MinecraftClient client, int x, int y, int iw, int ih)

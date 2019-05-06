@@ -14,9 +14,16 @@ import net.minecraft.block.Blocks;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.resource.language.I18n;
 import net.minecraft.client.texture.NativeImage;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityType;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.ai.TargetPredicate;
+import net.minecraft.entity.mob.HostileEntity;
+import net.minecraft.entity.mob.ZombieEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.text.StringTextComponent;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.BoundingBox;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.Heightmap;
 import net.minecraft.world.World;
@@ -56,6 +63,8 @@ public class Map
   private List<MapIcon.Player> players = new ArrayList<>();
   private MapIcon.Player playerIcon;
   private List<MapIcon.Waypoint> waypoints = new ArrayList<>();
+  private List<MapIcon.Entity> entities = new ArrayList<>();
+  
   
   private PlayerEntity locPlayer = null;
   
@@ -318,6 +327,39 @@ public class Map
       }
     }
     
+    if (Config.instance.showEntities())
+    {
+      entities.clear();
+      
+      int checkHeight = 64;
+      BlockPos start = new BlockPos(startX, player.y - checkHeight / 2, startZ);
+      BlockPos end = new BlockPos(endX, player.y + checkHeight / 2, endZ);
+      List<Entity> entities = world.getEntities((Entity) null, new BoundingBox(start, end));
+  
+      int t = 0;
+      
+      for (Entity entity :
+        entities)
+      {
+        if (entity instanceof LivingEntity && !(entity instanceof PlayerEntity))
+        {
+          t++;
+          LivingEntity livingEntity = (LivingEntity) entity;
+          MapIcon.Entity mie = new MapIcon.Entity(this, entity, livingEntity instanceof HostileEntity);
+          
+          mie.setPosition(MapIcon.getScaled((int) entity.x, startX, endX, size), MapIcon.getScaled((int) entity.z, startZ, endZ, size));
+          
+          this.entities.add(mie);
+        }
+        if (t >= 250)
+        {
+          break;
+        }
+      }
+      
+//      System.out.println("Found " + t + " entities");
+    }
+    
     if (Config.instance.alphaFeatures())
     {
       waypoints.clear();
@@ -429,6 +471,11 @@ public class Map
   public int getSizeZ()
   {
     return sizeZ;
+  }
+  
+  public List<MapIcon.Entity> getEntities()
+  {
+    return entities;
   }
   
   public MapInfoLineManager getManager()

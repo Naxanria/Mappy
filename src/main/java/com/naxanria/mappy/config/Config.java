@@ -30,6 +30,7 @@ public class Config extends ConfigBase<Config>
     addEntry(new ConfigEntry.BooleanEntry("showPlayerNames", dataMap, true));
     addEntry(new ConfigEntry.BooleanEntry("showPlayerHeads", dataMap, true));
     addEntry(new ConfigEntry.BooleanEntry("showDirection", dataMap, true));
+    addEntry(new ConfigEntry.BooleanEntry("showEntities", dataMap, false));
     addEntry(new ConfigEntry.IntegerRangeEntry("mapTriesLimit", dataMap, 50, 1, 255));
     
     
@@ -95,5 +96,10 @@ public class Config extends ConfigBase<Config>
   public boolean showDirection()
   {
     return getBoolean("showDirection");
+  }
+  
+  public boolean showEntities()
+  {
+    return getBoolean("showEntities");
   }
 }
