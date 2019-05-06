@@ -87,7 +87,7 @@ public class Map
       
       generate(player);
   
-      updateInfo();
+      updateInfo(player);
 
 
       MapGUI.instance.markDirty();
@@ -114,7 +114,7 @@ public class Map
     }
   }
   
-  private void updateInfo()
+  private void updateInfo(PlayerEntity player)
   {
     manager.clear();
     Config config = Config.instance;
@@ -146,7 +146,6 @@ public class Map
     
     if (config.showDirection())
     {
-      PlayerEntity player = playerIcon.player;
       Direction direction = player.getMovementDirection();
       
       directionInfo.setText(direction.asString());
