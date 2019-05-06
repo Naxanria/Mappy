@@ -2,11 +2,25 @@ package com.naxanria.mappy.config;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public abstract class ConfigBase<T extends ConfigBase>
 {
+  public interface ConfigChangedListener
+  {
+    void onConfigChanged(ConfigBase<?> config);
+  }
+  
+  private static List<ConfigChangedListener> listeners = new ArrayList<>();
+  
+  public static void registerListener(ConfigChangedListener listener)
+  {
+    listeners.add(listener);
+  }
+  
   public final DataMap dataMap;
   
   private Map<String, ConfigEntry<?>> entryMap = new HashMap<>();
@@ -31,6 +45,8 @@ public abstract class ConfigBase<T extends ConfigBase>
     }
     
     save();
+    
+    onConfigChanged();
   }
   
   protected abstract void init();
@@ -47,6 +63,7 @@ public abstract class ConfigBase<T extends ConfigBase>
     try
     {
       dataMap.load();
+      onConfigChanged();
     }
     catch (IOException e)
     {
@@ -70,7 +87,11 @@ public abstract class ConfigBase<T extends ConfigBase>
   
   public void onConfigChanged()
   {
-    save();
+    for (ConfigChangedListener listener :
+      listeners)
+    {
+      listener.onConfigChanged(this);
+    }
   }
   
   public ConfigEntry<?> getEntry(String key)

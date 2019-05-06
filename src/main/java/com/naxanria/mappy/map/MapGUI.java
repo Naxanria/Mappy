@@ -57,6 +57,17 @@ public class MapGUI extends DrawableHelperBase
   
   public void markDirty()
   {
+    NativeImage img = map.getImage();
+    if (img != backingImage)
+    {
+      backingImage = img;
+      if (texture != null)
+      {
+        texture.close();
+      }
+      texture = null;
+    }
+    
     if (texture != null)
     {
       texture.upload();
@@ -85,7 +96,7 @@ public class MapGUI extends DrawableHelperBase
       backingImage = map.getImage();
       texture = new NativeImageBackedTexture(backingImage);
       texture.upload();
-      textureIdentifier = MinecraftClient.getInstance().getTextureManager().registerDynamicTexture(Mappy.MODID + "_map_texture", texture);
+      textureIdentifier = client.getTextureManager().registerDynamicTexture(Mappy.MODID + "_map_texture", texture);
     }
     
     int x = offset;

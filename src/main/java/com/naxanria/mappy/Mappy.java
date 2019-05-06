@@ -52,6 +52,8 @@ public class Mappy implements ClientModInitializer
       }
     }
   
+    Config.registerListener(map::onConfigChanged);
+    
     Config config = new Config(configFile);
   
     KeyHandler.INSTANCE.register(new KeyParser(createKeyBinding("reload", GLFW.GLFW_KEY_G))

@@ -3,6 +3,7 @@ package com.naxanria.mappy.map;
 import com.naxanria.mappy.Mappy;
 import com.naxanria.mappy.client.Alignment;
 import com.naxanria.mappy.config.Config;
+import com.naxanria.mappy.config.ConfigBase;
 import com.naxanria.mappy.map.waypoint.WayPoint;
 import com.naxanria.mappy.map.waypoint.WayPointManager;
 import com.naxanria.mappy.util.ColorUtil;
@@ -95,6 +96,22 @@ public class Map
     }
   }
   
+  private void resize(int newSize)
+  {
+    image = new NativeImage(NativeImage.Format.RGBA, newSize, newSize, false);
+    System.out.println("Map resized to " + newSize + "x" + newSize);
+  }
+  
+  private void onConfigChanged(Config config)
+  {
+    int configSize = config.getMapSize();
+    if (configSize != size)
+    {
+      size = configSize;
+      resize(configSize);
+    }
+  }
+  
   private void updateInfo()
   {
     manager.clear();
@@ -158,10 +175,10 @@ public class Map
     
     boolean nether = type == DimensionType.THE_NETHER;
     
-    int startX = pos.getX() - sizeX / 2;
-    int startZ = pos.getZ() - sizeZ / 2;
-    int endX = startX + sizeX;
-    int endZ = startZ + sizeZ;
+    int startX = pos.getX() - size / 2;
+    int startZ = pos.getZ() - size / 2;
+    int endX = startX + size;
+    int endZ = startZ + size;
     
     for (int x = startX, px = 0; x < endX; x++, px++)
     {
@@ -395,5 +412,10 @@ public class Map
   public MapInfoLineManager getManager()
   {
     return manager;
+  }
+  
+  public void onConfigChanged(ConfigBase<?> configBase)
+  {
+    onConfigChanged((Config) configBase);
   }
 }

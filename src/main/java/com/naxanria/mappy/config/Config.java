@@ -3,6 +3,8 @@ package com.naxanria.mappy.config;
 import com.naxanria.mappy.client.DrawPosition;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Config extends ConfigBase<Config>
 {
