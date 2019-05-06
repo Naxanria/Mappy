@@ -17,6 +17,7 @@ import net.minecraft.client.texture.NativeImage;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.text.StringTextComponent;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Direction;
 import net.minecraft.world.Heightmap;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
@@ -40,6 +41,7 @@ public class Map
   private MapInfoLine biomeInfo = new MapInfoLine(Alignment.Center, "plains");
   private MapInfoLine inGameTimeInfo = new MapInfoLine(Alignment.Center, "00:00");
   private MapInfoLine fpsInfo = new MapInfoLine(Alignment.Center, "60 fps");
+  private MapInfoLine directionInfo = new MapInfoLine(Alignment.Center, "north");
   
   private int size = 64;
   private int width = size, height = size;
@@ -142,6 +144,15 @@ public class Map
       manager.add(inGameTimeInfo);
     }
     
+    if (config.showDirection())
+    {
+      PlayerEntity player = playerIcon.player;
+      Direction direction = player.getMovementDirection();
+      
+      directionInfo.setText(direction.asString());
+      manager.add(directionInfo);
+    }
+    
     if (Mappy.debugMode)
     {
       TriValue<BlockPos, BlockState, Integer> debugData = getDebugData();
@@ -163,6 +174,10 @@ public class Map
   private String getTimeFormatted(long time)
   {
 //    return time + "";
+    if (time > 24000)
+    {
+      time %= 24000;
+    }
 
     int m = (int) (((time % 1000) / 1000f) * 60);
     int h = (int) time / 1000 + 6;
