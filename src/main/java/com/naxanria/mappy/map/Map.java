@@ -179,6 +179,7 @@ public class Map
     int startZ = pos.getZ() - size / 2;
     int endX = startX + size;
     int endZ = startZ + size;
+    int mapTriesLimit = Config.instance.getMapTriesLimit();
     
     for (int x = startX, px = 0; x < endX; x++, px++)
     {
@@ -205,9 +206,8 @@ public class Map
         
         boolean up = !isAir(state);
         
-//        col = up ? 0xffffff00 : 0xff00ffff;
-        
-        int tries = 100;
+        // todo: use cached height maps?
+        int tries = mapTriesLimit;
         do
         {
           if (!nether)
@@ -240,9 +240,8 @@ public class Map
         }
         while (y >= 0 && y <= world.getHeight() && tries-- > 0);
         
-
-//        col = state.getMaterial().getColor().getRenderColor(2);
         col = state.getBlock().getMapColor(state, world, bpos).getRenderColor(2);
+        
         if (nether)
         {
           col = ColorUtil.multiply(col, (up) ? 0.5f : 1);
@@ -288,11 +287,6 @@ public class Map
         MapIcon.Player playerIcon1 = new MapIcon.Player(this, p, false);
         playerIcon1.setPosition(MapIcon.getScaled(x, startX, endX, size), MapIcon.getScaled(z, startZ, endZ, size));
         this.players.add(playerIcon1);
-        
-//        int drawX = MathUtil.clamp((int) (((x - startX) / ((float)sizeX)) * width) - s, 0, width - s);
-//        int drawZ = MathUtil.clamp((int) (((z - startZ) / ((float)sizeZ)) * height) - s, 0, height - s);
-//
-//        image.fillRGBA(drawX, drawZ, s, s, 0xff009900);
       }
     }
     

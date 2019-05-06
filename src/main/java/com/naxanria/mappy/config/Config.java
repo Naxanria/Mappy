@@ -29,6 +29,7 @@ public class Config extends ConfigBase<Config>
     addEntry(new ConfigEntry.BooleanEntry("showTime", dataMap, true));
     addEntry(new ConfigEntry.BooleanEntry("showPlayerNames", dataMap, true));
     addEntry(new ConfigEntry.BooleanEntry("showPlayerHeads", dataMap, true));
+    addEntry(new ConfigEntry.IntegerRangeEntry("mapTriesLimit", dataMap, 50, 1, 255));
     
     
     addEntry(new ConfigEntry.BooleanEntry("alphaFeatures", dataMap, false));
@@ -83,5 +84,10 @@ public class Config extends ConfigBase<Config>
   public boolean showPlayerHeads()
   {
     return getBoolean("showPlayerHeads");
+  }
+  
+  public int getMapTriesLimit()
+  {
+    return getInt("mapTriesLimit");
   }
 }
