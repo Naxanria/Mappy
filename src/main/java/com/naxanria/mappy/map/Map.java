@@ -136,11 +136,11 @@ public class Map
       manager.add(fpsInfo);
     }
     
-//    if (config.showTime())
-//    {
-//      inGameTimeInfo.setText(client.world.getTime() + "");
-//      manager.add(inGameTimeInfo);
-//    }
+    if (config.showTime())
+    {
+      inGameTimeInfo.setText(getTimeFormatted(client.world.getTimeOfDay()));
+      manager.add(inGameTimeInfo);
+    }
     
     if (Mappy.debugMode)
     {
@@ -158,6 +158,20 @@ public class Map
       manager.add(new MapInfoLine(Alignment.Center, stateString));
       manager.add(new MapInfoLine(Alignment.Center, (locPlayer.headYaw * -1 % 360) + ""));
     }
+  }
+  
+  private String getTimeFormatted(long time)
+  {
+//    return time + "";
+
+    int m = (int) (((time % 1000) / 1000f) * 60);
+    int h = (int) time / 1000 + 6;
+    if (h >= 24)
+    {
+      h -= 24;
+    }
+
+    return ((h < 10) ? "0" + h : h) + ":" + ((m < 10) ? "0" + m : m);
   }
   
   public TriValue<BlockPos, BlockState, Integer> getDebugData()
