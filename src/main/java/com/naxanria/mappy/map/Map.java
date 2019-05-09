@@ -4,6 +4,7 @@ import com.naxanria.mappy.Mappy;
 import com.naxanria.mappy.client.Alignment;
 import com.naxanria.mappy.config.Config;
 import com.naxanria.mappy.config.ConfigBase;
+import com.naxanria.mappy.map.chunk.ChunkCache;
 import com.naxanria.mappy.map.waypoint.WayPoint;
 import com.naxanria.mappy.map.waypoint.WayPointManager;
 import com.naxanria.mappy.util.ColorUtil;
@@ -15,20 +16,15 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.resource.language.I18n;
 import net.minecraft.client.texture.NativeImage;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.ai.TargetPredicate;
 import net.minecraft.entity.mob.HostileEntity;
-import net.minecraft.entity.mob.ZombieEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.text.StringTextComponent;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BoundingBox;
 import net.minecraft.util.math.Direction;
-import net.minecraft.world.Heightmap;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
-import net.minecraft.world.chunk.WorldChunk;
 import net.minecraft.world.dimension.DimensionType;
 
 import java.util.ArrayList;
@@ -210,93 +206,96 @@ public class Map
     biome = world.getBiome(pos);
     DimensionType type = world.dimension.getType();
     
-    boolean nether = type == DimensionType.THE_NETHER;
-    
+//    boolean nether = type == DimensionType.THE_NETHER;
+//
     int startX = pos.getX() - size / 2;
     int startZ = pos.getZ() - size / 2;
     int endX = startX + size;
     int endZ = startZ + size;
-    int mapTriesLimit = Config.instance.getMapTriesLimit();
     
-    for (int x = startX, px = 0; x < endX; x++, px++)
-    {
-      for (int z = startZ, pz = 0; z < endZ; z++, pz++)
-      {
-        int col;
-        int y;
-        
-        if (!nether)
-        {
-          BlockPos blockPos = new BlockPos(x, 64, z);
-          WorldChunk chunk = world.getWorldChunk(blockPos);
-          Heightmap heightmap = chunk.getHeightmap(Heightmap.Type.MOTION_BLOCKING);
-  
-          y = heightmap.get(x & 15, z & 15) - 1;
-        }
-        else
-        {
-          y = pos.getY();
-        }
+    ChunkCache.getPreLoader(world).update(this, startX, startZ);
+    
+//    int mapTriesLimit = Config.instance.getMapTriesLimit();
 
-        BlockPos bpos = new BlockPos(x, y, z);
-        BlockState state =  world.getBlockState(bpos);
-        
-        boolean up = !isAir(state);
-        int yStart = y;
-        
-        // todo: use cached height maps?
-        int tries = mapTriesLimit;
-        do
-        {
-          if (!nether)
-          {
-            bpos = new BlockPos(x, y, z);
-            state = world.getBlockState(bpos);
-            
-            if (!isAir(state))
-            {
-              break;
-            }
-            y--;
-          }
-          else
-          {
-            y += (up) ? 1 : -1;
-            bpos = new BlockPos(x, y, z);
-            state = world.getBlockState(bpos);
-            
-            if (up && isAir(state) || !isAir(state))
-            {
-              if (up)
-              {
-                bpos = bpos.down();
-                state = world.getBlockState(bpos);
-              }
-              break;
-            }
-          }
-        }
-        while (y >= 0 && y <= world.getHeight() && tries-- > 0);
-        
-//        col = state.getBlock().getMapColor(state, world, bpos).getRenderColor(2);
-        col = state.getTopMaterialColor(world, bpos).getRenderColor(2);//.color | 0xff000000;
+//    for (int x = startX, px = 0; x < endX; x++, px++)
+//    {
+//      for (int z = startZ, pz = 0; z < endZ; z++, pz++)
+//      {
+//        int col;
+//        int y;
 //
-        if (nether)
-        {
-          col = ColorUtil.multiply(col, (up) ? 0.5f : 1);
-        }
-        
-        if (Mappy.debugMode)
-        {
-          if (x == pos.getX() && z == pos.getZ())
-          {
-            debugData = new TriValue<>(bpos, state, col);
-          }
-        }
-  
-        image.setPixelRGBA(px, pz, col);
-      }
-    }
+//        if (!nether)
+//        {
+//          BlockPos blockPos = new BlockPos(x, 64, z);
+//          WorldChunk chunk = world.getWorldChunk(blockPos);
+//          Heightmap heightmap = chunk.getHeightmap(Heightmap.Type.MOTION_BLOCKING);
+//
+//          y = heightmap.get(x & 15, z & 15) - 1;
+//        }
+//        else
+//        {
+//          y = pos.getY();
+//        }
+//
+//        BlockPos bpos = new BlockPos(x, y, z);
+//        BlockState state =  world.getBlockState(bpos);
+//
+//        boolean up = !isAir(state);
+//        int yStart = y;
+//
+//        // todo: use cached height maps?
+//        int tries = mapTriesLimit;
+//        do
+//        {
+//          if (!nether)
+//          {
+//            bpos = new BlockPos(x, y, z);
+//            state = world.getBlockState(bpos);
+//
+//            if (!isAir(state))
+//            {
+//              break;
+//            }
+//            y--;
+//          }
+//          else
+//          {
+//            y += (up) ? 1 : -1;
+//            bpos = new BlockPos(x, y, z);
+//            state = world.getBlockState(bpos);
+//
+//            if (up && isAir(state) || !isAir(state))
+//            {
+//              if (up)
+//              {
+//                bpos = bpos.down();
+//                state = world.getBlockState(bpos);
+//              }
+//              break;
+//            }
+//          }
+//        }
+//        while (y >= 0 && y <= world.getHeight() && tries-- > 0);
+//
+////        col = state.getBlock().getMapColor(state, world, bpos).getRenderColor(2);
+//        col = state.getTopMaterialColor(world, bpos).getRenderColor(2);//.color | 0xff000000;
+////
+//        if (nether)
+//        {
+//          col = ColorUtil.multiply(col, (up) ? 0.5f : 1);
+//        }
+//
+//        if (Mappy.debugMode)
+//        {
+//          if (x == pos.getX() && z == pos.getZ())
+//          {
+//            debugData = new TriValue<>(bpos, state, col);
+//          }
+//        }
+//
+//        image.setPixelRGBA(px, pz, col);
+//      }
+//    }
     
     // todo: make option to show players or not.
     players.clear();
