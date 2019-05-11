@@ -17,7 +17,7 @@ public class WayPoint implements Serializable<WayPoint>
   public int color;
   public boolean showAlways;
   public boolean hidden;
-  public int showRange = 500;
+  public int showRange = 5000;
   
   public boolean show()
   {
