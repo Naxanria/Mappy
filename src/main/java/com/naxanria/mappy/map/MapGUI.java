@@ -7,6 +7,7 @@ import com.naxanria.mappy.client.DrawPosition;
 import com.naxanria.mappy.client.DrawableHelperBase;
 import com.naxanria.mappy.config.Config;
 import com.naxanria.mappy.util.TriValue;
+import java.util.Collection;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.BlockState;
@@ -17,6 +18,8 @@ import net.minecraft.client.render.VertexFormats;
 import net.minecraft.client.resource.language.I18n;
 import net.minecraft.client.texture.NativeImage;
 import net.minecraft.client.texture.NativeImageBackedTexture;
+import net.minecraft.entity.effect.StatusEffect;
+import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.biome.Biome;
@@ -123,6 +126,9 @@ public class MapGUI extends DrawableHelperBase
         break;
       case TOP_RIGHT:
         x = w - offset - iw;
+        Collection<StatusEffectInstance> effects =  MinecraftClient.getInstance().player.getStatusEffects();
+        if (!effects.isEmpty())
+          y += (hasNonBeneficialEffect(effects) ? 48 : 24);
         break;
       case BOTTOM_LEFT:
         direction = MapInfoLineManager.Direction.UP;
@@ -169,6 +175,15 @@ public class MapGUI extends DrawableHelperBase
 
     // draw info for the map
     manager.draw();
+  }
+
+  private boolean hasNonBeneficialEffect(Collection<StatusEffectInstance> effects) {
+    for (StatusEffectInstance e : effects) {
+      if (!e.getEffectType().method_5573()) {
+        return true;
+	  }
+	}
+    return false;
   }
   
   private void drawMap(MinecraftClient client, int x, int y, int iw, int ih)
