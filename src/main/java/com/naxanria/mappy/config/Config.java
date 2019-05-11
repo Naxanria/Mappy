@@ -3,8 +3,6 @@ package com.naxanria.mappy.config;
 import com.naxanria.mappy.client.DrawPosition;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
 
 public class Config extends ConfigBase<Config>
 {
@@ -32,7 +30,9 @@ public class Config extends ConfigBase<Config>
     addEntry(new ConfigEntry.BooleanEntry("showDirection", dataMap, true));
     addEntry(new ConfigEntry.BooleanEntry("showEntities", dataMap, false));
     addEntry(new ConfigEntry.IntegerRangeEntry("mapTriesLimit", dataMap, 50, 1, 255));
-    
+    addEntry(new ConfigEntry.IntegerRangeEntry("updatePerCycle", dataMap, 10, 1, 500));
+    addEntry(new ConfigEntry.IntegerRangeEntry("pruneDelay", dataMap, 60, 1, 600));
+    addEntry(new ConfigEntry.IntegerRangeEntry("pruneAmount", dataMap, 1500, 100, 50000));
     
     addEntry(new ConfigEntry.BooleanEntry("alphaFeatures", dataMap, false));
   }
@@ -101,5 +101,20 @@ public class Config extends ConfigBase<Config>
   public boolean showEntities()
   {
     return getBoolean("showEntities");
+  }
+  
+  public int getUpdatePerCycle()
+  {
+    return getInt("updatePerCycle");
+  }
+  
+  public int getPruneDelay()
+  {
+    return getInt("pruneDelay");
+  }
+  
+  public int getPruneAmount()
+  {
+    return getInt("pruneAmount");
   }
 }

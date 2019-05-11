@@ -159,18 +159,6 @@ public class Map
     
     if (Mappy.debugMode)
     {
-      TriValue<BlockPos, BlockState, Integer> debugData = getDebugData();
-      if (debugData == null)
-      {
-        return;
-      }
-    
-      String stateString = debugData.B.toString();
-      String posString = debugData.A.toString();
-      
-      manager.add(new MapInfoLine("##########", debugData.C));
-      manager.add(new MapInfoLine(Alignment.Center, posString));
-      manager.add(new MapInfoLine(Alignment.Center, stateString));
       manager.add(new MapInfoLine(Alignment.Center, (locPlayer.headYaw * -1 % 360) + ""));
     }
   }

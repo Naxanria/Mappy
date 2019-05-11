@@ -1,6 +1,7 @@
 package com.naxanria.mappy.map.chunk;
 
 import com.naxanria.mappy.Mappy;
+import com.naxanria.mappy.config.Config;
 import com.naxanria.mappy.map.Map;
 import com.naxanria.mappy.map.MapLayer;
 import com.naxanria.mappy.map.MapLayerProcessor;
@@ -11,7 +12,9 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.WorldChunk;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 public class ChunkCache
 {
@@ -90,6 +93,9 @@ public class ChunkCache
   
   private int updateIndex = 0;
   private int updatePerCycle = 10;
+  private long lastPrune = 0;
+  private long pruneDelay = 1000;
+  private int pruneAmount = 500;
   
   private ChunkCache(MapLayer layer, World world)
   {
@@ -99,15 +105,21 @@ public class ChunkCache
   
   public void update(Map map, int x, int z)
   {
+    Config config = Config.instance;
+    
+    updatePerCycle = config.getUpdatePerCycle();
+    pruneDelay = config.getPruneDelay() * 1000;
+    pruneAmount = config.getPruneAmount();
+    
     int size = map.getSize();
-    int chunksSize = size / 16 + 2;
+    int chunksSize = size / 16 + 4;
     int cxStart = x / 16 - 2;
     int cxEnd = cxStart + chunksSize;
     int czStart = z / 16 - 2;
     int czEnd = czStart + chunksSize;
   
-    int xOff = x % 15 - 32;
-    int zOff = z % 15 - 32;
+    int xOff = cxStart * 16 - x;
+    int zOff = czStart * 16 - z;
     
     long now = System.currentTimeMillis();
     
@@ -153,6 +165,45 @@ public class ChunkCache
     if (updateIndex >= chunksSize * chunksSize)
     {
       updateIndex = 0;
+    }
+    
+    if (now - lastPrune > pruneDelay)
+    {
+      prune(pruneAmount);
+      lastPrune = now;
+    }
+  }
+  
+  private void prune(int max)
+  {
+    int p = 0;
+    long now = System.currentTimeMillis();
+  
+    List<BiValue<Integer, Integer>> toRemove = new ArrayList<>();
+    for (BiValue<Integer, Integer> key :
+      data.keySet())
+    {
+      ChunkData chunkData = data.get(key);
+      if (now - chunkData.time >= 10000)
+      {
+        toRemove.add(key);
+        p++;
+        if (p >= max)
+        {
+          break;
+        }
+      }
+    }
+  
+    for (BiValue<Integer, Integer> key :
+      toRemove)
+    {
+      data.remove(key);
+    }
+    
+    if (p > 0)
+    {
+      System.out.println("Purged " + p + " chunks from cache");
     }
   }
   

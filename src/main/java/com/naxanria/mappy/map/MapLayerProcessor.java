@@ -2,6 +2,7 @@ package com.naxanria.mappy.map;
 
 import com.naxanria.mappy.util.StateUtil;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.Heightmap;
 import net.minecraft.world.World;
@@ -25,6 +26,10 @@ public class MapLayerProcessor
     if (!StateUtil.isAir(state))
     {
       // handle special cases?
+      if (world.getBlockState(worldPos.up()).getBlock() == Blocks.SNOW)
+      {
+        return 0xffffffff; // white
+      }
       return state.getTopMaterialColor(chunk.getWorld(), worldPos).getRenderColor(2);
     }
   

@@ -20,9 +20,9 @@ public class HudMixin
     {
       map.draw();
     }
-  
-    GlStateManager.disableDepthTest();
-    WayPointRenderer.render(delta);
-    GlStateManager.enableDepthTest();
+//
+//    GlStateManager.disableDepthTest();
+//    WayPointRenderer.render(delta);
+//    GlStateManager.enableDepthTest();
   }
 }
