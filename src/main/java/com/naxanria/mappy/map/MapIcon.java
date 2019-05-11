@@ -50,7 +50,7 @@ public abstract class MapIcon<T extends MapIcon<T>> extends DrawableHelperBase
     @Override
     public void draw(int mapX, int mapY)
     {
-      boolean alpha = Config.instance.alphaFeatures();
+//      boolean alpha = Config.instance.alphaFeatures();
   
       int size = (self) ? 4 : PlayerHeadIcon.HEAD_SIZE;
   
@@ -59,14 +59,19 @@ public abstract class MapIcon<T extends MapIcon<T>> extends DrawableHelperBase
   
       if (self)
       {
+        if (client.player != player)
+        {
+          player = client.player;
+        }
+        
         fill(drawX, drawY, drawX + size, drawY + size, PLAYER_SELF);
         
-        if (alpha)
-        {
+//        if (alpha)
+//        {
           int l = 4;
           double angle = Math.toRadians((player.headYaw + 90) % 360);
           line(drawX + size / 2, drawY + size / 2, (int) (drawX + size / 2 + Math.cos(angle) * l), (int) (drawY + size / 2 + Math.sin(angle) * l), RED);
-        }
+//        }
       }
       else
       {
