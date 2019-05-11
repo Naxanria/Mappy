@@ -74,6 +74,11 @@ public class Map
   
   public void update()
   {
+    if (!Mappy.showMap)
+    {
+      return;
+    }
+    
     PlayerEntity player = client.player;
     if (player != null)
     {
@@ -320,7 +325,7 @@ public class Map
     {
       entities.clear();
       
-      int checkHeight = 64;
+      int checkHeight = 24;
       BlockPos start = new BlockPos(startX, player.y - checkHeight / 2, startZ);
       BlockPos end = new BlockPos(endX, player.y + checkHeight / 2, endZ);
       List<Entity> entities = world.getEntities((Entity) null, new BoundingBox(start, end));
@@ -349,27 +354,26 @@ public class Map
 //      System.out.println("Found " + t + " entities");
     }
     
-    if (Config.instance.alphaFeatures())
+
+    waypoints.clear();
+    List<WayPoint> wps = WayPointManager.INSTANCE.getWaypoints(world.dimension.getType().getRawId());
+    if (wps != null)
     {
-      waypoints.clear();
-      List<WayPoint> wps = WayPointManager.INSTANCE.getWaypoints(world.dimension.getType().getRawId());
-      if (wps != null)
-      {
-        wps.stream()
-          .filter
-            (
-              wp -> !wp.hidden && (wp.showAlways || MathUtil.getDistance(pos, wp.pos, true) <= wp.showRange)
-            )
-          .forEach(wp ->
-          {
-            MapIcon.Waypoint waypoint = new MapIcon.Waypoint(this, wp);
-            waypoint.setPosition(
-              MathUtil.clamp(MapIcon.getScaled(wp.pos.getX(), startX, endX, size), 0, size),
-              MathUtil.clamp(MapIcon.getScaled(wp.pos.getZ(), startZ, endZ, size), 0, size));
-            waypoints.add(waypoint);
-          });
-      }
+      wps.stream()
+        .filter
+          (
+            wp -> !wp.hidden && (wp.showAlways || MathUtil.getDistance(pos, wp.pos, true) <= wp.showRange)
+          )
+        .forEach(wp ->
+        {
+          MapIcon.Waypoint waypoint = new MapIcon.Waypoint(this, wp);
+          waypoint.setPosition(
+            MathUtil.clamp(MapIcon.getScaled(wp.pos.getX(), startX, endX, size), 0, size),
+            MathUtil.clamp(MapIcon.getScaled(wp.pos.getZ(), startZ, endZ, size), 0, size));
+          waypoints.add(waypoint);
+        });
     }
+
   }
   
   protected boolean isAir(BlockState state)
@@ -428,7 +432,7 @@ public class Map
   
       WayPointManager.INSTANCE.save();
       
-      player.sendMessage(new StringTextComponent("Removed " + r + " waypoints"));
+      player.sendMessage(new StringTextComponent("Removed " + r + " waypoints [32 blocks range]"));
     }
   }
   

@@ -33,6 +33,7 @@ public class Config extends ConfigBase<Config>
     addEntry(new ConfigEntry.IntegerRangeEntry("updatePerCycle", dataMap, 10, 1, 500));
     addEntry(new ConfigEntry.IntegerRangeEntry("pruneDelay", dataMap, 60, 1, 600));
     addEntry(new ConfigEntry.IntegerRangeEntry("pruneAmount", dataMap, 1500, 100, 50000));
+    addEntry(new ConfigEntry.BooleanEntry("showMap", dataMap, true));
     
     addEntry(new ConfigEntry.BooleanEntry("alphaFeatures", dataMap, false));
   }
@@ -116,5 +117,17 @@ public class Config extends ConfigBase<Config>
   public int getPruneAmount()
   {
     return getInt("pruneAmount");
+  }
+  
+  public boolean getShowMap()
+  {
+    return getBoolean("showMap");
+  }
+  
+  public void setShowMap(boolean show)
+  {
+    setBoolean("showMap", show);
+    
+    save();
   }
 }

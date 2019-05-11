@@ -76,6 +76,11 @@ public class MapGUI extends DrawableHelperBase
   
   public void draw()
   {
+    if (!Mappy.showMap)
+    {
+      return;
+    }
+    
     MinecraftClient client = MinecraftClient.getInstance();
     
     if (client.player == null)
