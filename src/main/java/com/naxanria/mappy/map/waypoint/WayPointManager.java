@@ -1,6 +1,5 @@
 package com.naxanria.mappy.map.waypoint;
 
-import com.naxanria.mappy.config.Config;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.options.ServerEntry;
 import net.minecraft.nbt.CompoundTag;
@@ -96,11 +95,6 @@ public enum WayPointManager
   
   public void load()
   {
-    if (!Config.instance.alphaFeatures())
-    {
-      return;
-    }
-    
     try
     {
       CompoundTag tag = NbtIo.read(getSaveFile());
@@ -118,10 +112,6 @@ public enum WayPointManager
   
   public void save()
   {
-    if (!Config.instance.alphaFeatures())
-    {
-      return;
-    }
     try
     {
       NbtIo.safeWrite(writeToNBT(new CompoundTag()), getSaveFile());
