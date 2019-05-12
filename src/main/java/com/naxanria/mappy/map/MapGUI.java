@@ -9,6 +9,7 @@ import com.naxanria.mappy.config.Config;
 import com.naxanria.mappy.util.TriValue;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.fabricmc.fabric.api.util.TriState;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.BufferBuilder;
@@ -123,6 +124,17 @@ public class MapGUI extends DrawableHelperBase
         break;
       case TOP_RIGHT:
         x = w - offset - iw;
+        if (config.moveMapForEffects())
+        {
+          /*
+           * Based on code by ThexXTURBOXx in pull request #5
+           * */
+          EffectState effects = map.getEffects();
+          if (effects != EffectState.NONE)
+          {
+            y += effects == EffectState.HARMFUL ? 48 : 24;
+          }
+        }
         break;
       case BOTTOM_LEFT:
         direction = MapInfoLineManager.Direction.UP;

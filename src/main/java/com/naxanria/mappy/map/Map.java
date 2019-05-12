@@ -10,6 +10,7 @@ import com.naxanria.mappy.map.waypoint.WayPointManager;
 import com.naxanria.mappy.util.ColorUtil;
 import com.naxanria.mappy.util.MathUtil;
 import com.naxanria.mappy.util.TriValue;
+import net.fabricmc.fabric.api.util.TriState;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.client.MinecraftClient;
@@ -17,6 +18,7 @@ import net.minecraft.client.resource.language.I18n;
 import net.minecraft.client.texture.NativeImage;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.mob.HostileEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.text.StringTextComponent;
@@ -28,6 +30,7 @@ import net.minecraft.world.biome.Biome;
 import net.minecraft.world.dimension.DimensionType;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Random;
 
@@ -64,6 +67,8 @@ public class Map
   
   private PlayerEntity locPlayer = null;
   
+  private EffectState effects = EffectState.NONE;
+  
   public Map()
   {
     // todo: check what that boolean value actually does.
@@ -98,13 +103,38 @@ public class Map
       generate(player);
   
       updateInfo(player);
-
+      
+      updateStatusEffects();
 
       MapGUI.instance.markDirty();
     }
     else
     {
       locPlayer = null;
+    }
+  }
+  
+  private void updateStatusEffects()
+  {
+    /*
+    * Based on code by ThexXTURBOXx in pull request #5
+    * */
+    Collection<StatusEffectInstance> statusEffects = locPlayer.getStatusEffects();
+    if (statusEffects.size() > 0)
+    {
+      effects = EffectState.BENEFICIAL;
+      for (StatusEffectInstance e :
+        statusEffects)
+      {
+        if (!e.getEffectType().method_5573())
+        {
+          effects = EffectState.HARMFUL;
+        }
+      }
+    }
+    else
+    {
+      effects = EffectState.NONE;
     }
   }
   
@@ -166,6 +196,11 @@ public class Map
     {
       manager.add(new MapInfoLine(Alignment.Center, (locPlayer.headYaw * -1 % 360) + ""));
     }
+  }
+  
+  public EffectState getEffects()
+  {
+    return effects;
   }
   
   private String getTimeFormatted(long time)
