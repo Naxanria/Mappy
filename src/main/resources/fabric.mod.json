@@ -2,7 +2,6 @@
   "schemaVersion": 1,
   "id": "mappy",
   "version": "${version}",
-
   "name": "Mappy",
   "description": "A map mod.",
   "authors": [
@@ -12,9 +11,17 @@
     "sources": ""
   },
   "environment": "client",
+  "custom":
+  {
+    "modmenu:api": true,
+    "modmenu:clientsideOnly": true
+  },
   "entrypoints": {
     "client": [
       "com.naxanria.mappy.Mappy"
+    ],
+    "modmenu": [
+      "com.naxanria.mappy.ModMenuEntry"
     ]
   },
   "mixins": [

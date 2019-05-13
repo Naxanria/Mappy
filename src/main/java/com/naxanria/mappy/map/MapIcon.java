@@ -3,6 +3,7 @@ package com.naxanria.mappy.map;
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.naxanria.mappy.client.DrawableHelperBase;
 import com.naxanria.mappy.config.Config;
+import com.naxanria.mappy.config.Settings;
 import com.naxanria.mappy.map.waypoint.WayPoint;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -75,7 +76,7 @@ public abstract class MapIcon<T extends MapIcon<T>> extends DrawableHelperBase
       }
       else
       {
-        if (Config.instance.showPlayerHeads())
+        if (Settings.showPlayerHeads)
         {
           PlayerHeadIcon.drawHead(player, drawX, drawY);
         }
@@ -85,7 +86,7 @@ public abstract class MapIcon<T extends MapIcon<T>> extends DrawableHelperBase
         }
       }
       
-      if (!self && Config.instance.showPlayerNames())
+      if (!self && Settings.showPlayerNames)
       {
         drawStringCenteredBound(client.textRenderer, player.getName().getString(), drawX + size / 2, drawY - size / 2 - 10, 0, client.window.getScaledWidth(), WHITE);
       }

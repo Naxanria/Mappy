@@ -4,6 +4,7 @@ import com.naxanria.mappy.Mappy;
 import com.naxanria.mappy.client.Alignment;
 import com.naxanria.mappy.config.Config;
 import com.naxanria.mappy.config.ConfigBase;
+import com.naxanria.mappy.config.Settings;
 import com.naxanria.mappy.map.chunk.ChunkCache;
 import com.naxanria.mappy.map.waypoint.WayPoint;
 import com.naxanria.mappy.map.waypoint.WayPointManager;
@@ -144,9 +145,9 @@ public class Map
     System.out.println("Map resized to " + newSize + "x" + newSize);
   }
   
-  private void onConfigChanged(Config config)
+  public void onConfigChanged()
   {
-    int configSize = config.getMapSize();
+    int configSize = Settings.mapSize;
     if (configSize != size)
     {
       size = configSize;
@@ -159,32 +160,32 @@ public class Map
     manager.clear();
     Config config = Config.instance;
     
-    if (config.showPosition())
+    if (Settings.showPosition)
     {
       BlockPos playerPos = client.player.getBlockPos();
       playerPositionInfo.setText(playerPos.getX() + " " + playerPos.getY() + " " + playerPos.getZ());
       manager.add(playerPositionInfo);
     }
     
-    if (config.showBiome())
+    if (Settings.showBiome)
     {
       biomeInfo.setText(I18n.translate(biome.getTranslationKey()));
       manager.add(biomeInfo);
     }
     
-    if (config.showFPS())
+    if (Settings.showFPS)
     {
       fpsInfo.setText(MinecraftClient.getCurrentFps() + " fps");
       manager.add(fpsInfo);
     }
     
-    if (config.showTime())
+    if (Settings.showTime)
     {
       inGameTimeInfo.setText(getTimeFormatted(client.world.getTimeOfDay()));
       manager.add(inGameTimeInfo);
     }
     
-    if (config.showDirection())
+    if (Settings.showDirection)
     {
       Direction direction = player.getMovementDirection();
       
@@ -356,7 +357,7 @@ public class Map
       }
     }
     
-    if (Config.instance.showEntities())
+    if (Settings.showEntities)
     {
       entities.clear();
       
@@ -513,6 +514,6 @@ public class Map
   
   public void onConfigChanged(ConfigBase<?> configBase)
   {
-    onConfigChanged((Config) configBase);
+    onConfigChanged();
   }
 }

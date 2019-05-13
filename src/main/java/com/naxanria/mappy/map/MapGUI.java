@@ -6,6 +6,7 @@ import com.naxanria.mappy.client.Alignment;
 import com.naxanria.mappy.client.DrawPosition;
 import com.naxanria.mappy.client.DrawableHelperBase;
 import com.naxanria.mappy.config.Config;
+import com.naxanria.mappy.config.Settings;
 import com.naxanria.mappy.util.TriValue;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -43,11 +44,8 @@ public class MapGUI extends DrawableHelperBase
   
   private MapInfoLineManager manager;
   
-  private Config config;
-  
   public MapGUI(Map map, int offset, DrawPosition position)
   {
-    config = Config.instance;
     this.map = map;
     instance = this;
     this.offset = offset;
@@ -94,8 +92,8 @@ public class MapGUI extends DrawableHelperBase
       return;
     }
   
-    offset = config.getOffset();
-    drawPosition = config.getPosition();
+    offset = Settings.offset;
+    drawPosition = Settings.drawPosition;
     
     if (texture == null)
     {
@@ -124,7 +122,7 @@ public class MapGUI extends DrawableHelperBase
         break;
       case TOP_RIGHT:
         x = w - offset - iw;
-        if (config.moveMapForEffects())
+        if (Settings.moveMapForEffects)
         {
           /*
            * Based on code by ThexXTURBOXx in pull request #5

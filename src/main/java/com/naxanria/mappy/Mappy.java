@@ -117,24 +117,24 @@ public class Mappy implements ClientModInitializer
       }
     });
   
-    if (config.alphaFeatures())
-    {
-      KeyHandler.INSTANCE.register(new KeyParser(createKeyBinding("debug", GLFW.GLFW_KEY_F12))
-      {
-        @Override
-        public void onKeyUp()
-        {
-          debugMode = !debugMode;
-          mc.player.sendMessage(new StringTextComponent("Mappy debug mode " + (debugMode ? "enabled" : "disabled")));
-        }
-      
-        @Override
-        public boolean isListening()
-        {
-          return mc.player != null;
-        }
-      });
-    }
+//    if (config.alphaFeatures())
+//    {
+//      KeyHandler.INSTANCE.register(new KeyParser(createKeyBinding("debug", GLFW.GLFW_KEY_F12))
+//      {
+//        @Override
+//        public void onKeyUp()
+//        {
+//          debugMode = !debugMode;
+//          mc.player.sendMessage(new StringTextComponent("Mappy debug mode " + (debugMode ? "enabled" : "disabled")));
+//        }
+//
+//        @Override
+//        public boolean isListening()
+//        {
+//          return mc.player != null;
+//        }
+//      });
+//    }
   
   
     ClientTickCallback.EVENT.register(ClientHandler::tick);
