@@ -8,12 +8,13 @@
     "Naxanria"
   ],
   "contact": {
-    "sources": ""
+    "sources": "https://github.com/Naxanria/Mappy",
+    "issues": "https://github.com/Naxanria/Mappy/issues"
   },
+  "icon": "assets/mappy/icon.png",
   "environment": "client",
   "custom":
   {
-    "modmenu:api": true,
     "modmenu:clientsideOnly": true
   },
   "entrypoints": {
