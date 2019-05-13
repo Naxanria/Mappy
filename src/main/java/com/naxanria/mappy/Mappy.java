@@ -58,22 +58,22 @@ public class Mappy implements ClientModInitializer
     Config config = new Config(configFile);
     
     showMap = config.getShowMap();
-  
-    KeyHandler.INSTANCE.register(new KeyParser(createKeyBinding("reload", GLFW.GLFW_KEY_G))
-    {
-      @Override
-      public void onKeyUp()
-      {
-        config.load();
-        mc.player.sendMessage(new StringTextComponent("Reloaded mappy config").setStyle(new Style().setColor(TextFormat.AQUA)));
-      }
-  
-      @Override
-      public boolean isListening()
-      {
-        return mc.currentScreen == null && mc.player != null;
-      }
-    });
+//
+//    KeyHandler.INSTANCE.register(new KeyParser(createKeyBinding("reload", GLFW.GLFW_KEY_G))
+//    {
+//      @Override
+//      public void onKeyUp()
+//      {
+//        config.load();
+//        mc.player.sendMessage(new StringTextComponent("Reloaded mappy config").setStyle(new Style().setColor(TextFormat.AQUA)));
+//      }
+//
+//      @Override
+//      public boolean isListening()
+//      {
+//        return mc.currentScreen == null && mc.player != null;
+//      }
+//    });
   
     KeyHandler.INSTANCE.register(new KeyParser(createKeyBinding("waypoint_create", GLFW.GLFW_KEY_B))
     {
