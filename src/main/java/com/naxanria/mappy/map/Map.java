@@ -7,11 +7,11 @@ import com.naxanria.mappy.config.ConfigBase;
 import com.naxanria.mappy.config.Settings;
 import com.naxanria.mappy.map.chunk.ChunkCache;
 import com.naxanria.mappy.map.waypoint.WayPoint;
+import com.naxanria.mappy.map.waypoint.WayPointEditor;
 import com.naxanria.mappy.map.waypoint.WayPointManager;
-import com.naxanria.mappy.util.ColorUtil;
 import com.naxanria.mappy.util.MathUtil;
+import com.naxanria.mappy.util.RandomUtil;
 import com.naxanria.mappy.util.TriValue;
-import net.fabricmc.fabric.api.util.TriState;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.client.MinecraftClient;
@@ -33,7 +33,6 @@ import net.minecraft.world.dimension.DimensionType;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.Random;
 
 public class Map
 {
@@ -433,14 +432,17 @@ public class Map
     
     WayPoint wayPoint = new WayPoint();
     wayPoint.dimension = player.world.dimension.getType().getRawId();
-    Random random = player.world.random;
-    wayPoint.color = ColorUtil.rgb(random.nextInt(255), random.nextInt(255), random.nextInt(255));
+//    Random random = player.world.random;
+    wayPoint.name = "Waypoint";
+    wayPoint.color = RandomUtil.getElement(WayPoint.WAYPOINT_COLORS); //ColorUtil.rgb(random.nextInt(255), random.nextInt(255), random.nextInt(255));
     wayPoint.pos = player.getBlockPos();
-  
-    WayPointManager.INSTANCE.add(wayPoint);
-    WayPointManager.INSTANCE.save();
     
-    player.sendMessage(new StringTextComponent("Created waypoint " + wayPoint.pos.getX() + " " + wayPoint.pos.getY() + " " + wayPoint.pos.getZ()));
+    client.openScreen(new WayPointEditor(wayPoint, client.currentScreen, WayPointManager.INSTANCE::add));
+    
+//    WayPointManager.INSTANCE.add(wayPoint);
+//    WayPointManager.INSTANCE.save();
+//
+//    player.sendMessage(new StringTextComponent("Created waypoint " + wayPoint.pos.getX() + " " + wayPoint.pos.getY() + " " + wayPoint.pos.getZ()));
   }
   
   public void removeWayPoint()

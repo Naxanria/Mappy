@@ -11,6 +11,13 @@ import net.minecraft.world.dimension.DimensionType;
 
 public class WayPoint implements Serializable<WayPoint>
 {
+  public static final Integer[] WAYPOINT_COLORS = new Integer[]
+    {
+      0xFFFFFFFF, 0xFFFF0000, 0xFFFFFF00, 0xFF00FFFF, 0xFF00FF00,
+      0xFF00AA00, 0xFF0000FF, 0xFFFF8800, 0xFFFF00FF, 0xFF000000,
+      0xFFAA00AA, 0xFF888888, 0xFFFFAAAA, 0xFFAAFFAA, 0xFFAAAAFF
+    };
+  
   public String name = "";
   public BlockPos pos = new BlockPos(0, 0, 0);
   public int dimension;

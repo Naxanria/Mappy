@@ -7,11 +7,13 @@ import com.naxanria.mappy.client.KeyParser;
 import com.naxanria.mappy.config.Config;
 import com.naxanria.mappy.map.Map;
 import com.naxanria.mappy.map.MapGUI;
+import com.naxanria.mappy.map.waypoint.WayPointListEditor;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.keybinding.FabricKeyBinding;
 import net.fabricmc.fabric.api.client.keybinding.KeyBindingRegistry;
 import net.fabricmc.fabric.api.event.client.ClientTickCallback;
 import net.fabricmc.loader.api.FabricLoader;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.util.InputUtil;
 import net.minecraft.text.StringTextComponent;
 import net.minecraft.text.Style;
@@ -58,22 +60,6 @@ public class Mappy implements ClientModInitializer
     Config config = new Config(configFile);
     
     showMap = config.getShowMap();
-//
-//    KeyHandler.INSTANCE.register(new KeyParser(createKeyBinding("reload", GLFW.GLFW_KEY_G))
-//    {
-//      @Override
-//      public void onKeyUp()
-//      {
-//        config.load();
-//        mc.player.sendMessage(new StringTextComponent("Reloaded mappy config").setStyle(new Style().setColor(TextFormat.AQUA)));
-//      }
-//
-//      @Override
-//      public boolean isListening()
-//      {
-//        return mc.currentScreen == null && mc.player != null;
-//      }
-//    });
   
     KeyHandler.INSTANCE.register(new KeyParser(createKeyBinding("waypoint_create", GLFW.GLFW_KEY_B))
     {
@@ -116,26 +102,21 @@ public class Mappy implements ClientModInitializer
         config.setShowMap(show);
       }
     });
+    
+    KeyHandler.INSTANCE.register(new KeyParser(createKeyBinding("waypoints_list", GLFW.GLFW_KEY_U))
+    {
+      @Override
+      public void onKeyUp()
+      {
+        MinecraftClient.getInstance().openScreen(new WayPointListEditor(null));
+      }
   
-//    if (config.alphaFeatures())
-//    {
-//      KeyHandler.INSTANCE.register(new KeyParser(createKeyBinding("debug", GLFW.GLFW_KEY_F12))
-//      {
-//        @Override
-//        public void onKeyUp()
-//        {
-//          debugMode = !debugMode;
-//          mc.player.sendMessage(new StringTextComponent("Mappy debug mode " + (debugMode ? "enabled" : "disabled")));
-//        }
-//
-//        @Override
-//        public boolean isListening()
-//        {
-//          return mc.player != null;
-//        }
-//      });
-//    }
-  
+      @Override
+      public boolean isListening()
+      {
+        return mc.player != null && mc.currentScreen == null;
+      }
+    });
   
     ClientTickCallback.EVENT.register(ClientHandler::tick);
   

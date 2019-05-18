@@ -1,5 +1,6 @@
 package com.naxanria.mappy.util;
 
+import java.util.List;
 import java.util.Random;
 
 public class RandomUtil
@@ -16,5 +17,13 @@ public class RandomUtil
     return rand.nextInt(max - min) + min;
   }
   
+  public static <T> T getElement(T[] array)
+  {
+    return array[getRange(array.length)];
+  }
   
+  public static <T> T getElement(List<T> list)
+  {
+    return list.get(getRange(list.size()));
+  }
 }

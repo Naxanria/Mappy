@@ -211,4 +211,9 @@ public enum WayPointManager
     
     return list;
   }
+  
+  public List<Integer> getWaypointDimensions()
+  {
+    return new ArrayList<>(wayPoints.keySet());
+  }
 }

@@ -47,7 +47,7 @@ public class DrawableHelperBase extends DrawableHelper
     drawString(textRenderer, string, drawX, y, color);
   }
   
-  public void diamond(int x, int y, int width, int height, int color)
+  public static void diamond(int x, int y, int width, int height, int color)
   {
 //    fill(x, y, x + width, y + height, color);
     triangle
@@ -67,7 +67,7 @@ public class DrawableHelperBase extends DrawableHelper
     );
   }
   
-  public void triangle(int x1, int y1, int x2, int y2, int x3, int y3, int color)
+  public static void triangle(int x1, int y1, int x2, int y2, int x3, int y3, int color)
   {
     float a = (float)(color >> 24 & 255) / 255.0F;
     float r = (float)(color >> 16 & 255) / 255.0F;
@@ -89,7 +89,7 @@ public class DrawableHelperBase extends DrawableHelper
     GlStateManager.disableBlend();
   }
   
-  public void line(int x1, int y1, int x2, int y2, int color)
+  public static void line(int x1, int y1, int x2, int y2, int color)
   {
     float a = (float)(color >> 24 & 255) / 255.0F;
     float r = (float)(color >> 16 & 255) / 255.0F;
