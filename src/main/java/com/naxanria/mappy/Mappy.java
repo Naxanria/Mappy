@@ -75,22 +75,6 @@ public class Mappy implements ClientModInitializer
         return mc.player != null && mc.currentScreen == null;
       }
     });
-
-
-    KeyHandler.INSTANCE.register(new KeyParser(createKeyBinding("waypoint_delete", GLFW.GLFW_KEY_BACKSPACE))
-    {
-      @Override
-      public void onKeyUp()
-      {
-        map.removeWayPoint();
-      }
-  
-      @Override
-      public boolean isListening()
-      {
-        return mc.player != null && mc.currentScreen == null;
-      }
-    });
     
     KeyHandler.INSTANCE.register(new KeyParser(createKeyBinding("hide_map", GLFW.GLFW_KEY_H))
     {
