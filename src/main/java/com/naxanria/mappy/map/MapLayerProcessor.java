@@ -12,20 +12,61 @@ public class MapLayerProcessor
 {
   public static final int BLACK = 0xff000000;
   
+  // Get effective height for shading purposes.
+  public static int effectiveHeight(WorldChunk chunk, int x, int z) {
+    World world = chunk.getWorld();
+
+    BlockPos worldPos = new BlockPos(x + chunk.getPos().x * 16, 42, z + chunk.getPos().z * 16);
+
+    WorldChunk realChunk;
+    if (x < 0 || x > 15 || z < 0 || z > 15) {
+      // We were passed in coordinates not actually in the chunk we were passed, so fiddle the numbers to get a chunk that actually matches the coords,
+      // and coords that are correct rel to that chunk.
+      realChunk = world.getWorldChunk(worldPos);
+      /* Eugh, there must be a real way to do this. */
+      if (x < 0) {
+        x += 16;
+      }
+      if (x > 15) {
+        x -= 16;
+      }
+      if (z < 0) {
+        z += 16;
+      }
+      if (z > 15) {
+        z -= 16;
+      }
+    } else {
+      realChunk = chunk;
+    }
+
+    Heightmap heightmap = realChunk.getHeightmap(Heightmap.Type.MOTION_BLOCKING);
+    int y = heightmap.get(x, z);
+  
+
+    // Right, now that we know the y, update worldPos with it, so we can do whatever extra junk we need to do to get a final y we like.
+    worldPos = new BlockPos(worldPos.getX(), y-1, worldPos.getZ());
+
+
+    BlockState state;
+    // Correct y level if the top block we found was water(ish).
+    do {
+      worldPos = new BlockPos(worldPos.getX(), y-1, worldPos.getZ());
+      state = world.getBlockState(worldPos);
+      y--;
+    } while (state.getMaterial().isLiquid() && y>0);
+
+    return y;
+  }
 
   // Returns an rgba color?
   public static int shadeTopView(WorldChunk chunk, int x, int z)
   {
     //World world = chunk.getWorld();
 
-    if (x==15 || z==0) {
-      return 0;
-    }
-
-    Heightmap heightmap = chunk.getHeightmap(Heightmap.Type.MOTION_BLOCKING);
-    int y_here = heightmap.get(x, z);
-    int y_east = heightmap.get(x+1, z);
-    int y_south = heightmap.get(x, z-1);
+    int y_here = effectiveHeight(chunk, x, z);
+    int y_east = effectiveHeight(chunk, x+1, z);
+    int y_south = effectiveHeight(chunk, x, z-1);
 
     // https://en.wikipedia.org/wiki/Terrain_cartography#Shaded_relief states that shading convention is that the light is from the top-left corner
     // of the map.
