@@ -106,8 +106,6 @@ public class ChunkCache
   
   public void update(Map map, int x, int z)
   {
-    Config config = Config.instance;
-    
     updatePerCycle = Settings.updatePerCycle;
     pruneDelay = Settings.pruneDelay * 1000;
     pruneAmount = Settings.pruneAmount;
@@ -146,6 +144,8 @@ public class ChunkCache
             {
 //              System.out.println("updated empty chunk! " + chunk.getPos().toString());
               chunkData.chunk = chunk;
+              chunkData.cx = chunk.getPos().x;
+              chunkData.cz = chunk.getPos().z;
             }
           }
           

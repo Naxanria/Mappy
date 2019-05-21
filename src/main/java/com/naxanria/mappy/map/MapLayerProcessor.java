@@ -1,6 +1,7 @@
 package com.naxanria.mappy.map;
 
 import com.naxanria.mappy.config.Settings;
+import com.naxanria.mappy.map.chunk.ChunkData;
 import com.naxanria.mappy.util.ColorUtil;
 import com.naxanria.mappy.util.StateUtil;
 import net.minecraft.block.BlockState;
@@ -17,7 +18,7 @@ public class MapLayerProcessor
   public static final int BLACK = 0xff000000;
   
   // Get effective height for shading purposes.
-  public static int effectiveHeight(WorldChunk chunk, int x, int z)
+  public static int effectiveHeight(WorldChunk chunk, int x, int yStart, int z)
   {
     World world = chunk.getWorld();
 
@@ -55,7 +56,12 @@ public class MapLayerProcessor
 
     Heightmap heightmap = realChunk.getHeightmap(Heightmap.Type.MOTION_BLOCKING);
     int y = heightmap.get(x, z);
-  
+    
+    // if chunk is not loaded, return
+    if (chunk.isEmpty() || !world.getChunkManager().isChunkLoaded(realChunk.getPos().x, realChunk.getPos().z))
+    {
+      return yStart;
+    }
 
     // Right, now that we know the y, update worldPos with it, so we can do whatever extra junk we need to do to get a final y we like.
     worldPos = new BlockPos(worldPos.getX(), y - 1, worldPos.getZ());
@@ -74,14 +80,13 @@ public class MapLayerProcessor
     return y;
   }
 
-  // Returns an rgba color?
-  public static int shadeTopView(WorldChunk chunk, int x, int z)
+  public static int shadeTopView(ChunkData chunkData, int x, int z)
   {
-    //World world = chunk.getWorld();
+    WorldChunk chunk = chunkData.getChunk();
 
-    int y_here = effectiveHeight(chunk, x, z);
-    int y_east = effectiveHeight(chunk, x+1, z);
-    int y_south = effectiveHeight(chunk, x, z-1);
+    int y_here = effectiveHeight(chunk, x, -1, z);
+    int y_east = effectiveHeight(chunk, x+1, y_here, z);
+    int y_south = effectiveHeight(chunk, x, y_here, z-1);
 
     // https://en.wikipedia.org/wiki/Terrain_cartography#Shaded_relief states that shading convention is that the light is from the top-left corner
     // of the map.
@@ -113,14 +118,15 @@ public class MapLayerProcessor
     return (alpha << 24) | base_color;
   }
 
-  public static int processTopView(WorldChunk chunk, int x, int z)
+  public static int processTopView(ChunkData chunk, int x, int z)
   {
-    World world = chunk.getWorld();
+    WorldChunk worldChunk = chunk.getChunk();
+    World world = worldChunk.getWorld();
  
-    Heightmap heightmap = chunk.getHeightmap(Heightmap.Type.MOTION_BLOCKING);
+    Heightmap heightmap = worldChunk.getHeightmap(Heightmap.Type.MOTION_BLOCKING);
     int y = heightmap.get(x, z) - 1;
 
-    BlockPos worldPos = new BlockPos(x + chunk.getPos().x * 16, y, z + chunk.getPos().z * 16);
+    BlockPos worldPos = new BlockPos(x + worldChunk.getPos().x * 16, y, z + worldChunk.getPos().z * 16);
   
     BlockState state = world.getBlockState(worldPos);
   
@@ -131,29 +137,31 @@ public class MapLayerProcessor
       {
         return 0xffffffff; // white
       }
-      return state.getTopMaterialColor(chunk.getWorld(), worldPos).getRenderColor(2);
+      return color(world, state, worldPos);
     }
   
-    return BLACK;
+    // return the cached pixel
+    return chunk.cancelUpdate();
   }
   
-  public static int processTopViewNether(WorldChunk chunk, int x, int y, int z)
+  public static int processTopViewNether(ChunkData chunk, int x, int y, int z)
   {
     if (y >= 128)
     {
       return processTopView(chunk, x, z);
     }
-    
-    World world = chunk.getWorld();
+    WorldChunk worldChunk = chunk.getChunk();
+    World world = worldChunk.getWorld();
     BlockPos worldPos = new BlockPos(x, y, z);
     boolean up = !StateUtil.isAir(world.getBlockState(worldPos));
     
     return processTopViewNether(chunk, x, y, z, up);
   }
   
-  private static int processTopViewNether(WorldChunk chunk, int x, int y, int z, boolean up)
+  private static int processTopViewNether(ChunkData chunk, int x, int y, int z, boolean up)
   {
-    World world = chunk.getWorld();
+    WorldChunk worldChunk = chunk.getChunk();
+    World world = worldChunk.getWorld();
     
     do
     {
@@ -166,7 +174,7 @@ public class MapLayerProcessor
         y--;
       }
       
-      BlockPos worldPos = new BlockPos(x + chunk.getPos().x * 16, y, z + chunk.getPos().z * 16);
+      BlockPos worldPos = new BlockPos(x + worldChunk.getPos().x * 16, y, z + worldChunk.getPos().z * 16);
       BlockState state = world.getBlockState(worldPos);
   
       boolean air = StateUtil.isAir(state);
