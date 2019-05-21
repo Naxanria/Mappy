@@ -65,6 +65,8 @@ public class ChunkData
         }
         
         image.setPixelRGBA(x, z, col);
+
+        image.blendPixel(x, z, MapLayerProcessor.shadeTopView(chunk, x, z));
       }
     }
     
