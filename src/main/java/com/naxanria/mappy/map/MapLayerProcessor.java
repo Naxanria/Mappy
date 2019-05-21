@@ -1,6 +1,7 @@
 package com.naxanria.mappy.map;
 
 import com.naxanria.mappy.config.Settings;
+import com.naxanria.mappy.util.ColorUtil;
 import com.naxanria.mappy.util.StateUtil;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
@@ -136,6 +137,11 @@ public class MapLayerProcessor
   
   public static int processTopViewNether(WorldChunk chunk, int x, int y, int z)
   {
+    if (y >= 128)
+    {
+      return processTopView(chunk, x, z);
+    }
+    
     World world = chunk.getWorld();
     BlockPos worldPos = new BlockPos(x, y, z);
     boolean up = !StateUtil.isAir(world.getBlockState(worldPos));

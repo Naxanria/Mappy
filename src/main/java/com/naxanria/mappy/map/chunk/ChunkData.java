@@ -54,7 +54,7 @@ public class ChunkData
           case TOP_VIEW:
             if (nether)
             {
-              col = MapLayerProcessor.processTopViewNether(chunk, x, (int) MinecraftClient.getInstance().player.y, z);
+              col = MapLayerProcessor.processTopViewNether(chunk, x, (int) MinecraftClient.getInstance().player.y -1 , z);
             }
             else
             {
