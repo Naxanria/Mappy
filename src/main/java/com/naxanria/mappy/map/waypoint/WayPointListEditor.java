@@ -140,6 +140,26 @@ public class WayPointListEditor extends ScreenBase
     }
     
     dimensions = manager.getWaypointDimensions();
+    
+    int overWorldId = DimensionType.OVERWORLD.getRawId();
+    int netherId = DimensionType.THE_NETHER.getRawId();
+    int theEndId = DimensionType.THE_END.getRawId();
+    if (!dimensions.contains(overWorldId))
+    {
+      dimensions.add(overWorldId);
+    }
+    
+    if (!dimensions.contains(netherId))
+    {
+      dimensions.add(netherId);
+    }
+    
+    if (!dimensions.contains(theEndId))
+    {
+      dimensions.add(theEndId);
+    }
+    
+    
     currentDim = minecraft.player.dimension.getRawId();
     currentDimIndex = getDimIndex(currentDim);
   }
