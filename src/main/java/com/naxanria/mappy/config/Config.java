@@ -36,7 +36,7 @@ public class Config extends ConfigBase<Config>
     addEntry(new ConfigEntry.IntegerRangeEntry("pruneAmount", dataMap, 1500, 100, 50000));
     addEntry(new ConfigEntry.BooleanEntry("showMap", dataMap, true));
     addEntry(new ConfigEntry.BooleanEntry("moveMapForEffects", dataMap, true));
-    
+    addEntry(new ConfigEntry.BooleanEntry("shaded", dataMap, true));
 //    addEntry(new ConfigEntry.BooleanEntry("alphaFeatures", dataMap, false));
   }
   
@@ -60,6 +60,7 @@ public class Config extends ConfigBase<Config>
     setInt("pruneAmount", Settings.pruneAmount);
     setBoolean("showMap", Settings.showMap);
     setBoolean("moveMapForEffects", Settings.moveMapForEffects);
+    setBoolean("shaded", Settings.shaded);
     
     super.save();
   }
@@ -93,6 +94,7 @@ public class Config extends ConfigBase<Config>
     Settings.pruneAmount = getInt("pruneAmount");
     Settings.showMap = getBoolean("showMap");
     Settings.moveMapForEffects = getBoolean("moveMapForEffects");
+    Settings.shaded = getBoolean("shaded");
   
     onConfigChanged();
   }

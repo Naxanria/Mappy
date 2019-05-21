@@ -25,4 +25,5 @@ public class Settings
   public static boolean showMap = true;
   
   public static boolean moveMapForEffects = true;
+  public static boolean shaded = true;
 }

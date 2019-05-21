@@ -32,6 +32,7 @@ public class ModMenuEntry implements ModMenuApi
     general.addOption(new EnumListEntry<DrawPosition>("Draw Position", DrawPosition.class, Settings.drawPosition, RESET, () -> Settings.drawPosition, (p) -> Settings.drawPosition = p));
     general.addOption(new IntegerListEntry("Map Size", Settings.mapSize, RESET, () -> Settings.mapSize, (i) -> Settings.mapSize = i).setMinimum(32).setMaximum(1024));
     general.addOption(new BooleanListEntry("Move Map For Effects", Settings.moveMapForEffects, RESET, () -> Settings.moveMapForEffects, (b) -> Settings.moveMapForEffects = b));
+    general.addOption(new BooleanListEntry("Shaded", Settings.shaded, RESET, () -> Settings.shaded, (b) -> Settings.shaded = b));
     
     ConfigScreenBuilder.CategoryBuilder mapInfo = builder.addCategory("Map Info");
     mapInfo.addOption(new BooleanListEntry("Show Position", Settings.showPosition, RESET, () -> Settings.showPosition, (b) -> Settings.showPosition = b));
