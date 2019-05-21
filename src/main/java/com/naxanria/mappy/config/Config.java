@@ -37,6 +37,7 @@ public class Config extends ConfigBase<Config>
     addEntry(new ConfigEntry.BooleanEntry("showMap", dataMap, true));
     addEntry(new ConfigEntry.BooleanEntry("moveMapForEffects", dataMap, true));
     addEntry(new ConfigEntry.BooleanEntry("shaded", dataMap, true));
+    addEntry(new ConfigEntry.IntegerRangeEntry("maxDifference", dataMap, 10, 2, 16));
 //    addEntry(new ConfigEntry.BooleanEntry("alphaFeatures", dataMap, false));
   }
   
@@ -61,6 +62,7 @@ public class Config extends ConfigBase<Config>
     setBoolean("showMap", Settings.showMap);
     setBoolean("moveMapForEffects", Settings.moveMapForEffects);
     setBoolean("shaded", Settings.shaded);
+    setInt("maxDifference", Settings.maxDifference);
     
     super.save();
   }
@@ -95,7 +97,8 @@ public class Config extends ConfigBase<Config>
     Settings.showMap = getBoolean("showMap");
     Settings.moveMapForEffects = getBoolean("moveMapForEffects");
     Settings.shaded = getBoolean("shaded");
-  
+    Settings.maxDifference = getInt("maxDifference");
+    
     onConfigChanged();
   }
 //
