@@ -317,6 +317,7 @@ public class WayPointListEditor extends ScreenBase
   private void delete(WayPoint wayPoint)
   {
     manager.remove(wayPoint);
+    manager.save();
     reset();
   }
   
