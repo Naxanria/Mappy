@@ -4,15 +4,18 @@ import com.naxanria.mappy.client.DrawableHelperBase;
 import com.naxanria.mappy.client.ScreenBase;
 import com.naxanria.mappy.util.BiValue;
 import com.naxanria.mappy.util.MathUtil;
+import com.naxanria.mappy.util.RandomUtil;
 import com.naxanria.mappy.util.Util;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.Element;
 import net.minecraft.client.gui.Screen;
 import net.minecraft.client.gui.widget.ButtonWidget;
+import net.minecraft.server.command.CommandManager;
 import net.minecraft.text.StringTextComponent;
 import net.minecraft.text.TextComponent;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.dimension.DimensionType;
 
 import java.util.ArrayList;
@@ -123,7 +126,7 @@ public class WayPointListEditor extends ScreenBase
   private int maxScroll = 0;
   
   private ButtonWidget prevDimensionButton, nextDimensionButton;
-  private ButtonWidget closeButton;
+  private ButtonWidget addButton, closeButton;
   
   private int x, y;
   private int width, height;
@@ -152,7 +155,8 @@ public class WayPointListEditor extends ScreenBase
     prevDimensionButton = new ButtonWidget(x + 10, 10, 20, 20, "<", (b) -> cycleDimension(-1));
     nextDimensionButton = new ButtonWidget(x + width - 20 - 10, 10, 20, 20, ">", (b) -> cycleDimension(1));
     
-    closeButton = new ButtonWidget(x + 10, height - 25, 60, 20, "Close", (b) -> onClose());
+    addButton = new ButtonWidget(x + 10, height - 25, 60, 20, "Create", (b) -> add());
+    closeButton = new ButtonWidget(x + 15 + addButton.getWidth(), height - 25, 60, 20, "Close", (b) -> onClose());
   
     reset();
   }
@@ -224,9 +228,11 @@ public class WayPointListEditor extends ScreenBase
     
     children.clear();
     children.addAll(entries);
+    children.add(addButton);
     children.add(closeButton);
     children.add(prevDimensionButton);
     children.add(nextDimensionButton);
+    
   }
   
   @Override
@@ -248,6 +254,7 @@ public class WayPointListEditor extends ScreenBase
     
     nextDimensionButton.render(mouseX, mouseY, delta);
     
+    addButton.render(mouseX, mouseY, delta);
     closeButton.render(mouseX, mouseY, delta);
     
     drawScrollBar();
@@ -289,9 +296,22 @@ public class WayPointListEditor extends ScreenBase
     minecraft.openScreen(new WayPointEditor(wayPoint, this, null));
   }
   
-  private void tp(int wp)
+  private void tp(WayPoint wp)
   {
     // todo: Teleporting player.
+  
+    
+  }
+  
+  private void add()
+  {
+    WayPoint wayPoint = new WayPoint();
+    wayPoint.dimension = currentDim;
+    wayPoint.color = RandomUtil.getElement(WayPoint.WAYPOINT_COLORS);
+    wayPoint.pos = new BlockPos(0, 0, 0);
+    wayPoint.name = "Waypoint";
+    
+    minecraft.openScreen(new WayPointEditor(wayPoint, this, (manager::add)));
   }
   
   private void delete(WayPoint wayPoint)
