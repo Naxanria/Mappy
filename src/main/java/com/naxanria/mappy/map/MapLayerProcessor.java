@@ -5,6 +5,8 @@ import com.naxanria.mappy.util.ColorUtil;
 import com.naxanria.mappy.util.StateUtil;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.Heightmap;
 import net.minecraft.world.World;
@@ -153,38 +155,37 @@ public class MapLayerProcessor
   {
     World world = chunk.getWorld();
     
-    if (up)
+    do
     {
-      y++;
+      if (up)
+      {
+        y++;
+      }
+      else
+      {
+        y--;
+      }
+      
+      BlockPos worldPos = new BlockPos(x + chunk.getPos().x * 16, y, z + chunk.getPos().z * 16);
+      BlockState state = world.getBlockState(worldPos);
+  
+      boolean air = StateUtil.isAir(state);
+      if (up && air)
+      {
+        worldPos = worldPos.down();
+        state = world.getBlockState(worldPos);
+        return color(world, state, worldPos);
+      }
+      else if (!up && !air)
+      {
+        worldPos = worldPos.up();
+        state = world.getBlockState(worldPos);
+        return color(world, state, worldPos);
+      }
     }
-    else
-    {
-      y--;
-    }
+    while (y < world.getHeight() && y > 0);
     
-    if (y > world.getHeight() || y < 0)
-    {
-      return BLACK;
-    }
-
-    BlockPos worldPos = new BlockPos(x + chunk.getPos().x * 16, y, z + chunk.getPos().z * 16);
-    BlockState state = world.getBlockState(worldPos);
-    
-    boolean air = StateUtil.isAir(state);
-    if (up && air)
-    {
-      worldPos = worldPos.down();
-      state = world.getBlockState(worldPos);
-      return color(world, state, worldPos);
-    }
-    else if (!up && !air)
-    {
-      worldPos = worldPos.up();
-      state = world.getBlockState(worldPos);
-      return color(world, state, worldPos);
-    }
-    
-    return processTopViewNether(chunk, x, y, z, up);
+    return BLACK;
   }
   
   private static int color(World world, BlockState state, BlockPos pos)
