@@ -2,12 +2,9 @@ package com.naxanria.mappy.map;
 
 import com.naxanria.mappy.config.Settings;
 import com.naxanria.mappy.map.chunk.ChunkData;
-import com.naxanria.mappy.util.ColorUtil;
 import com.naxanria.mappy.util.StateUtil;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.Heightmap;
 import net.minecraft.world.World;
@@ -82,7 +79,7 @@ public class MapLayerProcessor
 
   public static int shadeTopView(ChunkData chunkData, int x, int z)
   {
-    WorldChunk chunk = chunkData.getChunk();
+    WorldChunk chunk = chunkData.chunk;
 
     int y_here = effectiveHeight(chunk, x, -1, z);
     int y_east = effectiveHeight(chunk, x+1, y_here, z);
@@ -120,7 +117,7 @@ public class MapLayerProcessor
 
   public static int processTopView(ChunkData chunk, int x, int z)
   {
-    WorldChunk worldChunk = chunk.getChunk();
+    WorldChunk worldChunk = chunk.chunk;
     World world = worldChunk.getWorld();
  
     Heightmap heightmap = worldChunk.getHeightmap(Heightmap.Type.MOTION_BLOCKING);
@@ -150,7 +147,7 @@ public class MapLayerProcessor
     {
       return processTopView(chunk, x, z);
     }
-    WorldChunk worldChunk = chunk.getChunk();
+    WorldChunk worldChunk = chunk.chunk;
     World world = worldChunk.getWorld();
     BlockPos worldPos = new BlockPos(x, y, z);
     boolean up = !StateUtil.isAir(world.getBlockState(worldPos));
@@ -160,7 +157,7 @@ public class MapLayerProcessor
   
   private static int processTopViewNether(ChunkData chunk, int x, int y, int z, boolean up)
   {
-    WorldChunk worldChunk = chunk.getChunk();
+    WorldChunk worldChunk = chunk.chunk;
     World world = worldChunk.getWorld();
     
     do

@@ -21,7 +21,7 @@ public class ChunkData
   public NativeImage image = new NativeImage(NativeImage.Format.RGBA, 16, 16, false);
   public long time;
   public MapLayer layer;
-  WorldChunk chunk;
+  public WorldChunk chunk;
   private boolean nether;
   private boolean updating;
   
@@ -95,12 +95,7 @@ public class ChunkData
     
     return null;
   }
-  
-  public WorldChunk getChunk()
-  {
-    return chunk;
-  }
-  
+
   public int cancelUpdate()
   {
     updating = false;
