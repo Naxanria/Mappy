@@ -38,6 +38,7 @@ public class Config extends ConfigBase<Config>
     addEntry(new ConfigEntry.BooleanEntry("moveMapForEffects", dataMap, true));
     addEntry(new ConfigEntry.BooleanEntry("shaded", dataMap, true));
     addEntry(new ConfigEntry.IntegerRangeEntry("maxDifference", dataMap, 10, 2, 16));
+    addEntry(new ConfigEntry.BooleanEntry("drawChunkGrid", dataMap, false));
 //    addEntry(new ConfigEntry.BooleanEntry("alphaFeatures", dataMap, false));
   }
   
@@ -63,6 +64,7 @@ public class Config extends ConfigBase<Config>
     setBoolean("moveMapForEffects", Settings.moveMapForEffects);
     setBoolean("shaded", Settings.shaded);
     setInt("maxDifference", Settings.maxDifference);
+    setBoolean("drawChunkGrid", Settings.drawChunkGrid);
     
     super.save();
   }
@@ -98,6 +100,7 @@ public class Config extends ConfigBase<Config>
     Settings.moveMapForEffects = getBoolean("moveMapForEffects");
     Settings.shaded = getBoolean("shaded");
     Settings.maxDifference = getInt("maxDifference");
+    Settings.drawChunkGrid = getBoolean("drawChunkGrid");
     
     onConfigChanged();
   }

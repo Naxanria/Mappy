@@ -37,6 +37,7 @@ public class ModMenuEntry implements ModMenuApi
     general.addOption(new IntegerSliderEntry("Shading strength",2, 16, 18 - Settings.maxDifference, RESET, () -> 18 - Settings.maxDifference, (i) -> Settings.maxDifference = 18 - i));
     
     ConfigScreenBuilder.CategoryBuilder mapInfo = builder.addCategory("Map Info");
+    mapInfo.addOption(new BooleanListEntry("Draw Chunk Grid", Settings.drawChunkGrid, RESET, () -> Settings.drawChunkGrid, (b) -> Settings.drawChunkGrid = b));
     mapInfo.addOption(new BooleanListEntry("Show Position", Settings.showPosition, RESET, () -> Settings.showPosition, (b) -> Settings.showPosition = b));
     mapInfo.addOption(new BooleanListEntry("Show Biome", Settings.showBiome, RESET, () -> Settings.showBiome, (b) -> Settings.showBiome= b));
     mapInfo.addOption(new BooleanListEntry("Show FPS", Settings.showFPS, RESET, () -> Settings.showFPS, (b) -> Settings.showFPS = b));

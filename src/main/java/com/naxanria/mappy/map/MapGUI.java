@@ -196,5 +196,41 @@ public class MapGUI extends DrawableHelperBase
     builder.vertex(x + iw, y, z).texture(1, 0).color(255, 255, 255, 255).next();
     builder.vertex(x, y, z).texture(0, 0).color(255, 255, 255, 255).next();
     tessellator.draw();
+    if (Settings.drawChunkGrid)
+    {
+      drawGrid(client, x, y, iw, ih);
+    }
+  }
+  
+  private void drawGrid(MinecraftClient client, int x, int y, int iw, int ih)
+  {
+    int col = 0x88444444;
+    int px = client.player.getBlockPos().getX();
+    int pz = client.player.getBlockPos().getZ();
+    int xOff = ((px / 16) * 16) - px;
+    int yOff = ((pz / 16) * 16) - pz;
+    
+    GlStateManager.disableDepthTest();
+    for (int h = yOff; h < ih; h += 16)
+    {
+      int yp = y + h;
+      if (yp < y || yp > y + ih)
+      {
+        continue;
+      }
+      line(x, yp, x + iw, yp, col);
+    }
+  
+    for (int v = xOff; v < iw; v += 16)
+    {
+      int xp = x + v;
+      if (xp < x || xp >= x + iw)
+      {
+        continue;
+      }
+      
+      line(xp, y, xp, y + ih, col);
+    }
+    GlStateManager.enableDepthTest();
   }
 }
