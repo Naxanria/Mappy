@@ -1,5 +1,6 @@
 package com.naxanria.mappy.map;
 
+import com.naxanria.mappy.config.Settings;
 import com.naxanria.mappy.util.StateUtil;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
@@ -13,30 +14,39 @@ public class MapLayerProcessor
   public static final int BLACK = 0xff000000;
   
   // Get effective height for shading purposes.
-  public static int effectiveHeight(WorldChunk chunk, int x, int z) {
+  public static int effectiveHeight(WorldChunk chunk, int x, int z)
+  {
     World world = chunk.getWorld();
 
     BlockPos worldPos = new BlockPos(x + chunk.getPos().x * 16, 42, z + chunk.getPos().z * 16);
 
     WorldChunk realChunk;
-    if (x < 0 || x > 15 || z < 0 || z > 15) {
+    if (x < 0 || x > 15 || z < 0 || z > 15)
+    {
       // We were passed in coordinates not actually in the chunk we were passed, so fiddle the numbers to get a chunk that actually matches the coords,
       // and coords that are correct rel to that chunk.
       realChunk = world.getWorldChunk(worldPos);
-      /* Eugh, there must be a real way to do this. */
-      if (x < 0) {
+      
+      if (x < 0)
+      {
         x += 16;
       }
-      if (x > 15) {
+      else if (x > 15)
+      {
         x -= 16;
       }
-      if (z < 0) {
+      
+      if (z < 0)
+      {
         z += 16;
       }
-      if (z > 15) {
+      else if (z > 15)
+      {
         z -= 16;
       }
-    } else {
+    }
+    else
+    {
       realChunk = chunk;
     }
 
@@ -45,16 +55,18 @@ public class MapLayerProcessor
   
 
     // Right, now that we know the y, update worldPos with it, so we can do whatever extra junk we need to do to get a final y we like.
-    worldPos = new BlockPos(worldPos.getX(), y-1, worldPos.getZ());
+    worldPos = new BlockPos(worldPos.getX(), y - 1, worldPos.getZ());
 
 
     BlockState state;
     // Correct y level if the top block we found was water(ish).
-    do {
-      worldPos = new BlockPos(worldPos.getX(), y-1, worldPos.getZ());
+    do
+    {
+      worldPos = new BlockPos(worldPos.getX(), y - 1, worldPos.getZ());
       state = world.getBlockState(worldPos);
       y--;
-    } while (state.getMaterial().isLiquid() && y>0);
+    }
+    while (state.getMaterial().isLiquid() && y > 0);
 
     return y;
   }
@@ -76,20 +88,24 @@ public class MapLayerProcessor
     int y_diff = y_diff_east + y_diff_south;
 
     int base_color;
-    if (y_diff < 0) {
-      // Black
-      base_color = 0;
+    if (y_diff < 0)
+    {
+      base_color = 0x222222;
       y_diff = -y_diff;
-    } else {
-      // White
-      base_color = 0xFFFFFF;
     }
-    
-    if (y_diff > 8) {
-      y_diff = 8;
+    else
+    {
+      base_color = 0xDDDDDD;
     }
 
-    int alpha = (int)(255.0 * y_diff/8.0);
+    int maxDiff = Settings.maxDifference;
+    
+    if (y_diff > maxDiff)
+    {
+      y_diff = maxDiff;
+    }
+
+    int alpha = (int)(255.0 * y_diff / (double) maxDiff);
 
     return (alpha << 24) | base_color;
   }
