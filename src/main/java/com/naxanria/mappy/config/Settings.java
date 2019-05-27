@@ -29,4 +29,5 @@ public class Settings
   public static boolean shaded = true;
   public static int maxDifference = 10;
   public static boolean drawChunkGrid = false;
+  public static int scale = 1;
 }

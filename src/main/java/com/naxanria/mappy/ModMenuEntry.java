@@ -30,8 +30,9 @@ public class ModMenuEntry implements ModMenuApi
     
     ConfigScreenBuilder.CategoryBuilder general = builder.addCategory("General");
     general.addOption(new IntegerListEntry("Offset", Settings.offset, RESET, () -> Settings.offset, (i) -> Settings.offset = i));
-    general.addOption(new EnumListEntry<DrawPosition>("Draw Position", DrawPosition.class, Settings.drawPosition, RESET, () -> Settings.drawPosition, (p) -> Settings.drawPosition = p));
+    general.addOption(new EnumListEntry<>("Draw Position", DrawPosition.class, Settings.drawPosition, RESET, () -> Settings.drawPosition, (p) -> Settings.drawPosition = p));
     general.addOption(new IntegerListEntry("Map Size", Settings.mapSize, RESET, () -> Settings.mapSize, (i) -> Settings.mapSize = i).setMinimum(32).setMaximum(1024));
+//    general.addOption(new IntegerSliderEntry("Map Scale", 1, 8, Settings.scale, RESET, () -> Settings.scale, (i) -> Settings.scale = i));
     general.addOption(new BooleanListEntry("Move Map For Effects", Settings.moveMapForEffects, RESET, () -> Settings.moveMapForEffects, (b) -> Settings.moveMapForEffects = b));
     general.addOption(new BooleanListEntry("Shaded", Settings.shaded, RESET, () -> Settings.shaded, (b) -> Settings.shaded = b));
     general.addOption(new IntegerSliderEntry("Shading strength",2, 16, 18 - Settings.maxDifference, RESET, () -> 18 - Settings.maxDifference, (i) -> Settings.maxDifference = 18 - i));

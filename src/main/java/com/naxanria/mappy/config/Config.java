@@ -4,6 +4,7 @@ import com.naxanria.mappy.client.DrawPosition;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Set;
 
 public class Config extends ConfigBase<Config>
 {
@@ -19,173 +20,31 @@ public class Config extends ConfigBase<Config>
   @Override
   protected void init()
   {
-    addEntry(new ConfigEntry.IntegerEntry("offset", dataMap, 4));
-    addEntry(new ConfigEntry.IntegerRangeEntry("drawPosition", dataMap, DrawPosition.TOP_RIGHT.ordinal(), DrawPosition.values().length - 1));
-    addEntry(new ConfigEntry.IntegerRangeEntry("mapSize", dataMap, 64, 16, 256));
-    addEntry(new ConfigEntry.BooleanEntry("showPosition", dataMap, true));
-    addEntry(new ConfigEntry.BooleanEntry("showFPS", dataMap, true));
-    addEntry(new ConfigEntry.BooleanEntry("showBiome", dataMap, true));
-    addEntry(new ConfigEntry.BooleanEntry("showTime", dataMap, true));
-    addEntry(new ConfigEntry.BooleanEntry("showPlayerNames", dataMap, true));
-    addEntry(new ConfigEntry.BooleanEntry("showPlayerHeads", dataMap, true));
-    addEntry(new ConfigEntry.BooleanEntry("showDirection", dataMap, true));
-    addEntry(new ConfigEntry.BooleanEntry("showEntities", dataMap, false));
-//    addEntry(new ConfigEntry.IntegerRangeEntry("mapTriesLimit", dataMap, 50, 1, 255));
-    addEntry(new ConfigEntry.IntegerRangeEntry("updatePerCycle", dataMap, 10, 1, 500));
-    addEntry(new ConfigEntry.IntegerRangeEntry("pruneDelay", dataMap, 60, 1, 600));
-    addEntry(new ConfigEntry.IntegerRangeEntry("pruneAmount", dataMap, 1500, 100, 50000));
-    addEntry(new ConfigEntry.BooleanEntry("showMap", dataMap, true));
-    addEntry(new ConfigEntry.BooleanEntry("moveMapForEffects", dataMap, true));
-    addEntry(new ConfigEntry.BooleanEntry("shaded", dataMap, true));
-    addEntry(new ConfigEntry.IntegerRangeEntry("maxDifference", dataMap, 10, 2, 16));
-    addEntry(new ConfigEntry.BooleanEntry("drawChunkGrid", dataMap, false));
-//    addEntry(new ConfigEntry.BooleanEntry("alphaFeatures", dataMap, false));
-  }
-  
-  @Override
-  public void save()
-  {
-    setInt("offset", Settings.offset);
-    setInt("drawPosition", Settings.drawPosition.ordinal());
-    setInt("mapSize", Settings.mapSize);
-    
-    setBoolean("showPosition", Settings.showPosition);
-    setBoolean("showFPS", Settings.showFPS);
-    setBoolean("showBiome", Settings.showBiome);
-    setBoolean("showTime", Settings.showTime);
-    setBoolean("showPlayerNames", Settings.showPlayerNames);
-    setBoolean("showPlayerHeads", Settings.showPlayerHeads);
-    setBoolean("showEntities", Settings.showEntities);
-    setBoolean("showDirection", Settings.showDirection);
-    setInt("updatePerCycle", Settings.updatePerCycle);
-    setInt("pruneDelay", Settings.pruneDelay);
-    setInt("pruneAmount", Settings.pruneAmount);
-    setBoolean("showMap", Settings.showMap);
-    setBoolean("moveMapForEffects", Settings.moveMapForEffects);
-    setBoolean("shaded", Settings.shaded);
-    setInt("maxDifference", Settings.maxDifference);
-    setBoolean("drawChunkGrid", Settings.drawChunkGrid);
-    
-    super.save();
-  }
-  
-  @Override
-  public void load()
-  {
-    try
-    {
-      dataMap.load();
-    }
-    catch (IOException e)
-    {
-      System.err.println("Could not load the config!");
-      e.printStackTrace();
-    }
+    addEntry(new ConfigEntry.IntegerEntry("offset", 4, (i) -> Settings.offset = i, () -> Settings.offset));
+//    addEntry(new ConfigEntry.IntegerRangeEntry("drawPosition", DrawPosition.TOP_RIGHT.ordinal(), DrawPosition.values().length - 1,
+//      (i) -> Settings.drawPosition = DrawPosition.get(i), () -> Settings.drawPosition.ordinal()));
+    addEntry(new ConfigEntry.EnumEntry<>("drawPosition", DrawPosition.class, DrawPosition.TOP_RIGHT, (e) -> Settings.drawPosition = e, () -> Settings.drawPosition));
+    addEntry(new ConfigEntry.IntegerRangeEntry("mapSize", 64, 16, 256, (i) -> Settings.mapSize = i, () -> Settings.mapSize));
+    addEntry(new ConfigEntry.BooleanEntry("showPosition", true, (b) -> Settings.showPosition = b, () -> Settings.showPosition));
+    addEntry(new ConfigEntry.BooleanEntry("showFPS", true, (b) -> Settings.showFPS = b, () -> Settings.showFPS));
+    addEntry(new ConfigEntry.BooleanEntry("showBiome", true, (b) -> Settings.showBiome = b, () -> Settings.showBiome));
+    addEntry(new ConfigEntry.BooleanEntry("showTime", true, (b) -> Settings.showTime = b, () -> Settings.showTime));
+    addEntry(new ConfigEntry.BooleanEntry("showPlayerNames", true, (b) -> Settings.showPlayerNames = b, () -> Settings.showPlayerNames));
+    addEntry(new ConfigEntry.BooleanEntry("showPlayerHeads", true, (b) -> Settings.showPlayerHeads = b, () -> Settings.showPlayerHeads));
+    addEntry(new ConfigEntry.BooleanEntry("showDirection", true, (b) -> Settings.showDirection = b, () -> Settings.showDirection));
+    addEntry(new ConfigEntry.BooleanEntry("showEntities", false, (b) -> Settings.showEntities = b, () -> Settings.showEntities));
 
-    Settings.offset = getInt("offset");
-    Settings.drawPosition = DrawPosition.values()[getInt("drawPosition")];
-    Settings.mapSize = getInt("mapSize");
-    Settings.showPosition = getBoolean("showPosition");
-    Settings.showFPS = getBoolean("showFPS");
-    Settings.showBiome = getBoolean("showBiome");
-    Settings.showTime = getBoolean("showTime");
-    Settings.showPlayerNames = getBoolean("showPlayerNames");
-    Settings.showPlayerHeads = getBoolean("showPlayerHeads");
-    Settings.showDirection = getBoolean("showDirection");
-    Settings.showEntities = getBoolean("showEntities");
-    Settings.updatePerCycle = getInt("updatePerCycle");
-    Settings.pruneDelay = getInt("pruneDelay");
-    Settings.pruneAmount = getInt("pruneAmount");
-    Settings.showMap = getBoolean("showMap");
-    Settings.moveMapForEffects = getBoolean("moveMapForEffects");
-    Settings.shaded = getBoolean("shaded");
-    Settings.maxDifference = getInt("maxDifference");
-    Settings.drawChunkGrid = getBoolean("drawChunkGrid");
-    
-    onConfigChanged();
+    addEntry(new ConfigEntry.IntegerRangeEntry("updatePerCycle",  10, 1, 500, (i) -> Settings.updatePerCycle = i, () -> Settings.updatePerCycle));
+    addEntry(new ConfigEntry.IntegerRangeEntry("pruneDelay",  60, 1, 600, (i) -> Settings.pruneDelay = i, () -> Settings.pruneDelay));
+    addEntry(new ConfigEntry.IntegerRangeEntry("pruneAmount",  1500, 100, 50000, (i) -> Settings.pruneAmount = i, () -> Settings.pruneAmount));
+    addEntry(new ConfigEntry.BooleanEntry("showMap", true, (b) -> Settings.showMap = b, () -> Settings.showMap));
+    addEntry(new ConfigEntry.BooleanEntry("moveMapForEffects", true, (b) -> Settings.moveMapForEffects = b, () -> Settings.moveMapForEffects));
+    addEntry(new ConfigEntry.BooleanEntry("shaded", true, (b) -> Settings.shaded = b, () -> Settings.shaded));
+    addEntry(new ConfigEntry.IntegerRangeEntry("maxDifference",  10, 2, 16, (i) -> Settings.maxDifference = i, () -> Settings.maxDifference));
+    addEntry(new ConfigEntry.BooleanEntry("drawChunkGrid", false, (b) -> Settings.drawChunkGrid = b, () -> Settings.drawChunkGrid));
+    addEntry(new ConfigEntry.IntegerRangeEntry("scale",  1, 1, 8, (i) -> Settings.scale = i, () -> Settings.scale));
   }
-//
-//  public int getOffset()
-//  {
-//    return getInt("offset");
-//  }
-//
-//  public DrawPosition getPosition()
-//  {
-//    int p = getInt("drawPosition");
-//    return DrawPosition.values()[p];
-//  }
-//
-//  public int getMapSize()
-//  {
-//    return getInt("mapSize");
-//  }
-//
-//  public boolean showFPS()
-//  {
-//    return getBoolean("showFPS");
-//  }
-//
-//  public boolean showPosition()
-//  {
-//    return getBoolean("showPosition");
-//  }
-//
-//  public boolean showBiome()
-//  {
-//    return getBoolean("showBiome");
-//  }
-//
-//  public boolean showTime()
-//  {
-//    return getBoolean("showTime");
-//  }
-//
-//  public boolean showPlayerNames()
-//  {
-//    return getBoolean("showPlayerNames");
-//  }
-//
-//  public boolean alphaFeatures()
-//  {
-//    return getBoolean("alphaFeatures");
-//  }
-//
-//  public boolean showPlayerHeads()
-//  {
-//    return getBoolean("showPlayerHeads");
-//  }
-//
-//  public int getMapTriesLimit()
-//  {
-//    return getInt("mapTriesLimit");
-//  }
-//
-//  public boolean showDirection()
-//  {
-//    return getBoolean("showDirection");
-//  }
-//
-//  public boolean showEntities()
-//  {
-//    return getBoolean("showEntities");
-//  }
-//
-//  public int getUpdatePerCycle()
-//  {
-//    return getInt("updatePerCycle");
-//  }
-//
-//  public int getPruneDelay()
-//  {
-//    return getInt("pruneDelay");
-//  }
-//
-//  public int getPruneAmount()
-//  {
-//    return getInt("pruneAmount");
-//  }
-//
+  
   public boolean getShowMap()
   {
     return getBoolean("showMap");
@@ -197,9 +56,4 @@ public class Config extends ConfigBase<Config>
 
     save();
   }
-//
-//  public boolean moveMapForEffects()
-//  {
-//    return getBoolean("moveMapForEffects");
-//  }
 }

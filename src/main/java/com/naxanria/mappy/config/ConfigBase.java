@@ -53,6 +53,8 @@ public abstract class ConfigBase<T extends ConfigBase>
   
   public T addEntry(ConfigEntry entry)
   {
+    entry.setMap(dataMap);
+    
     entryMap.put(entry.name, entry);
     
     return (T) this;
@@ -63,6 +65,15 @@ public abstract class ConfigBase<T extends ConfigBase>
     try
     {
       dataMap.load();
+  
+      for (String name:
+           entryMap.keySet())
+      {
+        ConfigEntry<?> entry = entryMap.get(name);
+        
+        entry.load();
+      }
+      
       onConfigChanged();
     }
     catch (IOException e)
@@ -76,6 +87,14 @@ public abstract class ConfigBase<T extends ConfigBase>
   {
     try
     {
+      for (String name:
+        entryMap.keySet())
+      {
+        ConfigEntry<?> entry = entryMap.get(name);
+    
+        entry.save();
+      }
+      
       dataMap.save();
     }
     catch (IOException e)
