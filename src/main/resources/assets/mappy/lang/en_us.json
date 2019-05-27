@@ -1,0 +1,43 @@
+{
+  "mappy": "Mappy",
+
+  "key.mappy.waypoint_create": "Create a Waypoint.",
+  "key.mappy.hide_map": "Toggle minimap.",
+  "key.mappy.waypoints_list": "Waypoints List",
+
+  "mappy.config.category.general": "General",
+  "mappy.config.category.info": "Map Info",
+  "mappy.config.category.optimization": "Optimization",
+
+  "mappy.config.offset": "Offset",
+  "mappy.config.draw_position": "Draw Position",
+  "mappy.config.map_size": "Map Size",
+  "mappy.config.map_move": "Move map for effects",
+  "mappy.config.show_in_chat": "Show map while in chat",
+  "mappy.config.shaded": "Shaded",
+  "mappy.config.shade_strength": "Shading Strength",
+  "mappy.config.show_grid": "Show Grid Lines",
+  "mappy.config.show_position": "Show Position",
+  "mappy.config.show_biome": "Show Biome",
+  "mappy.config.show_fps": "Show FPS",
+  "mappy.config.show_game_time": "Show Time",
+  "mappy.config.show_direction": "Show Direction",
+  "mappy.config.show_player_names": "Show Player Names",
+  "mappy.config.show_player_heads": "Show Player Heads",
+  "mappy.config.show_entities": "Show Entities",
+  "mappy.config.update_cycle": "Update Chunks Per Cycle",
+  "mappy.config.prune_delay": "Delay for pruning (Seconds)",
+  "mappy.config.prune_amount": "Max amount to prune",
+
+  "mappy.dim.overworld": "Overworld",
+  "mappy.dim.nether": "The Nether",
+  "mappy.dim.the_end": "The End",
+
+  "mappy.gui.save": "Save",
+  "mappy.gui.cancel": "Cancel",
+  "mappy.gui.edit": "Edit",
+  "mappy.gui.delete": "Delete",
+  "mappy.gui.close": "Close",
+  "mappy.gui.create": "Create",
+  "mappy.gui.name": "Name"
+}

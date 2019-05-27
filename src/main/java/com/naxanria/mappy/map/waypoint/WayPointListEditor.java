@@ -11,6 +11,7 @@ import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.Element;
 import net.minecraft.client.gui.Screen;
 import net.minecraft.client.gui.widget.ButtonWidget;
+import net.minecraft.client.resource.language.I18n;
 import net.minecraft.server.command.CommandManager;
 import net.minecraft.text.StringTextComponent;
 import net.minecraft.text.TextComponent;
@@ -25,10 +26,11 @@ import java.util.List;
 public class WayPointListEditor extends ScreenBase
 {
   public static final Identifier DEFAULT_IDENTIFIER = new Identifier("textures/block/dirt.png");
-  public static final HashMap<String, BiValue<String, Identifier>> DIMENSION_INFO = new HashMap<String, BiValue<String, Identifier>>(){{
-    put("minecraft:overworld", new BiValue<>("Overworld", new Identifier("textures/block/stone.png")));
-    put("minecraft:the_nether", new BiValue<>("Nether", new Identifier("textures/block/nether_bricks.png")));
-    put("minecraft:the_end", new BiValue<>("The End", new Identifier("textures/block/end_stone_bricks.png")));
+  public static final HashMap<String, BiValue<String, Identifier>> DIMENSION_INFO = new HashMap<String, BiValue<String, Identifier>>()
+  {{
+    put("minecraft:overworld", new BiValue<>("mappy.dim.overworld", new Identifier("textures/block/stone.png")));
+    put("minecraft:the_nether", new BiValue<>("mappy.dim.nether", new Identifier("textures/block/nether_bricks.png")));
+    put("minecraft:the_end", new BiValue<>("mappy.dim.the_end", new Identifier("textures/block/end_stone_bricks.png")));
   }};
   
   private static class Entry extends DrawableHelperBase implements Element
@@ -50,8 +52,8 @@ public class WayPointListEditor extends ScreenBase
       
       minecraft = MinecraftClient.getInstance();
       
-      editButton = new ButtonWidget(0, 0, 40, height, "Edit", (b) -> wayPointListEditor.edit(wayPoint));
-      deleteButton = new ButtonWidget(0, 0, 40, height, "Delete", (b) -> wayPointListEditor.delete(wayPoint));
+      editButton = new ButtonWidget(0, 0, 40, height, wayPointListEditor.lang("edit"), (b) -> wayPointListEditor.edit(wayPoint));
+      deleteButton = new ButtonWidget(0, 0, 40, height, wayPointListEditor.lang("delete"), (b) -> wayPointListEditor.delete(wayPoint));
       
       setPosition(x, y);
     }
@@ -175,8 +177,8 @@ public class WayPointListEditor extends ScreenBase
     prevDimensionButton = new ButtonWidget(x + 10, 10, 20, 20, "<", (b) -> cycleDimension(-1));
     nextDimensionButton = new ButtonWidget(x + width - 20 - 10, 10, 20, 20, ">", (b) -> cycleDimension(1));
     
-    addButton = new ButtonWidget(x + 10, height - 25, 60, 20, "Create", (b) -> add());
-    closeButton = new ButtonWidget(x + 15 + addButton.getWidth(), height - 25, 60, 20, "Close", (b) -> onClose());
+    addButton = new ButtonWidget(x + 10, height - 25, 60, 20, lang("create"), (b) -> add());
+    closeButton = new ButtonWidget(x + 15 + addButton.getWidth(), height - 25, 60, 20, lang("close"), (b) -> onClose());
   
     reset();
   }
@@ -269,7 +271,7 @@ public class WayPointListEditor extends ScreenBase
     
     prevDimensionButton.render(mouseX, mouseY, delta);
   
-    String dimensionName = info == null ? "Unknown" : info.A;
+    String dimensionName = info == null ? lang("unknown") : I18n.translate(info.A);
     drawCenteredString(font, dimensionName, 130 / 2 + prevDimensionButton.x + prevDimensionButton.getWidth(), 15, 0xffffffff);
     
     nextDimensionButton.render(mouseX, mouseY, delta);

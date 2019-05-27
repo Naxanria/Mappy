@@ -7,6 +7,7 @@ import net.minecraft.client.gui.Screen;
 import net.minecraft.client.render.BufferBuilder;
 import net.minecraft.client.render.Tessellator;
 import net.minecraft.client.render.VertexFormats;
+import net.minecraft.client.resource.language.I18n;
 import net.minecraft.text.TextComponent;
 import net.minecraft.util.Identifier;
 import org.lwjgl.opengl.GL11;
@@ -109,6 +110,11 @@ public class ScreenBase extends Screen
         renderTextureModal(x + xp, y + yp, w, h, textureWidth, textureHeight, id);
       }
     }
+  }
+  
+  public String lang(String key)
+  {
+    return I18n.translate("mappy.gui." + key);
   }
   
 }

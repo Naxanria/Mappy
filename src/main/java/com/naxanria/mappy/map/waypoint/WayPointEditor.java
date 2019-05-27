@@ -47,7 +47,7 @@ public class WayPointEditor extends ScreenBase
     
     int x = halfWidth - halfW;
     
-    nameField = new TitledWidget<>(font, new TextFieldWidget(font, 0, 0, 100, 12, "Name"), x, 50, 180, h, "", "Name");
+    nameField = new TitledWidget<>(font, new TextFieldWidget(font, 0, 0, 100, 12, "Name"), x, 50, 180, h, "", lang("name"));
     nameField.changeFocus(true);
     nameField.widget.setMaxLength(12);
     nameField.widget.setText(wayPoint.name);
@@ -85,10 +85,10 @@ public class WayPointEditor extends ScreenBase
     children.add(nextColorButton);
     
     int by = height - 90;
-    saveButton = new ButtonWidget(x, by, 60, h, "Save", (b) -> { save(); onClose(); });
+    saveButton = new ButtonWidget(x, by, 60, h, lang("save"), (b) -> { save(); onClose(); });
     children.add(saveButton);
     
-    cancelButton = new ButtonWidget(x + 62, by, 60, h, "Cancel", (b) -> onClose());
+    cancelButton = new ButtonWidget(x + 62, by, 60, h, lang("cancel"), (b) -> onClose());
     children.add(cancelButton);
     
     setInitialFocus(nameField);
