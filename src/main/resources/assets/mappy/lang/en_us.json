@@ -39,5 +39,6 @@
   "mappy.gui.delete": "Delete",
   "mappy.gui.close": "Close",
   "mappy.gui.create": "Create",
-  "mappy.gui.name": "Name"
+  "mappy.gui.name": "Name",
+  "mappy.gui.chat": "Chat"
 }

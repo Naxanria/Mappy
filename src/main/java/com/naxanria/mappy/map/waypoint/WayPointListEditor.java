@@ -14,7 +14,10 @@ import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.resource.language.I18n;
 import net.minecraft.server.command.CommandManager;
 import net.minecraft.text.StringTextComponent;
+import net.minecraft.text.Style;
 import net.minecraft.text.TextComponent;
+import net.minecraft.text.TextFormat;
+import net.minecraft.text.event.ClickEvent;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.dimension.DimensionType;
@@ -43,6 +46,7 @@ public class WayPointListEditor extends ScreenBase
     private WayPoint wayPoint;
     private ButtonWidget editButton;
     private ButtonWidget deleteButton;
+//    private ButtonWidget chatButton;
   
     public Entry(WayPointListEditor wayPointListEditor, int x, int y, int width, int height, WayPoint wayPoint)
     {
@@ -54,6 +58,7 @@ public class WayPointListEditor extends ScreenBase
       
       editButton = new ButtonWidget(0, 0, 40, height, wayPointListEditor.lang("edit"), (b) -> wayPointListEditor.edit(wayPoint));
       deleteButton = new ButtonWidget(0, 0, 40, height, wayPointListEditor.lang("delete"), (b) -> wayPointListEditor.delete(wayPoint));
+//      chatButton = new ButtonWidget(0, 0, 40, height, wayPointListEditor.lang("chat"), (b) -> wayPointListEditor.toChat(wayPoint));
       
       setPosition(x, y);
     }
@@ -63,11 +68,17 @@ public class WayPointListEditor extends ScreenBase
       this.x = x;
       this.y = y;
       
+      rightAlign(deleteButton, x + width);
+      rightAlign(editButton, deleteButton);
+//      rightAlign(chatButton, editButton);
+      
       editButton.y = y;
-      editButton.x = x + width - editButton.getWidth() - deleteButton.getWidth();
+//      editButton.x = x + width - editButton.getWidth() - deleteButton.getWidth();
       deleteButton.y = y;
-      deleteButton.x = x + width - deleteButton.getWidth();
+//      deleteButton.x = x + width - deleteButton.getWidth();
+//      chatButton.y = y;
     }
+    
     
     public void render(int mouseX, int mouseY, float delta)
     {
@@ -88,29 +99,40 @@ public class WayPointListEditor extends ScreenBase
 
       drawString(font, wayPoint.name, nameX, stringY, WHITE);
       
-      int posX = x + width - editButton.getWidth() - deleteButton.getWidth() - 2;
+      int posX = editButton.x - 2;
       drawRightAlignedString(font, Util.prettyFy(wayPoint.pos), posX, stringY, WHITE);
       
       editButton.render(mouseX, mouseY, delta);
       deleteButton.render(mouseX, mouseY, delta);
+//      chatButton.render(mouseX, mouseY, delta);
     }
   
     @Override
     public boolean mouseClicked(double double_1, double double_2, int int_1)
     {
-      return editButton.mouseClicked(double_1, double_2, int_1) || deleteButton.mouseClicked(double_1, double_2, int_1);
+      return editButton.mouseClicked(double_1, double_2, int_1) || deleteButton.mouseClicked(double_1, double_2, int_1);// || chatButton.mouseReleased(double_1, double_2, int_1);
     }
   
     @Override
     public boolean mouseReleased(double double_1, double double_2, int int_1)
     {
-      return editButton.mouseReleased(double_1, double_2, int_1) || deleteButton.mouseReleased(double_1, double_2, int_1);
+      return editButton.mouseReleased(double_1, double_2, int_1) || deleteButton.mouseReleased(double_1, double_2, int_1);// || chatButton.mouseReleased(double_1, double_2, int_1);
     }
   
     @Override
     public boolean isMouseOver(double mouseX, double mouseY)
     {
       return mouseX >= x && mouseX <= x + width && mouseY >= y && mouseY <= y + height;
+    }
+  
+    private void rightAlign(ButtonWidget toAlign, ButtonWidget from)
+    {
+      toAlign.x = from.x - toAlign.getWidth();
+    }
+  
+    private void rightAlign(ButtonWidget toAlign, int right)
+    {
+      toAlign.x = right - toAlign.getWidth();
     }
   }
   
@@ -303,12 +325,10 @@ public class WayPointListEditor extends ScreenBase
     Identifier id = info.B;
     if (id == null)
     {
-      id = DEFAULT_IDENTIFIER;// "textures/block/dirt.png";
+      id = DEFAULT_IDENTIFIER;
     }
 
-//    fill(x, 0, x + width, 40, bgColor);
     renderTextureRepeating(x, 0, width, 40, 16, 16, id);
-//    fill(x, height - 40, x + width, height, bgColor);
     renderTextureRepeating(x, height - 40, width, 40, 16, 16, id);
     
   }
@@ -323,6 +343,22 @@ public class WayPointListEditor extends ScreenBase
     // todo: Teleporting player.
   
     
+  }
+  
+  private void toChat(WayPoint wp)
+  {
+//    StringTextComponent text = new StringTextComponent(Util.prettyFy(wp.pos));
+//    Style style = text.getStyle();
+//    style.setColor(TextFormat.AQUA);
+//    style.setBold(true);
+//    style.setClickEvent(
+//      new ClickEvent(
+//        ClickEvent.Action.SUGGEST_COMMAND, "/wp " + wp.pos.getX() + " " + wp.pos.getY() + " " + wp.pos.getZ() + " " + wp.dimension
+//    ));
+//
+//    onClose();
+//
+//    minecraft.player.sendMessage(text);
   }
   
   private void add()
