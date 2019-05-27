@@ -52,6 +52,7 @@ public class Map
   private int size = 64;
   private int width = size, height = size;
   private int sizeX = size, sizeZ = size;
+  private int scale = 1;
   
   private TriValue<BlockPos, BlockState, Integer> debugData;
   
@@ -146,18 +147,34 @@ public class Map
   
   public void onConfigChanged()
   {
+    int configScale = Settings.scale;
     int configSize = Settings.mapSize;
+    
+    boolean resize = false;
+    
+    if (configScale != scale)
+    {
+      scale = configScale;
+      resize = true;
+    }
+    
+
     if (configSize != size)
     {
       size = configSize;
-      resize(configSize);
+      resize = true;
+    }
+  
+    if (resize)
+    {
+      size = configSize * scale;
+      resize(size);
     }
   }
   
   private void updateInfo(PlayerEntity player)
   {
     manager.clear();
-    Config config = Config.instance;
     
     if (Settings.showPosition)
     {
@@ -236,10 +253,13 @@ public class Map
     
 //    boolean nether = type == DimensionType.THE_NETHER;
 //
-    int startX = pos.getX() - size / 2;
-    int startZ = pos.getZ() - size / 2;
-    int endX = startX + size;
-    int endZ = startZ + size;
+    
+    int scaled = scale * size;
+//    int size = scaled;
+    int startX = pos.getX() - scaled / 2;
+    int startZ = pos.getZ() - scaled / 2;
+    int endX = startX + scaled;
+    int endZ = startZ + scaled;
     
     ChunkCache.getPreLoader(world).update(this, startX, startZ);
     
@@ -443,35 +463,6 @@ public class Map
 //    WayPointManager.INSTANCE.save();
 //
 //    player.sendMessage(new StringTextComponent("Created waypoint " + wayPoint.pos.getX() + " " + wayPoint.pos.getY() + " " + wayPoint.pos.getZ()));
-  }
-  
-  public void removeWayPoint()
-  {
-    int removeRange = 32;
-    PlayerEntity player = client.player;
-    
-    List<WayPoint> wayPoints = WayPointManager.INSTANCE.getWaypoints(player.world.dimension.getType().getRawId());
-    if (wayPoints != null)
-    {
-      int r = 0;
-      int size = wayPoints.size();
-      for (int i = 0; i < size; i++)
-      {
-        WayPoint wp = wayPoints.get(i);
-        if (MathUtil.getDistance(wp.pos, player.getBlockPos()) <= removeRange)
-        {
-          r++;
-          wayPoints.remove(i);
-          size = wayPoints.size();
-          i--;
-        }
-      }
-//      wayPoints.stream().filter(wp -> MathUtil.getDistance(wp.pos, player.getBlockPos()) <= removeRange).forEach(wayPoints::remove);
-  
-      WayPointManager.INSTANCE.save();
-      
-      player.sendMessage(new StringTextComponent("Removed " + r + " waypoints [32 blocks range]"));
-    }
   }
   
   public NativeImage getImage()

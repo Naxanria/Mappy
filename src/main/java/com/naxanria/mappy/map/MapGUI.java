@@ -2,26 +2,18 @@ package com.naxanria.mappy.map;
 
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.naxanria.mappy.Mappy;
-import com.naxanria.mappy.client.Alignment;
 import com.naxanria.mappy.client.DrawPosition;
 import com.naxanria.mappy.client.DrawableHelperBase;
-import com.naxanria.mappy.config.Config;
 import com.naxanria.mappy.config.Settings;
-import com.naxanria.mappy.util.TriValue;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.fabricmc.fabric.api.util.TriState;
-import net.minecraft.block.BlockState;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.BufferBuilder;
 import net.minecraft.client.render.Tessellator;
 import net.minecraft.client.render.VertexFormats;
-import net.minecraft.client.resource.language.I18n;
 import net.minecraft.client.texture.NativeImage;
 import net.minecraft.client.texture.NativeImageBackedTexture;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.biome.Biome;
 import org.lwjgl.opengl.GL11;
 
 
@@ -107,9 +99,11 @@ public class MapGUI extends DrawableHelperBase
     int y = offset;
     int w = client.window.getScaledWidth();
     int h = client.window.getScaledHeight();
+  
+    int scale = Settings.scale;
+    int iw = backingImage.getWidth() / scale;
+    int ih = backingImage.getHeight() / scale;
     
-    int iw = backingImage.getWidth();
-    int ih = backingImage.getHeight();
   
     MapInfoLineManager.Direction direction = MapInfoLineManager.Direction.DOWN;
     
@@ -183,6 +177,9 @@ public class MapGUI extends DrawableHelperBase
   
   private void drawMap(MinecraftClient client, int x, int y, int iw, int ih)
   {
+    
+//    fillNoDepth(x, y, x + iw, y + ih, 0xffff00ff);
+    
     client.getTextureManager().bindTexture(textureIdentifier);
     
     Tessellator tessellator = Tessellator.getInstance();
