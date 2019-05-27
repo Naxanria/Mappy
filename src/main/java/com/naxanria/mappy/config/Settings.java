@@ -30,4 +30,5 @@ public class Settings
   public static int maxDifference = 10;
   public static boolean drawChunkGrid = false;
   public static int scale = 1;
+  public static boolean showInChat = true;
 }

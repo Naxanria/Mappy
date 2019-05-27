@@ -34,8 +34,11 @@ public class ModMenuEntry implements ModMenuApi
     general.addOption(new IntegerListEntry("Map Size", Settings.mapSize, RESET, () -> Settings.mapSize, (i) -> Settings.mapSize = i).setMinimum(32).setMaximum(1024));
 //    general.addOption(new IntegerSliderEntry("Map Scale", 1, 8, Settings.scale, RESET, () -> Settings.scale, (i) -> Settings.scale = i));
     general.addOption(new BooleanListEntry("Move Map For Effects", Settings.moveMapForEffects, RESET, () -> Settings.moveMapForEffects, (b) -> Settings.moveMapForEffects = b));
+    general.addOption(new BooleanListEntry("Show Map While In Chat", Settings.showInChat, RESET, () -> Settings.showInChat, (b) -> Settings.showInChat = b));
+    
     general.addOption(new BooleanListEntry("Shaded", Settings.shaded, RESET, () -> Settings.shaded, (b) -> Settings.shaded = b));
     general.addOption(new IntegerSliderEntry("Shading strength",2, 16, 18 - Settings.maxDifference, RESET, () -> 18 - Settings.maxDifference, (i) -> Settings.maxDifference = 18 - i));
+    
     
     ConfigScreenBuilder.CategoryBuilder mapInfo = builder.addCategory("Map Info");
     mapInfo.addOption(new BooleanListEntry("Draw Chunk Grid", Settings.drawChunkGrid, RESET, () -> Settings.drawChunkGrid, (b) -> Settings.drawChunkGrid = b));

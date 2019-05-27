@@ -43,6 +43,8 @@ public class Config extends ConfigBase<Config>
     addEntry(new ConfigEntry.IntegerRangeEntry("maxDifference",  10, 2, 16, (i) -> Settings.maxDifference = i, () -> Settings.maxDifference));
     addEntry(new ConfigEntry.BooleanEntry("drawChunkGrid", false, (b) -> Settings.drawChunkGrid = b, () -> Settings.drawChunkGrid));
     addEntry(new ConfigEntry.IntegerRangeEntry("scale",  1, 1, 8, (i) -> Settings.scale = i, () -> Settings.scale));
+    
+    addEntry(new ConfigEntry.BooleanEntry("showInChat", true, (b) -> Settings.showInChat = b, () -> Settings.showInChat));
   }
   
   public boolean getShowMap()
