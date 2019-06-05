@@ -74,7 +74,6 @@ public class Map
   private boolean showTime;
   private boolean showBiome;
   
-  
   public Map()
   {
     // todo: check what that boolean value actually does.
@@ -140,13 +139,24 @@ public class Map
     if (statusEffects.size() > 0)
     {
       effects = EffectState.BENEFICIAL;
+      boolean showing = false;
       for (StatusEffectInstance e :
         statusEffects)
       {
+        showing |= e.shouldShowIcon();
         if (!e.getEffectType().method_5573())
         {
           effects = EffectState.HARMFUL;
+          if (showing)
+          {
+            break;
+          }
         }
+      }
+      
+      if (!showing)
+      {
+        effects = EffectState.NONE;
       }
     }
     else
