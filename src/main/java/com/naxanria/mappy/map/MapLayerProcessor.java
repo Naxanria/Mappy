@@ -5,6 +5,8 @@ import com.naxanria.mappy.map.chunk.ChunkData;
 import com.naxanria.mappy.util.StateUtil;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
+import net.minecraft.block.KelpPlantBlock;
+import net.minecraft.block.Material;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.Heightmap;
 import net.minecraft.world.World;
@@ -66,13 +68,25 @@ public class MapLayerProcessor
 
     BlockState state;
     // Correct y level if the top block we found was water(ish).
+    
+    boolean loop;
     do
     {
       worldPos = new BlockPos(worldPos.getX(), y - 1, worldPos.getZ());
       state = world.getBlockState(worldPos);
       y--;
+      loop = state.getMaterial().isLiquid();
+      if (!loop)
+      {
+        if (state.getMaterial() == Material.UNDERWATER_PLANT)
+        {
+          loop = true;
+        }
+      }
+      
+      loop &= y > 0;
     }
-    while (state.getMaterial().isLiquid() && y > 0);
+    while (loop);
 
     return y;
   }
