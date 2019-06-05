@@ -42,6 +42,7 @@ public class PlayerHeadIcon
       initialize();
     }
     PlayerHeadIcon icon;
+    long now = System.currentTimeMillis();
     
     if (icons.containsKey(player.getUuid()))
     {
@@ -49,11 +50,16 @@ public class PlayerHeadIcon
       
       if (icon.retry)
       {
-        long now = System.currentTimeMillis();
         if (now - icon.time - icon.wait * 1000 > 0)
         {
           loadSkin(icon);
         }
+      }
+      else if (now - icon.time > 120000) // 2 min
+      {
+        icon.retry = true;
+        icon.wait = 1;
+        loadSkin(icon);
       }
     }
     else
@@ -92,6 +98,7 @@ public class PlayerHeadIcon
     {
       System.out.println("Loading cached skin for " + icon.player.getName().getString());
       icon.skinId = provider.loadSkin(map.get(MinecraftProfileTexture.Type.SKIN), MinecraftProfileTexture.Type.SKIN);
+      icon.retry = false;
     }
     else
     {
@@ -110,6 +117,5 @@ public class PlayerHeadIcon
       return;
     }
     initialized = true;
- 
   }
 }
