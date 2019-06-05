@@ -9,9 +9,7 @@ import com.naxanria.mappy.map.chunk.ChunkCache;
 import com.naxanria.mappy.map.waypoint.WayPoint;
 import com.naxanria.mappy.map.waypoint.WayPointEditor;
 import com.naxanria.mappy.map.waypoint.WayPointManager;
-import com.naxanria.mappy.util.MathUtil;
-import com.naxanria.mappy.util.RandomUtil;
-import com.naxanria.mappy.util.TriValue;
+import com.naxanria.mappy.util.*;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.client.MinecraftClient;
@@ -70,6 +68,13 @@ public class Map
   
   private EffectState effects = EffectState.NONE;
   
+  
+  private boolean showMap;
+  private boolean showPosition;
+  private boolean showTime;
+  private boolean showBiome;
+  
+  
   public Map()
   {
     // todo: check what that boolean value actually does.
@@ -99,6 +104,8 @@ public class Map
         locPlayer = player;
       }
       
+      itemCheck();
+      
       playerIcon.setPosition(size / 2, size / 2);
       
       generate(player);
@@ -113,6 +120,15 @@ public class Map
     {
       locPlayer = null;
     }
+  }
+  
+  private void itemCheck()
+  {
+    boolean inHotBar = Settings.inHotBar;
+    showMap = Settings.mapItem.equals("") || StackUtil.contains(locPlayer.inventory, inHotBar, Settings.mapItem);
+    showPosition = Settings.showPosition && (Settings.positionItem.equals("") || StackUtil.contains(locPlayer.inventory, inHotBar, Settings.positionItem));
+    showTime = Settings.showTime && (Settings.timeItem.equals("") || StackUtil.contains(locPlayer.inventory, inHotBar, Settings.timeItem));
+    showBiome = Settings.showBiome && (Settings.biomeItem.equals("") || StackUtil.contains(locPlayer.inventory, inHotBar, Settings.biomeItem));
   }
   
   private void updateStatusEffects()
@@ -176,14 +192,14 @@ public class Map
   {
     manager.clear();
     
-    if (Settings.showPosition)
+    if (showPosition)
     {
       BlockPos playerPos = client.player.getBlockPos();
       playerPositionInfo.setText(playerPos.getX() + " " + playerPos.getY() + " " + playerPos.getZ());
       manager.add(playerPositionInfo);
     }
     
-    if (Settings.showBiome)
+    if (showBiome)
     {
       biomeInfo.setText(I18n.translate(biome.getTranslationKey()));
       manager.add(biomeInfo);
@@ -195,7 +211,7 @@ public class Map
       manager.add(fpsInfo);
     }
     
-    if (Settings.showTime)
+    if (showTime)
     {
       inGameTimeInfo.setText(getTimeFormatted(client.world.getTimeOfDay()));
       manager.add(inGameTimeInfo);
@@ -508,5 +524,10 @@ public class Map
   public void onConfigChanged(ConfigBase<?> configBase)
   {
     onConfigChanged();
+  }
+  
+  public boolean canShowMap()
+  {
+    return showMap;
   }
 }

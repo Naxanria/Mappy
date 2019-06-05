@@ -31,4 +31,11 @@ public class Settings
   public static boolean drawChunkGrid = false;
   public static int scale = 1;
   public static boolean showInChat = true;
+  
+  public static boolean inHotBar = false;
+  public static String mapItem = "";
+  public static String positionItem = "";
+  public static String timeItem = "";
+  public static boolean showItemConfigInGame = false;
+  public static String biomeItem = "";
 }

@@ -8,6 +8,7 @@
   "mappy.config.category.general": "General",
   "mappy.config.category.info": "Map Info",
   "mappy.config.category.optimization": "Optimization",
+  "mappy.config.category.items": "Items",
 
   "mappy.config.offset": "Offset",
   "mappy.config.draw_position": "Draw Position",
@@ -28,6 +29,13 @@
   "mappy.config.update_cycle": "Update Chunks Per Cycle",
   "mappy.config.prune_delay": "Delay for pruning (Seconds)",
   "mappy.config.prune_amount": "Max amount to prune",
+  "mappy.config.item_description_name": "",
+  "mappy.config.item_description": "You can set here what items are required e.g: minecraft:compass, an empty field means it is not required.",
+  "mappy.config.item_in_hotbar": "Item needs to be in the hotbar",
+  "mappy.config.item_show_map": "Required item to show map",
+  "mappy.config.item_show_biome": "Required item to show biome",
+  "mappy.config.item_show_position": "Required item to show position",
+  "mappy.config.item_show_time": "Required item to show time",
 
   "mappy.dim.overworld": "Overworld",
   "mappy.dim.nether": "The Nether",

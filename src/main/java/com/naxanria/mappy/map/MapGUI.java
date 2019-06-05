@@ -73,6 +73,8 @@ public class MapGUI extends DrawableHelperBase
       return;
     }
     
+    boolean canShowMap = map.canShowMap();
+    
     MinecraftClient client = MinecraftClient.getInstance();
     
     if (client.player == null)
@@ -143,38 +145,40 @@ public class MapGUI extends DrawableHelperBase
         break;
     }
     
-    manager.setPosition(x, y + (direction == MapInfoLineManager.Direction.DOWN ? ih + border + 2 : -border - 2));
+    manager.setPosition(x, y + (direction == MapInfoLineManager.Direction.DOWN && canShowMap ? ih + border + 2 : -border - 2));
     manager.setDirection(direction);
     manager.setSpacing(12);
+    
+    if (canShowMap)
+    {
+      fill(x - border, y - border, x + iw + border, y + ih + border, borderColor);
   
-    fill(x - border, y - border, x + iw + border, y + ih + border, borderColor);
-    
-    // draw the map
-    drawMap(client, x, y, iw, ih);
-    
-    // draw the icons
-    GlStateManager.disableDepthTest();
-    for (MapIcon.Player player:
-         map.getPlayerIcons())
-    {
-      player.draw(x, y);
-    }
+      // draw the map
+      drawMap(client, x, y, iw, ih);
   
-    for (MapIcon.Entity entity :
-      map.getEntities())
-    {
-      entity.draw(x, y);
+      // draw the icons
+      GlStateManager.disableDepthTest();
+      for (MapIcon.Player player :
+        map.getPlayerIcons())
+      {
+        player.draw(x, y);
+      }
+  
+      for (MapIcon.Entity entity :
+        map.getEntities())
+      {
+        entity.draw(x, y);
+      }
+  
+      for (MapIcon.Waypoint waypoint :
+        map.getWaypoints())
+      {
+        waypoint.draw(x, y);
+      }
+  
+  
+      GlStateManager.enableDepthTest();
     }
-    
-    for (MapIcon.Waypoint waypoint :
-      map.getWaypoints())
-    {
-      waypoint.draw(x, y);
-    }
-    
-    
-    GlStateManager.enableDepthTest();
-
     // draw info for the map
     manager.draw();
   }

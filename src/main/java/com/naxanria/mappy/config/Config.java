@@ -45,6 +45,13 @@ public class Config extends ConfigBase<Config>
     addEntry(new ConfigEntry.IntegerRangeEntry("scale",  1, 1, 8, (i) -> Settings.scale = i, () -> Settings.scale));
     
     addEntry(new ConfigEntry.BooleanEntry("showInChat", true, (b) -> Settings.showInChat = b, () -> Settings.showInChat));
+    
+    addEntry(new ConfigEntry.BooleanEntry("inHotBar", false, (b) -> Settings.inHotBar = b, () -> Settings.inHotBar));
+    addEntry(new ConfigEntry.StringEntry("mapItem", "", (s) -> Settings.mapItem = s, () -> Settings.mapItem));
+    addEntry(new ConfigEntry.StringEntry("positionItem", "", (s) -> Settings.positionItem = s, () -> Settings.positionItem));
+    addEntry(new ConfigEntry.StringEntry("timeItem", "", (s) -> Settings.timeItem = s, () -> Settings.timeItem));
+    addEntry(new ConfigEntry.StringEntry("biomeItem", "", (s) -> Settings.biomeItem = s, () -> Settings.biomeItem));
+    addEntry(new ConfigEntry.BooleanEntry("showItemConfigInGame", false, (b) -> Settings.showItemConfigInGame = b, () -> Settings.showItemConfigInGame));
   }
   
   public boolean getShowMap()

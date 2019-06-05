@@ -6,13 +6,11 @@ import com.naxanria.mappy.config.ConfigBase;
 import com.naxanria.mappy.config.Settings;
 import io.github.prospector.modmenu.api.ModMenuApi;
 import me.shedaniel.cloth.api.ConfigScreenBuilder;
-import me.shedaniel.cloth.gui.entries.BooleanListEntry;
-import me.shedaniel.cloth.gui.entries.EnumListEntry;
-import me.shedaniel.cloth.gui.entries.IntegerListEntry;
-import me.shedaniel.cloth.gui.entries.IntegerSliderEntry;
+import me.shedaniel.cloth.gui.entries.*;
 import net.minecraft.client.gui.Screen;
 import net.minecraft.client.resource.language.I18n;
 
+import java.util.Set;
 import java.util.function.Function;
 
 public class ModMenuEntry implements ModMenuApi
@@ -58,6 +56,16 @@ public class ModMenuEntry implements ModMenuApi
     optimization.addOption(new IntegerListEntry(lang("prune_delay"), Settings.pruneDelay, RESET, () -> Settings.pruneDelay, (i) -> Settings.pruneDelay = i).setMinimum(10).setMaximum(600));
     optimization.addOption(new IntegerListEntry(lang("prune_amount"), Settings.pruneAmount, RESET, () -> Settings.pruneAmount, (i) -> Settings.pruneAmount = i).setMinimum(100).setMaximum(5000));
     
+    if (Settings.showItemConfigInGame)
+    {
+      ConfigScreenBuilder.CategoryBuilder items = builder.addCategory(lang("category.items"));
+      items.addOption(new TextListEntry(lang("item_description_name"), lang("item_description")));
+      items.addOption(new BooleanListEntry(lang("item_in_hotbar"), Settings.inHotBar, RESET, () -> Settings.inHotBar, (b) -> Settings.inHotBar = b));
+      items.addOption(new StringListEntry(lang("item_show_map"), Settings.mapItem, RESET, () -> Settings.mapItem, (s) -> Settings.mapItem = s));
+      items.addOption(new StringListEntry(lang("item_show_position"), Settings.positionItem, RESET, () -> Settings.positionItem, (s) -> Settings.positionItem = s));
+      items.addOption(new StringListEntry(lang("item_show_biome"), Settings.biomeItem, RESET, () -> Settings.biomeItem, (s) -> Settings.biomeItem = s));
+      items.addOption(new StringListEntry(lang("item_show_time"), Settings.timeItem, RESET, () -> Settings.timeItem, (s) -> Settings.timeItem = s));
+    }
     builder.setDoesConfirmSave(false);
     
     return builder.build();
