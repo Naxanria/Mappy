@@ -58,11 +58,15 @@ public class ChunkCache
       ChunkCache loader = layers.get(currentLayer);
       if (loader.world != world)
       {
+//        loader.world = world;
         loader.world = world;
+        loader.clear();
         NativeImage img = Mappy.map.getImage();
         img.fillRGBA(0, 0, img.getWidth(), img.getHeight(), MapLayerProcessor.BLACK);
         
-        System.out.println("Updated world");
+        System.out.println("Updated world " + world + " " + dimId);
+        
+        
       }
       
       return loader;
@@ -72,6 +76,11 @@ public class ChunkCache
     layers.put(currentLayer, loader);
     
     return loader;
+  }
+  
+  private void clear()
+  {
+    data.clear();
   }
   
   private static HashMap<MapLayer, ChunkCache> getLayers(int dimId)
@@ -204,11 +213,16 @@ public class ChunkCache
     
     if (p > 0)
     {
-      System.out.println("Purged " + p + " chunks from cache");
+//      System.out.println("Purged " + p + " chunks from cache");
     }
   }
   
-  private ChunkData getChunk(int cx, int cz)
+  public ChunkData getChunk(int cx, int cz)
+  {
+    return getChunk(cx, cz, true);
+  }
+  
+  public ChunkData getChunk(int cx, int cz, boolean update)
   {
     BiValue<Integer, Integer> key = new BiValue<>(cx, cz);
     if (data.containsKey(key))
@@ -222,7 +236,11 @@ public class ChunkCache
     
     ChunkData chunkData = new ChunkData(chunk, currentLayer);
 
-    chunkData.update();
+    if (update)
+    {
+      chunkData.update();
+    }
+    
     data.put(key, chunkData);
     
     return chunkData;
