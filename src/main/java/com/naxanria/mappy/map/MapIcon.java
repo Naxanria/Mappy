@@ -70,7 +70,8 @@ public abstract class MapIcon<T extends MapIcon<T>> extends DrawableHelperBase
 //        if (alpha)
 //        {
           int l = 4;
-          double angle = Math.toRadians((player.cameraYaw + 90) % 360);
+          // player.cameraYaw
+          double angle = Math.toRadians((player.rotationYaw + 90) % 360);
           line(drawX + size / 2, drawY + size / 2, (int) (drawX + size / 2 + Math.cos(angle) * l), (int) (drawY + size / 2 + Math.sin(angle) * l), RED);
 //        }
       }
