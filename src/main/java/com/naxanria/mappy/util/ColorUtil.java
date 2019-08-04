@@ -14,6 +14,26 @@ public class ColorUtil
     return r << 16 | g << 8 << b;
   }
   
+  public static int BGRAtoARGB(int col)
+  {
+    int a = col & 0xff;
+    int r = (col >> 8) & 0xff;
+    int g = (col >> 16) & 0xff;
+    int b = (col >> 24) & 0xff;
+    
+    return a << 24 | r << 16 | g << 8 << b;
+  }
+  
+  public static int ABGRtoARGB(int col)
+  {
+    int r = col & 0xff;
+    int g = (col >> 8) & 0xff;
+    int b = (col >> 16) & 0xff;
+    int a = (col >> 24) & 0xff;
+    
+    return a << 24 | r << 16 | g << 8 << b;
+  }
+  
   public static int multiply(int col, float amount)
   {
     int r = (int) MathUtil.clamp(((col >> 16) & 0xff) * amount, 0, 255);

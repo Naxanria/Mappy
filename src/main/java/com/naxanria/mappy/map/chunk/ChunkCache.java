@@ -144,7 +144,7 @@ public class ChunkCache
         {
           if (chunkData.chunk.isEmpty())
           {
-            Chunk chunk = world.getChunk(cx * 16, cz * 16);
+            Chunk chunk = world.getChunk(cx, cz);
             if (!chunk.isEmpty())
             {
 //              System.out.println("updated empty chunk! " + chunk.getPos().toString());

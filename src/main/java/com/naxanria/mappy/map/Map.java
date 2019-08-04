@@ -8,16 +8,12 @@ import com.naxanria.mappy.map.chunk.ChunkCache;
 import com.naxanria.mappy.map.waypoint.WayPoint;
 import com.naxanria.mappy.map.waypoint.WayPointEditor;
 import com.naxanria.mappy.map.waypoint.WayPointManager;
-import com.naxanria.mappy.util.MathUtil;
-import com.naxanria.mappy.util.RandomUtil;
-import com.naxanria.mappy.util.StackUtil;
-import com.naxanria.mappy.util.TriValue;
-//import com.sun.org.apache.xml.internal.security.utils.I18n;
-import com.sun.org.apache.xml.internal.security.utils.I18n;
+import com.naxanria.mappy.util.*;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.NativeImage;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.monster.MonsterEntity;
@@ -28,8 +24,8 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
+import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.dimension.DimensionType;
-import net.minecraftforge.fml.ForgeI18n;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -115,6 +111,8 @@ public class Map
       updateInfo(player);
       
       updateStatusEffects();
+      
+//      image.fillAreaRGBA(10, 10, 10, 10, 0xff0000ff);
 
       MapGUI.instance.markDirty();
     }
@@ -214,7 +212,7 @@ public class Map
     
     if (showBiome)
     {
-      biomeInfo.setText(I18n.translate(biome.getTranslationKey()));
+      biomeInfo.setText(I18n.format(biome.getTranslationKey()));
       manager.add(biomeInfo);
     }
     
@@ -243,6 +241,31 @@ public class Map
 //    {
 //      manager.add(new MapInfoLine(Alignment.Center, (locPlayer.headYaw * -1 % 360) + ""));
 //    }
+    
+    World world = player.world;
+    BlockPos pos = player.getPosition();
+    
+    int h = MapLayerProcessor.getHeight(world, pos, false);
+    int h2 = MapLayerProcessor.effectiveHeight((Chunk) world.getChunk(pos), 2, 255, 2, false);
+    
+    BlockPos pos2 = new BlockPos(pos.getX(), h, pos.getZ());
+    BlockState state = world.getBlockState(pos2);
+  
+    
+  
+    int col = ColorUtil.BGRAtoARGB(MapLayerProcessor.color(world, state, pos2));
+  
+    float[] f = ColorUtil.toFloats(col);//ColorUtil.BGRAtoARGB(ColorUtil.rgb(1, 2, 3)));
+    int r = (int)(f[0] * 255);
+    int g = (int)(f[1] * 255);
+    int b = (int)(f[2] * 255);
+    String info = "Current height: " + h + ":"+ h2 + " state: " + state + " col: " + r + "," + g + "," + b;
+    
+//    col = ColorUtil.rgb(b, g, r);
+    
+    MapInfoLine infoLine = new MapInfoLine(Alignment.Center, info);
+    infoLine.color = col;
+    manager.add(infoLine);
   }
   
   public EffectState getEffects()

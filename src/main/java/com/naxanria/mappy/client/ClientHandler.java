@@ -20,11 +20,13 @@ public class ClientHandler
   @SubscribeEvent
   public static void clientTick(final TickEvent.ClientTickEvent event)
   {
-    if (Mappy.showMap)
+    if (event.phase == TickEvent.Phase.END)
     {
-      Mappy.map.update();
+      if (Mappy.showMap)
+      {
+        Mappy.map.update();
+      }
     }
-    
     KeyHandler.INSTANCE.update();
   }
   

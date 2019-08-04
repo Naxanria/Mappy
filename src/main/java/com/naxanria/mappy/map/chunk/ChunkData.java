@@ -1,5 +1,7 @@
 package com.naxanria.mappy.map.chunk;
 
+import com.naxanria.mappy.Logger;
+import com.naxanria.mappy.Mappy;
 import com.naxanria.mappy.config.Settings;
 import com.naxanria.mappy.map.MapLayer;
 import com.naxanria.mappy.map.MapLayerProcessor;
@@ -57,6 +59,8 @@ public class ChunkData
     
     long now = System.currentTimeMillis();
     updating = true;
+  
+//    Mappy.LOGGER.info("Updating " + cx + "," + cz);
     
     for (int x = 0; x < 16; x++)
     {
@@ -76,6 +80,10 @@ public class ChunkData
               
               heightmap[x + z * 16] = MapLayerProcessor.getHeight(chunk.getWorld(), getPosition(x, 0, z), false);// MapLayerProcessor.effectiveHeight(chunk, x, 255, z, false);
               col = MapLayerProcessor.processTopView(this, x, z);
+              if (col == MapLayerProcessor.VOID_COLOR)
+              {
+                col = 0xff00ff00;
+              }
 //              float c = (heightmap[x + z * 16]) / 255f;
 //              float[] cols = ColorUtil.toFloats(col);
 //

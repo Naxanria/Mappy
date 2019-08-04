@@ -3,6 +3,7 @@ package com.naxanria.mappy.map;
 import com.naxanria.mappy.config.Settings;
 import com.naxanria.mappy.map.chunk.ChunkCache;
 import com.naxanria.mappy.map.chunk.ChunkData;
+import com.naxanria.mappy.util.ColorUtil;
 import com.naxanria.mappy.util.StateUtil;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
@@ -14,6 +15,7 @@ import net.minecraft.world.chunk.Chunk;
 public class MapLayerProcessor
 {
   public static final int BLACK = 0xff000000;
+  public static final int VOID_COLOR = 0xff676676;
   
   // Get effective height for shading purposes.
   public static int effectiveHeight(Chunk chunk, int x, int yStart, int z, boolean skipLiquid)
@@ -139,16 +141,16 @@ public class MapLayerProcessor
     return (alpha << 24) | base_color;
   }
 
-  public static int processTopView(ChunkData chunk, int x, int z)
+  public static int processTopView(ChunkData chunkData, int x, int z)
   {
-    Chunk worldChunk = chunk.chunk;
+    Chunk worldChunk = chunkData.chunk;
     World world = worldChunk.getWorld();
  
-    int y = chunk.heightmap[x + z * 16];
+    int y = chunkData.heightmap[x + z * 16];
     
     if (y < 0)
     {
-      y = effectiveHeight(chunk.chunk, x, 255, z, false);
+      y = effectiveHeight(chunkData.chunk, x, 255, z, false);
     }
 
 
@@ -167,7 +169,8 @@ public class MapLayerProcessor
     }
   
     // return the cached pixel
-    return 0xff676676;
+    
+    return VOID_COLOR;
   }
   
   public static int processTopViewNether(ChunkData chunk, int x, int y, int z)
@@ -222,9 +225,9 @@ public class MapLayerProcessor
     return BLACK;
   }
   
-  private static int color(World world, BlockState state, BlockPos pos)
+  public static int color(World world, BlockState state, BlockPos pos)
   {
-    return state.getBlock().getMaterialColor(state, world, pos).getMapColor(2);
+    return state.getBlock().getMaterialColor(state, world, pos).colorValue;//.getMapColor(2);
   }
   
   public static int getHeight(World world, BlockPos pos, boolean ignoreLiquid)
