@@ -2,6 +2,7 @@ package com.naxanria.mappy.client;
 
 import com.naxanria.mappy.Mappy;
 import com.naxanria.mappy.map.MapGUI;
+import com.naxanria.mappy.map.waypoint.WayPointListEditor;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.client.util.InputMappings;
 import net.minecraftforge.api.distmarker.Dist;
@@ -60,6 +61,36 @@ public class ClientHandler
       public boolean isListening()
       {
         return mc.currentScreen == null;
+      }
+    });
+    
+    KeyHandler.INSTANCE.register(new KeyParser(createKeyBinding("create_waypoint", GLFW.GLFW_KEY_B, KeyConflictContext.IN_GAME))
+    {
+      @Override
+      public void onKeyUp()
+      {
+        Mappy.map.createWayPoint();
+      }
+  
+      @Override
+      public boolean isListening()
+      {
+        return mc.player != null && mc.currentScreen == null;
+      }
+    });
+    
+    KeyHandler.INSTANCE.register(new KeyParser(createKeyBinding("waypoints_list", GLFW.GLFW_KEY_U, KeyConflictContext.IN_GAME))
+    {
+      @Override
+      public void onKeyUp()
+      {
+        mc.displayGuiScreen(new WayPointListEditor(null));
+      }
+  
+      @Override
+      public boolean isListening()
+      {
+        return mc.player != null && mc.currentScreen == null;
       }
     });
   }

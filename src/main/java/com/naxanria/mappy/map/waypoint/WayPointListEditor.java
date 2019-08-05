@@ -1,5 +1,6 @@
 package com.naxanria.mappy.map.waypoint;
 
+import com.naxanria.mappy.Mappy;
 import com.naxanria.mappy.client.DrawableHelperBase;
 import com.naxanria.mappy.client.ScreenBase;
 import com.naxanria.mappy.util.BiValue;
@@ -12,6 +13,7 @@ import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.IGuiEventListener;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.button.Button;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.StringTextComponent;
@@ -291,7 +293,7 @@ public class WayPointListEditor extends ScreenBase
     prevDimensionButton.render(mouseX, mouseY, delta);
   
     
-    String dimensionName = info == null ? lang("unknown") : ForgeI18n.parseFormat(info.A);
+    String dimensionName = info == null ? lang("unknown") : I18n.format(info.A);
     drawCenteredString(font, dimensionName, 130 / 2 + prevDimensionButton.x + prevDimensionButton.getWidth(), 15, 0xffffffff);
     
     nextDimensionButton.render(mouseX, mouseY, delta);
@@ -308,10 +310,19 @@ public class WayPointListEditor extends ScreenBase
     String key = "unknown";
     if (type != null)
     {
-       key = type.toString();
+      ResourceLocation rl = DimensionType.getKey(type);
+      if (rl != null)
+      {
+        key = rl.toString();
+      }
     }
     
-    return DIMENSION_INFO.getOrDefault(key, null);
+    if (key.equals("unknown"))
+    {
+      Mappy.LOGGER.warn("Unkown dim: " + dim);
+    }
+    
+    return DIMENSION_INFO.getOrDefault(key, new BiValue<>(key, DEFAULT_IDENTIFIER));
   }
   
   private void drawScrollBar()
@@ -320,11 +331,21 @@ public class WayPointListEditor extends ScreenBase
   
   private void drawBorders(int mouseX, int mouseY, float delta)
   {
-    ResourceLocation id = info.B;
-    if (id == null)
+    ResourceLocation id;
+    if (info != null)
+    {
+      id = info.B;
+  
+      if (id == null)
+      {
+        id = DEFAULT_IDENTIFIER;
+      }
+    }
+    else
     {
       id = DEFAULT_IDENTIFIER;
     }
+    
 
     renderTextureRepeating(x, 0, width, 40, 16, 16, id);
     renderTextureRepeating(x, height - 40, width, 40, 16, 16, id);
