@@ -34,19 +34,19 @@ public class Mappy
     IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
     modEventBus.addListener(this::setupClient);
   
-    configFolder = FMLPaths.CONFIGDIR.get().resolve(MODID + "/");
-    File configFolderFile = configFolder.toFile();
-    if (!configFolderFile.exists())
-    {
-      if (configFolderFile.mkdir())
-      {
-        LOGGER.info("Created config folder");
-      }
-      else
-      {
-        LOGGER.warn("failed to create config folder");
-      }
-    }
+//    configFolder = FMLPaths.CONFIGDIR.get().resolve(MODID + "/");
+//    File configFolderFile = configFolder.toFile();
+//    if (!configFolderFile.exists())
+//    {
+//      if (configFolderFile.mkdir())
+//      {
+//        LOGGER.info("Created config folder");
+//      }
+//      else
+//      {
+//        LOGGER.warn("failed to create config folder");
+//      }
+//    }
   
     MapGUI mapGUI = new MapGUI(map, 4, DrawPosition.TOP_RIGHT);
   
