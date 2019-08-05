@@ -8,6 +8,7 @@ import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.TextComponent;
 import net.minecraftforge.fml.ForgeI18n;
@@ -115,7 +116,7 @@ public class ScreenBase extends Screen
   
   public String lang(String key)
   {
-    return ForgeI18n.getPattern("mappy.gui" + key); //I18n.translate("mappy.gui." + key);
+    return I18n.format("mappy.gui." + key); //I18n.translate("mappy.gui." + key);
   }
   
 }

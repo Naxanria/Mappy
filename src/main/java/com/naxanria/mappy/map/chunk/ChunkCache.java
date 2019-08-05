@@ -1,7 +1,7 @@
 package com.naxanria.mappy.map.chunk;
 
 import com.naxanria.mappy.Mappy;
-import com.naxanria.mappy.config.Settings;
+import com.naxanria.mappy.config.MappyConfig;
 import com.naxanria.mappy.map.Map;
 import com.naxanria.mappy.map.MapLayer;
 import com.naxanria.mappy.map.MapLayerProcessor;
@@ -111,9 +111,9 @@ public class ChunkCache
   
   public void update(Map map, int x, int z)
   {
-    updatePerCycle = Settings.updatePerCycle;
-    pruneDelay = Settings.pruneDelay * 1000;
-    pruneAmount = Settings.pruneAmount;
+    updatePerCycle = MappyConfig.updatePerCycle;
+    pruneDelay = MappyConfig.pruneDelay * 1000;
+    pruneAmount = MappyConfig.pruneAmount;
     
     int size = map.getSize();
     int chunksSize = size / 16 + 4;

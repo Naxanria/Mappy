@@ -1,0 +1,18 @@
+{
+  "mappy": "Mappy",
+  "create_waypoint": "Create Waypoint",
+  "hide_map": "Hide Map",
+  "waypoints_list": "Waypoints List",
+
+  "mappy.dim.overworld": "Overworld",
+  "mappy.dim.nether": "The Nether",
+  "mappy.dim.the_end": "The End",
+
+  "mappy.gui.name": "Name",
+  "mappy.gui.save": "Save",
+  "mappy.gui.cancel": "Cancel",
+  "mappy.gui.edit": "Edit",
+  "mappy.gui.delete": "Delete",
+  "mappy.gui.create": "Create",
+  "mappy.gui.close": "Close"
+}

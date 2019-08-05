@@ -2,7 +2,7 @@ package com.naxanria.mappy.map.chunk;
 
 import com.naxanria.mappy.Logger;
 import com.naxanria.mappy.Mappy;
-import com.naxanria.mappy.config.Settings;
+import com.naxanria.mappy.config.MappyConfig;
 import com.naxanria.mappy.map.MapLayer;
 import com.naxanria.mappy.map.MapLayerProcessor;
 import net.minecraft.client.Minecraft;
@@ -102,7 +102,7 @@ public class ChunkData
         
         image.setPixelRGBA(x, z, col);
         
-        if (Settings.shaded)
+        if (MappyConfig.shaded)
         {
           image.blendPixel(x, z, MapLayerProcessor.shadeTopView(this, x, z));
         }

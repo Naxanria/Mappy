@@ -4,7 +4,8 @@ import com.mojang.blaze3d.platform.GlStateManager;
 import com.naxanria.mappy.Mappy;
 import com.naxanria.mappy.client.DrawPosition;
 import com.naxanria.mappy.client.DrawableHelperBase;
-import com.naxanria.mappy.config.Settings;
+import com.naxanria.mappy.config.MappyConfig;
+import com.naxanria.mappy.config.MappyConfig;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screen.ChatScreen;
 import net.minecraft.client.renderer.BufferBuilder;
@@ -81,14 +82,14 @@ public class MapGUI extends DrawableHelperBase
     
     if (client.currentScreen != null)
     {
-      if (!(Settings.showInChat && client.currentScreen instanceof ChatScreen))
+      if (!(MappyConfig.showInChat && client.currentScreen instanceof ChatScreen))
       {
         return;
       }
     }
   
-    offset = Settings.offset;
-    drawPosition = Settings.drawPosition;
+    offset = MappyConfig.offset;
+    drawPosition = MappyConfig.drawPosition;
     
     if (texture == null)
     {
@@ -103,7 +104,7 @@ public class MapGUI extends DrawableHelperBase
     int w = client.mainWindow.getScaledWidth();
     int h = client.mainWindow.getScaledHeight();
   
-    int scale = Settings.scale;
+    int scale = MappyConfig.scale;
     int iw = backingImage.getWidth() / scale;
     int ih = backingImage.getHeight() / scale;
     
@@ -119,7 +120,7 @@ public class MapGUI extends DrawableHelperBase
         break;
       case TOP_RIGHT:
         x = w - offset - iw;
-        if (Settings.moveMapForEffects)
+        if (MappyConfig.moveMapForEffects)
         {
           /*
            * Based on code by ThexXTURBOXx in pull request #5
@@ -203,7 +204,7 @@ public class MapGUI extends DrawableHelperBase
     builder.pos(x + iw, y, z).tex(1, 0).color(255, 255, 255, 255).endVertex();
     builder.pos(x, y, z).tex(0, 0).color(255, 255, 255, 255).endVertex();
     tessellator.draw();
-    if (Settings.drawChunkGrid)
+    if (MappyConfig.drawChunkGrid)
     {
       drawGrid(client, x, y, iw, ih);
     }

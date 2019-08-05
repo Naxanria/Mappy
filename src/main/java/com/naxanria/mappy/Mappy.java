@@ -2,9 +2,11 @@ package com.naxanria.mappy;
 
 import com.naxanria.mappy.client.ClientHandler;
 import com.naxanria.mappy.client.DrawPosition;
+import com.naxanria.mappy.config.MappyConfig;
 import com.naxanria.mappy.map.Map;
 import com.naxanria.mappy.map.MapGUI;
 import net.minecraftforge.eventbus.api.IEventBus;
+import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
@@ -47,6 +49,8 @@ public class Mappy
     }
   
     MapGUI mapGUI = new MapGUI(map, 4, DrawPosition.TOP_RIGHT);
+  
+    MappyConfig.register(ModLoadingContext.get());
     
   }
   

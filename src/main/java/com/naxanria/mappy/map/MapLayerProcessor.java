@@ -1,6 +1,6 @@
 package com.naxanria.mappy.map;
 
-import com.naxanria.mappy.config.Settings;
+import com.naxanria.mappy.config.MappyConfig;
 import com.naxanria.mappy.map.chunk.ChunkCache;
 import com.naxanria.mappy.map.chunk.ChunkData;
 import com.naxanria.mappy.util.ColorUtil;
@@ -129,7 +129,7 @@ public class MapLayerProcessor
       base_color = 0xDDDDDD;
     }
 
-    int maxDiff = Settings.maxDifference;
+    int maxDiff = MappyConfig.maxDifference;
     
     if (y_diff > maxDiff)
     {

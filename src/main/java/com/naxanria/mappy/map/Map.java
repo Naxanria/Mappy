@@ -3,7 +3,8 @@ package com.naxanria.mappy.map;
 import com.naxanria.mappy.Mappy;
 import com.naxanria.mappy.client.Alignment;
 import com.naxanria.mappy.config.ConfigBase;
-import com.naxanria.mappy.config.Settings;
+import com.naxanria.mappy.config.MappyConfig;
+import com.naxanria.mappy.config.MappyConfig;
 import com.naxanria.mappy.map.chunk.ChunkCache;
 import com.naxanria.mappy.map.waypoint.WayPoint;
 import com.naxanria.mappy.map.waypoint.WayPointEditor;
@@ -124,11 +125,11 @@ public class Map
   
   private void itemCheck()
   {
-    boolean inHotBar = Settings.inHotBar;
-    showMap = Settings.mapItem.equals("") || StackUtil.contains(locPlayer.inventory, inHotBar, Settings.mapItem);
-    showPosition = Settings.showPosition && (Settings.positionItem.equals("") || StackUtil.contains(locPlayer.inventory, inHotBar, Settings.positionItem));
-    showTime = Settings.showTime && (Settings.timeItem.equals("") || StackUtil.contains(locPlayer.inventory, inHotBar, Settings.timeItem));
-    showBiome = Settings.showBiome && (Settings.biomeItem.equals("") || StackUtil.contains(locPlayer.inventory, inHotBar, Settings.biomeItem));
+    boolean inHotBar = MappyConfig.inHotBar;
+    showMap = MappyConfig.mapItem.equals("") || StackUtil.contains(locPlayer.inventory, inHotBar, MappyConfig.mapItem);
+    showPosition = MappyConfig.showPosition && (MappyConfig.positionItem.equals("") || StackUtil.contains(locPlayer.inventory, inHotBar, MappyConfig.positionItem));
+    showTime = MappyConfig.showTime && (MappyConfig.timeItem.equals("") || StackUtil.contains(locPlayer.inventory, inHotBar, MappyConfig.timeItem));
+    showBiome = MappyConfig.showBiome && (MappyConfig.biomeItem.equals("") || StackUtil.contains(locPlayer.inventory, inHotBar, MappyConfig.biomeItem));
   }
   
   private void updateStatusEffects()
@@ -174,8 +175,8 @@ public class Map
   
   public void onConfigChanged()
   {
-    int configScale = Settings.scale;
-    int configSize = Settings.mapSize;
+    int configScale = MappyConfig.scale;
+    int configSize = MappyConfig.mapSize;
     
     boolean resize = false;
     
@@ -216,7 +217,7 @@ public class Map
       manager.add(biomeInfo);
     }
     
-    if (Settings.showFPS)
+    if (MappyConfig.showFPS)
     {
       fpsInfo.setText(Minecraft.getDebugFPS() + " fps");
       manager.add(fpsInfo);
@@ -228,7 +229,7 @@ public class Map
       manager.add(inGameTimeInfo);
     }
     
-    if (Settings.showDirection)
+    if (MappyConfig.showDirection)
     {
       //todo: check if correct
       Direction direction = player.getHorizontalFacing();
@@ -348,7 +349,7 @@ public class Map
       }
     }
     
-    if (Settings.showEntities)
+    if (MappyConfig.showEntities)
     {
       entities.clear();
       
