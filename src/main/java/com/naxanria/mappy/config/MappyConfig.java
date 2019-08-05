@@ -1,5 +1,6 @@
 package com.naxanria.mappy.config;
 
+import com.naxanria.mappy.Mappy;
 import com.naxanria.mappy.client.DrawPosition;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.fml.ModLoadingContext;
@@ -113,6 +114,8 @@ public class MappyConfig
     positionItem = config.positionItem.get();
     timeItem = config.timeItem.get();
     biomeItem = config.biomeItem.get();
+  
+    Mappy.map.onConfigChanged();
   }
   
   private static class Client
