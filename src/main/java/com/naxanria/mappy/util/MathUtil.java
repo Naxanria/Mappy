@@ -34,4 +34,9 @@ public class MathUtil
     
     return Math.sqrt(dist);
   }
+  
+  public static BiInteger getXZInChunk(BlockPos pos)
+  {
+    return new BiInteger(pos.getX() & 15, pos.getZ() & 15);
+  }
 }

@@ -242,30 +242,31 @@ public class Map
 //      manager.add(new MapInfoLine(Alignment.Center, (locPlayer.headYaw * -1 % 360) + ""));
 //    }
     
-    World world = player.world;
-    BlockPos pos = player.getPosition();
-    
-    int h = MapLayerProcessor.getHeight(world, pos, false);
-    int h2 = MapLayerProcessor.effectiveHeight((Chunk) world.getChunk(pos), 2, 255, 2, false);
-    
-    BlockPos pos2 = new BlockPos(pos.getX(), h, pos.getZ());
-    BlockState state = world.getBlockState(pos2);
-  
-    
-  
-    int col = ColorUtil.BGRAtoARGB(MapLayerProcessor.color(world, state, pos2));
-  
-    float[] f = ColorUtil.toFloats(col);//ColorUtil.BGRAtoARGB(ColorUtil.rgb(1, 2, 3)));
-    int r = (int)(f[0] * 255);
-    int g = (int)(f[1] * 255);
-    int b = (int)(f[2] * 255);
-    String info = "Current height: " + h + ":"+ h2 + " state: " + state + " col: " + r + "," + g + "," + b;
-    
-//    col = ColorUtil.rgb(b, g, r);
-    
-    MapInfoLine infoLine = new MapInfoLine(Alignment.Center, info);
-    infoLine.color = col;
-    manager.add(infoLine);
+//    World world = player.world;
+//    BlockPos pos = player.getPosition();
+//    BiInteger cpos = MathUtil.getXZInChunk(pos);
+//
+//    int h = MapLayerProcessor.getHeight(world, pos, false);
+//    int h2 = MapLayerProcessor.effectiveHeight((Chunk) world.getChunk(pos), cpos.A, 255, cpos.B, false);
+//
+//    BlockPos pos2 = new BlockPos(pos.getX(), h, pos.getZ());
+//    BlockState state = world.getBlockState(pos2);
+//
+//
+//
+//    int col = ColorUtil.ABGRtoARGB(MapLayerProcessor.color(world, state, pos2));
+//
+//    float[] f = ColorUtil.toFloats(col);//ColorUtil.BGRAtoARGB(ColorUtil.rgb(1, 2, 3)));
+//    int r = (int)(f[0] * 255);
+//    int g = (int)(f[1] * 255);
+//    int b = (int)(f[2] * 255);
+//    String info = "Current height: " + h + ":"+ h2 + " state: " + state + " col: " + r + "," + g + "," + b;
+//
+////    col = ColorUtil.rgb(b, g, r);
+//
+//    MapInfoLine infoLine = new MapInfoLine(Alignment.Center, info);
+//    infoLine.color = col;
+//    manager.add(infoLine);
   }
   
   public EffectState getEffects()

@@ -98,7 +98,7 @@ public class MapLayerProcessor
     }
     while (loop);
     
-    return y;// < 0 ? getHeight(world, worldPos, skipLiquid) : y;
+    return y + 1;// < 0 ? getHeight(world, worldPos, skipLiquid) : y;
 
 //    return y;
   }
@@ -147,6 +147,18 @@ public class MapLayerProcessor
     World world = worldChunk.getWorld();
  
     int y = chunkData.heightmap[x + z * 16];
+//
+//    if (y < 0)
+//    {
+//      return 0xffff00ff;
+//    }
+//    int c = y * 25;
+//
+//    BlockPos worldPos = new BlockPos(x + worldChunk.getPos().x * 16, y, z + worldChunk.getPos().z * 16);
+//
+//    BlockState state = world.getBlockState(worldPos);
+//
+//    return color(world, state, worldPos);
     
     if (y < 0)
     {
@@ -155,9 +167,9 @@ public class MapLayerProcessor
 
 
     BlockPos worldPos = new BlockPos(x + worldChunk.getPos().x * 16, y, z + worldChunk.getPos().z * 16);
-  
+
     BlockState state = world.getBlockState(worldPos);
-  
+
     if (!StateUtil.isAir(state))
     {
       // handle special cases?
@@ -167,9 +179,9 @@ public class MapLayerProcessor
       }
       return color(world, state, worldPos);
     }
-  
+
     // return the cached pixel
-    
+
     return VOID_COLOR;
   }
   
@@ -227,7 +239,7 @@ public class MapLayerProcessor
   
   public static int color(World world, BlockState state, BlockPos pos)
   {
-    return state.getBlock().getMaterialColor(state, world, pos).colorValue;//.getMapColor(2);
+    return state.getMaterial().getColor().getMapColor(2);
   }
   
   public static int getHeight(World world, BlockPos pos, boolean ignoreLiquid)

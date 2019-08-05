@@ -80,10 +80,10 @@ public class ChunkData
               
               heightmap[x + z * 16] = MapLayerProcessor.getHeight(chunk.getWorld(), getPosition(x, 0, z), false);// MapLayerProcessor.effectiveHeight(chunk, x, 255, z, false);
               col = MapLayerProcessor.processTopView(this, x, z);
-              if (col == MapLayerProcessor.VOID_COLOR)
-              {
-                col = 0xff00ff00;
-              }
+//              if (col == MapLayerProcessor.VOID_COLOR)
+//              {
+//                col = 0xff00ff00;
+//              }
 //              float c = (heightmap[x + z * 16]) / 255f;
 //              float[] cols = ColorUtil.toFloats(col);
 //
