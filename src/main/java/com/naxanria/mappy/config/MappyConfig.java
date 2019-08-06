@@ -27,6 +27,7 @@ public class MappyConfig
   public static int updatePerCycle = 4;
   public static int pruneDelay = 60;
   public static int pruneAmount = 1500;
+  public static boolean forceHeightmap = false;
   
   public static boolean showMap = true;
   
@@ -96,6 +97,7 @@ public class MappyConfig
     updatePerCycle = config.updatePerCycle.get();
     pruneDelay = config.pruneDelay.get();
     pruneAmount = config.pruneAmount.get();
+    forceHeightmap = config.forceHeightmapUse.get();
     
     showMap = config.showMap.get();
     moveMapForEffects = config.moveMapForEffects.get();
@@ -137,6 +139,7 @@ public class MappyConfig
     private final ForgeConfigSpec.IntValue updatePerCycle;
     private final ForgeConfigSpec.IntValue pruneDelay;
     private final ForgeConfigSpec.IntValue pruneAmount;
+    private final ForgeConfigSpec.BooleanValue forceHeightmapUse;
   
     public final ForgeConfigSpec.BooleanValue showMap;
   
@@ -254,7 +257,7 @@ public class MappyConfig
       updatePerCycle = builder
         .comment("Updated chunks per cycle")
         .translation(key("update_per_cycle"))
-        .defineInRange("update_per_cycle", 2, 1, 100);
+        .defineInRange("update_per_cycle", 10, 1, 100);
       
       pruneDelay = builder
         .comment("Delay before pruning old not visited chunks")
@@ -265,7 +268,11 @@ public class MappyConfig
         .comment("Max amount to purge per prune cycle")
         .translation(key("prune_amount"))
         .defineInRange("prune_amount", 1500, 100, 6000);
-  
+      
+      forceHeightmapUse = builder
+        .comment("Forces use of heightmap for height checking, this is more performing but can be less accurate")
+        .translation(key("force_heightmap"))
+        .define("force_heightmap", true);
   
       builder.pop().comment("Items required for showing").push("items");
   

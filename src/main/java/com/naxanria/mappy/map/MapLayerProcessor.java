@@ -9,6 +9,7 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.material.Material;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.LightType;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
 
@@ -239,7 +240,35 @@ public class MapLayerProcessor
   
   public static int color(World world, BlockState state, BlockPos pos)
   {
-    return state.getMaterial().getColor().getMapColor(2);
+    int brightness = 1;
+//    int skyLight = 15 - world.getSkylightSubtracted();
+//
+//    int l = 0;
+//    if (skyLight == 15)
+//    {
+//      l = 15;
+//    }
+//    else
+//    {
+//      l = Math.max(world.getLightFor(LightType.BLOCK, pos.up()), skyLight);
+//    }
+//
+//    if (l > 12)
+//    {
+//      brightness = 2;
+//    }
+//    else if (l > 8)
+//    {
+//      brightness = 1;
+//    }
+//    else
+//    {
+//      brightness = 3;
+//    }
+    
+    
+    return state.getMaterialColor(world, pos).getMapColor(brightness);
+//    return state.getMaterial().getColor().getMapColor(2);
   }
   
   public static int getHeight(World world, BlockPos pos, boolean ignoreLiquid)

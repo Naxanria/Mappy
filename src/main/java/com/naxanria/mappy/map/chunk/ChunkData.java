@@ -13,6 +13,7 @@ import net.minecraft.util.math.ChunkPos;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.dimension.DimensionType;
+import net.minecraft.world.gen.Heightmap;
 
 import java.util.Arrays;
 
@@ -76,9 +77,15 @@ public class ChunkData
             }
             else
             {
-              int h = heightmap[x + z * 16];
-              
-              heightmap[x + z * 16] = MapLayerProcessor.getHeight(chunk.getWorld(), getPosition(x, 0, z), false);// MapLayerProcessor.effectiveHeight(chunk, x, 255, z, false);
+//              int h = heightmap[x + z * 16];
+              if (MappyConfig.forceHeightmap)
+              {
+                heightmap[x + z * 16] = chunk.getWorld().getHeight(Heightmap.Type.WORLD_SURFACE, cx * 16 + x, cz * 16 + z) - 1;
+              }
+              else
+              {
+                heightmap[x + z * 16] = MapLayerProcessor.getHeight(chunk.getWorld(), getPosition(x, 0, z), false);// MapLayerProcessor.effectiveHeight(chunk, x, 255, z, false);
+              }
               col = MapLayerProcessor.processTopView(this, x, z);
 //              if (col == MapLayerProcessor.VOID_COLOR)
 //              {
