@@ -113,6 +113,8 @@ public class Map
       updateInfo(player);
       
       updateStatusEffects();
+  
+//      image.fillRGBA(10, 10, 10, 10, 0xff0000ff);
 
       MapGUI.instance.markDirty();
     }

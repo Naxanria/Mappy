@@ -3,6 +3,7 @@ package com.naxanria.mappy.map;
 import com.naxanria.mappy.config.Settings;
 import com.naxanria.mappy.map.chunk.ChunkCache;
 import com.naxanria.mappy.map.chunk.ChunkData;
+import com.naxanria.mappy.util.MathUtil;
 import com.naxanria.mappy.util.StateUtil;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
@@ -11,6 +12,7 @@ import net.minecraft.block.Material;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.Heightmap;
 import net.minecraft.world.World;
+import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.chunk.WorldChunk;
 
 public class MapLayerProcessor
@@ -226,7 +228,7 @@ public class MapLayerProcessor
   
   private static int color(World world, BlockState state, BlockPos pos)
   {
-    return state.getTopMaterialColor(world, pos).getRenderColor(2);
+    return state.getTopMaterialColor(world, pos).getRenderColor(1);
   }
   
   public static int getHeight(World world, BlockPos pos, boolean ignoreLiquid)

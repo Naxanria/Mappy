@@ -75,8 +75,8 @@ public class ChunkData
             else
             {
               int h = heightmap[x + z * 16];
-              
-              heightmap[x + z * 16] = MapLayerProcessor.getHeight(chunk.getWorld(), getPosition(x, 0, z), false);// MapLayerProcessor.effectiveHeight(chunk, x, 255, z, false);
+              heightmap[x + z * 16] = chunk.sampleHeightmap(Heightmap.Type.WORLD_SURFACE, x, z);
+//              heightmap[x + z * 16] = MapLayerProcessor.getHeight(chunk.getWorld(), getPosition(x, 0, z), false);// MapLayerProcessor.effectiveHeight(chunk, x, 255, z, false);
               col = MapLayerProcessor.processTopView(this, x, z);
 //              float c = (heightmap[x + z * 16]) / 255f;
 //              float[] cols = ColorUtil.toFloats(col);
