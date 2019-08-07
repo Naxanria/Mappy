@@ -198,22 +198,22 @@ public class MappyConfig
       createDeathWayPoints = builder
         .comment("Create a waypoint when you die")
         .translation(key("death_waypoint"))
-        .define("death_waypoint", true);
+        .define("waypoint", true);
       
       autoRemoveDeathWaypoint = builder
         .comment("Auto remove the death point when you get close")
         .translation(key("death_auto_remove"))
-        .define("death_auto_remove", true);
+        .define("auto_remove", true);
       
       autoRemoveRange = builder
         .comment("Range for when to remove the death waypoint")
         .translation(key("death_remove_range"))
-        .defineInRange("death_remove_range", 5, 1, 40);
+        .defineInRange("remove_range", 5, 1, 40);
       
       printDeathPointInChat = builder
         .comment("Print the death position into your chat.")
         .translation(key("death_print"))
-        .define("death_print", false);
+        .define("print", false);
       
       builder.pop();
       
