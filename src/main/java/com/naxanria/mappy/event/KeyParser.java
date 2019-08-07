@@ -1,4 +1,4 @@
-package com.naxanria.mappy.client;
+package com.naxanria.mappy.event;
 
 
 import net.minecraft.client.Minecraft;

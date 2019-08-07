@@ -1,6 +1,6 @@
 package com.naxanria.mappy;
 
-import com.naxanria.mappy.client.ClientHandler;
+import com.naxanria.mappy.event.EventListener;
 import com.naxanria.mappy.client.DrawPosition;
 import com.naxanria.mappy.config.MappyConfig;
 import com.naxanria.mappy.map.Map;
@@ -10,7 +10,6 @@ import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
-import net.minecraftforge.fml.loading.FMLPaths;
 
 import java.io.File;
 import java.nio.file.Path;
@@ -56,7 +55,7 @@ public class Mappy
   
   private void setupClient(final FMLClientSetupEvent event)
   {
-    ClientHandler.setupKeyBinds();
+    EventListener.setupKeyBinds();
   }
   
   //  @Override
@@ -127,7 +126,7 @@ public class Mappy
 //      }
 //    });
 //
-//    ClientTickCallback.EVENT.register(ClientHandler::tick);
+//    ClientTickCallback.EVENT.register(EventListener::tick);
 //
 //    MapGUI mapGUI = new MapGUI(map, 4, DrawPosition.TOP_RIGHT);
 //  }

@@ -24,6 +24,7 @@ public class WayPoint implements Serializable<WayPoint>
   public boolean hidden;
   public int showRange = 5000;
   public IconType iconType = IconType.DIAMOND;
+  public boolean deathPoint = false;
   
   public boolean show()
   {
@@ -43,6 +44,7 @@ public class WayPoint implements Serializable<WayPoint>
       tag.putBoolean("hidden", hidden);
       tag.putInt("showRange", showRange);
       tag.putInt("icon", iconType.ordinal());
+      tag.putBoolean("death", deathPoint);
     }
     
     return this;
@@ -54,18 +56,21 @@ public class WayPoint implements Serializable<WayPoint>
     if (tag != null)
     {
       name = tag.getString("name");
-      pos = NBTUtil.readBlockPos((CompoundNBT) tag.getCompound("pos"));
+      pos = NBTUtil.readBlockPos(tag.getCompound("pos"));
       dimension = tag.getInt("dimension");
       color = tag.getInt("color");
       showAlways = tag.getBoolean("showAlways");
       hidden = tag.getBoolean("hidden");
       showRange = tag.getInt("showRange");
+      
       int icon = 0;
       if (tag.contains("icon"))
       {
         icon = tag.getInt("icon");
       }
       iconType = IconType.values()[icon];
+      
+      deathPoint = tag.contains("death") && tag.getBoolean("death");
     }
     
     return this;

@@ -14,6 +14,11 @@ public class MappyConfig
   public static DrawPosition drawPosition = DrawPosition.TOP_RIGHT;
   public static int mapSize = 64;
   
+  public static boolean createDeathWaypoints = true;
+  public static boolean autoRemoveDeathWaypoints = true;
+  public static int autoRemoveRange = 5;
+  public static boolean printDeathPointInChat = false;
+  
   public static boolean showPosition = true;
   public static boolean showFPS = false;
   public static boolean showBiome = true;
@@ -27,7 +32,7 @@ public class MappyConfig
   public static int updatePerCycle = 4;
   public static int pruneDelay = 60;
   public static int pruneAmount = 1500;
-  public static boolean forceHeightmap = false;
+  public static boolean forceHeightmap = true;
   
   public static boolean showMap = true;
   
@@ -84,6 +89,11 @@ public class MappyConfig
     drawPosition = config.drawPosition.get();
     mapSize = config.mapSize.get();
   
+    createDeathWaypoints = config.createDeathWayPoints.get();
+    autoRemoveDeathWaypoints = config.autoRemoveDeathWaypoint.get();
+    autoRemoveRange = config.autoRemoveRange.get();
+    printDeathPointInChat = config.printDeathPointInChat.get();
+  
     showPosition = config.showPosition.get();
     showFPS = config.showFPS.get();
     showBiome = config.showBiome.get();
@@ -125,6 +135,11 @@ public class MappyConfig
     private final ForgeConfigSpec.IntValue offset;
     private final ForgeConfigSpec.EnumValue<DrawPosition> drawPosition;
     private final ForgeConfigSpec.IntValue mapSize;
+  
+    private final ForgeConfigSpec.BooleanValue createDeathWayPoints;
+    private final ForgeConfigSpec.BooleanValue printDeathPointInChat;
+    private final ForgeConfigSpec.BooleanValue autoRemoveDeathWaypoint;
+    private final ForgeConfigSpec.IntValue autoRemoveRange;
   
     private final ForgeConfigSpec.BooleanValue showPosition;
     private final ForgeConfigSpec.BooleanValue showFPS;
@@ -177,7 +192,31 @@ public class MappyConfig
         .comment("The map size")
         .translation(key("map_size"))
         .defineInRange("map_size", 64, 16, 256);
+      
+      builder.comment("Death waypoints for when you die.").push("death");
   
+      createDeathWayPoints = builder
+        .comment("Create a waypoint when you die")
+        .translation(key("death_waypoint"))
+        .define("death_waypoint", true);
+      
+      autoRemoveDeathWaypoint = builder
+        .comment("Auto remove the death point when you get close")
+        .translation(key("death_auto_remove"))
+        .define("death_auto_remove", true);
+      
+      autoRemoveRange = builder
+        .comment("Range for when to remove the death waypoint")
+        .translation(key("death_remove_range"))
+        .defineInRange("death_remove_range", 5, 1, 40);
+      
+      printDeathPointInChat = builder
+        .comment("Print the death position into your chat.")
+        .translation(key("death_print"))
+        .define("death_print", false);
+      
+      builder.pop();
+      
       shaded = builder
         .comment("Show the map shaded")
         .translation(key("shaded"))

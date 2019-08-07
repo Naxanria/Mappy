@@ -5,7 +5,9 @@ import com.naxanria.mappy.client.Alignment;
 import com.naxanria.mappy.config.ConfigBase;
 import com.naxanria.mappy.config.MappyConfig;
 import com.naxanria.mappy.config.MappyConfig;
+import com.naxanria.mappy.event.EventListener;
 import com.naxanria.mappy.map.chunk.ChunkCache;
+import com.naxanria.mappy.map.waypoint.IconType;
 import com.naxanria.mappy.map.waypoint.WayPoint;
 import com.naxanria.mappy.map.waypoint.WayPointEditor;
 import com.naxanria.mappy.map.waypoint.WayPointManager;
@@ -13,6 +15,7 @@ import com.naxanria.mappy.util.*;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.screen.DeathScreen;
 import net.minecraft.client.renderer.texture.NativeImage;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.Entity;
@@ -386,29 +389,83 @@ public class Map
 
     waypoints.clear();
     List<WayPoint> wps = WayPointManager.INSTANCE.getWaypoints(world.dimension.getType().getId());
+    List<WayPoint> toRemove = new ArrayList<>();
     if (wps != null)
     {
-      wps.stream()
-        .filter
-          (
-            wp -> !wp.hidden && (wp.showAlways || MathUtil.getDistance(pos, wp.pos, true) <= wp.showRange)
-          )
-        .forEach(wp ->
+      for (WayPoint wp :
+        wps)
+      {
+        boolean show = false;
+        if (!wp.hidden || wp.showAlways || wp.deathPoint)
+        {
+          if (wp.showAlways && !wp.deathPoint)
+          {
+            show = true;
+          }
+          else
+          {
+            double distS = MathUtil.getDistanceSqrd(pos, wp.pos);
+
+            if (wp.deathPoint)
+            {
+              if (MappyConfig.autoRemoveDeathWaypoints && distS <= MappyConfig.autoRemoveRange * MappyConfig.autoRemoveRange)
+              {
+                // don't want to remove the waypoint we just added
+                if (EventListener.playerAlive && !(Minecraft.getInstance().currentScreen instanceof DeathScreen))
+                {
+                  toRemove.add(wp);
+                }
+              }
+              else
+              {
+                show = true;
+              }
+            }
+            else
+            {
+              if (distS <= wp.showRange * wp.showRange)
+              {
+                show = true;
+              }
+            }
+          }
+        }
+
+        if (show)
         {
           MapIcon.Waypoint waypoint = new MapIcon.Waypoint(this, wp);
-          waypoint.setPosition(
+          waypoint.setPosition
+          (
             MathUtil.clamp(MapIcon.getScaled(wp.pos.getX(), startX, endX, size), 0, size),
-            MathUtil.clamp(MapIcon.getScaled(wp.pos.getZ(), startZ, endZ, size), 0, size));
+            MathUtil.clamp(MapIcon.getScaled(wp.pos.getZ(), startZ, endZ, size), 0, size)
+          );
           waypoints.add(waypoint);
-        });
+        }
+      }
+
+      toRemove.forEach(WayPointManager.INSTANCE::remove);
+      
+//      wps.stream()
+//        .filter
+//          (
+//            wp -> !wp.hidden && (wp.showAlways || MathUtil.getDistance(pos, wp.pos, true) <= wp.showRange)
+//          )
+//        .forEach(wp ->
+//        {
+//          MapIcon.Waypoint waypoint = new MapIcon.Waypoint(this, wp);
+//          waypoint.setPosition(
+//            MathUtil.clamp(MapIcon.getScaled(wp.pos.getX(), startX, endX, size), 0, size),
+//            MathUtil.clamp(MapIcon.getScaled(wp.pos.getZ(), startZ, endZ, size), 0, size));
+//          waypoints.add(waypoint);
+//        });
     }
 
   }
   
-  protected boolean isAir(BlockState state)
-  {
-    return state.isAir() || state == AIR_STATE || state == CAVE_AIR_STATE || state == VOID_AIR_STATE;
-  }
+//  protected boolean isAir(BlockState state)
+//  {
+//    return state.isAir() || state == AIR_STATE || state == CAVE_AIR_STATE || state == VOID_AIR_STATE;
+//  }
   
   public List<MapIcon.Player> getPlayerIcons()
   {
@@ -422,21 +479,39 @@ public class Map
   
   public void createWayPoint()
   {
+    createWayPoint(false);
+  }
+  
+  public void createWayPoint(boolean death)
+  {
     PlayerEntity player = client.player;
     
     WayPoint wayPoint = new WayPoint();
-    wayPoint.dimension = player.world.dimension.getType().getId();
-//    Random random = player.world.random;
-    wayPoint.name = "Waypoint";
-    wayPoint.color = RandomUtil.getElement(WayPoint.WAYPOINT_COLORS); //ColorUtil.rgb(random.nextInt(255), random.nextInt(255), random.nextInt(255));
     wayPoint.pos = player.getPosition();
+    wayPoint.dimension = player.world.dimension.getType().getId();
     
-    client.displayGuiScreen(new WayPointEditor(wayPoint, client.currentScreen, WayPointManager.INSTANCE::add));
-    
-//    WayPointManager.INSTANCE.add(wayPoint);
-//    WayPointManager.INSTANCE.save();
-//
-//    player.sendMessage(new StringTextComponent("Created waypoint " + wayPoint.pos.getX() + " " + wayPoint.pos.getY() + " " + wayPoint.pos.getZ()));
+    if (death)
+    {
+      wayPoint.deathPoint = true;
+      wayPoint.iconType = IconType.SKULL;
+      wayPoint.color = 0xff666666;
+      wayPoint.name = "Death";
+      
+      WayPointManager.INSTANCE.add(wayPoint);
+      
+      
+      Mappy.LOGGER.info("Created death waypoint [" + wayPoint.dimension + "] " + Util.prettyFy(wayPoint.pos));
+  
+      WayPointManager.INSTANCE.save();
+    }
+    else
+    {
+      wayPoint.name = "Waypoint";
+      wayPoint.color = RandomUtil.getElement(WayPoint.WAYPOINT_COLORS); //ColorUtil.rgb(random.nextInt(255), random.nextInt(255), random.nextInt(255));
+  
+  
+      client.displayGuiScreen(new WayPointEditor(wayPoint, client.currentScreen, WayPointManager.INSTANCE::add));
+    }
   }
   
   public NativeImage getImage()
