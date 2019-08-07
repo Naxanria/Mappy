@@ -113,4 +113,41 @@ public class DrawableHelperBase extends AbstractGui
     GlStateManager.disableBlend();
   }
   
+  public static void rect(int x, int y, int size, int color)
+  {
+    rect(x, y, size, size, color);
+  }
+  
+  public static void rect(int x, int y, int width, int height, int color)
+  {
+    float a = (float)(color >> 24 & 255) / 255.0F;
+    float r = (float)(color >> 16 & 255) / 255.0F;
+    float g = (float)(color >> 8 & 255) / 255.0F;
+    float b = (float)(color & 255) / 255.0F;
+  
+    Tessellator tessellator = Tessellator.getInstance();
+    BufferBuilder builder = tessellator.getBuffer();
+    GlStateManager.enableBlend();
+    GlStateManager.disableTexture();
+    GlStateManager.blendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
+    GlStateManager.color4f(r, g, b, a);
+    builder.begin(GL11.GL_LINES, DefaultVertexFormats.POSITION);
+    builder.pos(x, y, 0).endVertex();
+    builder.pos(x + width, y, 0).endVertex();
+    
+    builder.pos(x + width, y, 0).endVertex();
+    builder.pos(x + width, y + height, 0).endVertex();
+    
+    builder.pos(x + width, y + height, 0).endVertex();
+    builder.pos(x, y + height, 0).endVertex();
+  
+    builder.pos(x, y, 0).endVertex();
+    builder.pos(x, y + height, 0).endVertex();
+    
+    tessellator.draw();
+    
+    GlStateManager.enableTexture();
+    GlStateManager.disableBlend();
+  }
+  
 }

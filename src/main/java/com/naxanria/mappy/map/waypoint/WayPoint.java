@@ -23,6 +23,7 @@ public class WayPoint implements Serializable<WayPoint>
   public boolean showAlways;
   public boolean hidden;
   public int showRange = 5000;
+  public IconType iconType = IconType.DIAMOND;
   
   public boolean show()
   {
@@ -41,6 +42,7 @@ public class WayPoint implements Serializable<WayPoint>
       tag.putBoolean("showAlways", showAlways);
       tag.putBoolean("hidden", hidden);
       tag.putInt("showRange", showRange);
+      tag.putInt("icon", iconType.ordinal());
     }
     
     return this;
@@ -58,6 +60,12 @@ public class WayPoint implements Serializable<WayPoint>
       showAlways = tag.getBoolean("showAlways");
       hidden = tag.getBoolean("hidden");
       showRange = tag.getInt("showRange");
+      int icon = 0;
+      if (tag.contains("icon"))
+      {
+        icon = tag.getInt("icon");
+      }
+      iconType = IconType.values()[icon];
     }
     
     return this;

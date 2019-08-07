@@ -109,10 +109,12 @@ public abstract class MapIcon<T extends MapIcon<T>> extends DrawableHelperBase
       
       int drawX = mapX + x - size / 2;
       int drawY = mapY + y - size / 2;
+      
+      wayPoint.iconType.draw(drawX, drawY, col);
   
-      GlStateManager.pushMatrix();
-      diamond(drawX, drawY, size, size, col);
-      GlStateManager.popMatrix();
+//      GlStateManager.pushMatrix();
+//      diamond(drawX, drawY, size, size, col);
+//      GlStateManager.popMatrix();
     }
   }
   

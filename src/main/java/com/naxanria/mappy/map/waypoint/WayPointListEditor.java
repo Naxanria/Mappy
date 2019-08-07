@@ -87,12 +87,17 @@ public class WayPointListEditor extends ScreenBase
       fill(x, y, x + width, y + height, bgColor);
       
       // todo: other icons if needed
-      int diamondSize = height - 2;
-      diamond(x, y + 1, diamondSize, diamondSize, wayPoint.color);
+      
+      int size = height - 2;
+      
+      wayPoint.iconType.draw(x + size / 2, y + 1 + size / 2, wayPoint.color);
+//
+//      int diamondSize = height - 2;
+//      diamond(x, y + 1, diamondSize, diamondSize, wayPoint.color);
       
       int stringY = y + 6;
       
-      int nameX = x + diamondSize + 2;
+      int nameX = x + size + 2;
 
       drawString(font, wayPoint.name, nameX, stringY, WHITE);
       

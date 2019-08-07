@@ -2,6 +2,7 @@ package com.naxanria.mappy.map.waypoint;
 
 import com.naxanria.mappy.client.ScreenBase;
 import com.naxanria.mappy.client.widget.TitledWidget;
+import com.naxanria.mappy.client.widget.WaypointTypeSelectorWidget;
 import com.naxanria.mappy.util.Predicates;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.TextFieldWidget;
@@ -22,6 +23,7 @@ public class WayPointEditor extends ScreenBase
   
   private TitledWidget<TextFieldWidget> nameField;
   private Button prevColorButton, nextColorButton;
+  private WaypointTypeSelectorWidget typeSelectorWidget;
   private TextFieldWidget xField, yField, zField;
 //  private CheckboxWidget hiddenCheckbox, alwaysShownCheckBox;
   private Button saveButton, cancelButton;
@@ -83,6 +85,9 @@ public class WayPointEditor extends ScreenBase
     nextColorButton = new Button(x + halfWidth - bw - 30, 92, bw, h, ">", (b) -> cycleColor(1));
     children.add(nextColorButton);
     
+    typeSelectorWidget = new WaypointTypeSelectorWidget(x, 92 + 2 + 20, "", this);
+    children.add(typeSelectorWidget);
+    
     int by = height - 90;
     saveButton = new Button(x, by, 60, h, lang("save"), (b) -> { save(); onClose(); });
     children.add(saveButton);
@@ -118,6 +123,8 @@ public class WayPointEditor extends ScreenBase
     
     wayPoint.pos = new BlockPos(xPos, yPos, zPos);
     
+    wayPoint.iconType = typeSelectorWidget.getSelectedType();
+    
     if (onSaveCallback != null)
     {
       onSaveCallback.accept(wayPoint);
@@ -139,7 +146,7 @@ public class WayPointEditor extends ScreenBase
     int w = nextColorButton.x - x - 2;
     int y = prevColorButton.y + 3;
     int h = 12;
-    int col = WayPoint.WAYPOINT_COLORS[colorIndex];
+    int col = getPreviewColor();
     
     borderedRect(x, y, w, h, col, 2, 0xFFCCCCCC);
   }
@@ -191,5 +198,15 @@ public class WayPointEditor extends ScreenBase
     }
     
     return super.keyPressed(int_1, int_2, int_3);
+  }
+  
+  public WayPoint getWaypoint()
+  {
+    return wayPoint;
+  }
+  
+  public int getPreviewColor()
+  {
+    return WayPoint.WAYPOINT_COLORS[colorIndex];
   }
 }
