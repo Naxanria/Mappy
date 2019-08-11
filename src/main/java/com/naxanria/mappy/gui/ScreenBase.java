@@ -43,21 +43,31 @@ public class ScreenBase extends Screen
     renderBackground();
     
     renderPreChildren();
-    
-    for (IGuiEventListener listener :
-      children)
-    {
-      if (listener instanceof IRenderable)
-      {
-        ((IRenderable) listener).render(mouseX, mouseY, partialTicks);
-      }
-    }
-    
+  
+    processChildren(mouseX, mouseY, partialTicks);
+  
     renderPostChildren();
     
     renderForeground();
     
     renderPost();
+  }
+  
+  protected void processChildren(int mouseX, int mouseY, float partialTicks)
+  {
+    for (IGuiEventListener listener :
+      children)
+    {
+      processChild(mouseX, mouseY, partialTicks, listener);
+    }
+  }
+  
+  protected void processChild(int mouseX, int mouseY, float partialTicks, IGuiEventListener child)
+  {
+    if (child instanceof IRenderable)
+    {
+      ((IRenderable) child).render(mouseX, mouseY, partialTicks);
+    }
   }
   
   public void renderPre()

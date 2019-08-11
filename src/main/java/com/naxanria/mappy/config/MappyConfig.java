@@ -141,42 +141,42 @@ public class MappyConfig
     public final ForgeConfigSpec.EnumValue<DrawPosition> drawPosition;
     public final ForgeConfigSpec.IntValue mapSize;
   
-    private final ForgeConfigSpec.BooleanValue createDeathWayPoints;
-    private final ForgeConfigSpec.BooleanValue printDeathPointInChat;
-    private final ForgeConfigSpec.BooleanValue autoRemoveDeathWaypoint;
-    private final ForgeConfigSpec.IntValue autoRemoveRange;
+    public final ForgeConfigSpec.BooleanValue createDeathWayPoints;
+    public final ForgeConfigSpec.BooleanValue printDeathPointInChat;
+    public final ForgeConfigSpec.BooleanValue autoRemoveDeathWaypoint;
+    public final ForgeConfigSpec.IntValue autoRemoveRange;
   
-    private final ForgeConfigSpec.BooleanValue showPosition;
-    private final ForgeConfigSpec.BooleanValue showFPS;
-    private final ForgeConfigSpec.BooleanValue showBiome;
-    private final ForgeConfigSpec.BooleanValue showTime;
-    private final ForgeConfigSpec.BooleanValue showDirection;
+    public final ForgeConfigSpec.BooleanValue showPosition;
+    public final ForgeConfigSpec.BooleanValue showFPS;
+    public final ForgeConfigSpec.BooleanValue showBiome;
+    public final ForgeConfigSpec.BooleanValue showTime;
+    public final ForgeConfigSpec.BooleanValue showDirection;
   
-    private final ForgeConfigSpec.BooleanValue showPlayerNames;
-    private final ForgeConfigSpec.BooleanValue showPlayerHeads;
-    private final ForgeConfigSpec.BooleanValue showEntities;
+    public final ForgeConfigSpec.BooleanValue showPlayerNames;
+    public final ForgeConfigSpec.BooleanValue showPlayerHeads;
+    public final ForgeConfigSpec.BooleanValue showEntities;
   
-    private final ForgeConfigSpec.IntValue updatePerCycle;
-    private final ForgeConfigSpec.IntValue pruneDelay;
-    private final ForgeConfigSpec.IntValue pruneAmount;
-    private final ForgeConfigSpec.BooleanValue forceHeightmapUse;
+    public final ForgeConfigSpec.IntValue updatePerCycle;
+    public final ForgeConfigSpec.IntValue pruneDelay;
+    public final ForgeConfigSpec.IntValue pruneAmount;
+    public final ForgeConfigSpec.BooleanValue forceHeightmapUse;
   
     public final ForgeConfigSpec.BooleanValue showMap;
   
-    private final ForgeConfigSpec.BooleanValue moveMapForEffects;
+    public final ForgeConfigSpec.BooleanValue moveMapForEffects;
   
-    private final ForgeConfigSpec.BooleanValue shaded;
-    private final ForgeConfigSpec.IntValue shadeStrength;
-    private final ForgeConfigSpec.BooleanValue drawChunkGrid;
-    private final ForgeConfigSpec.IntValue scale;
-    private final ForgeConfigSpec.BooleanValue showInChat;
+    public final ForgeConfigSpec.BooleanValue shaded;
+    public final ForgeConfigSpec.IntValue shadeStrength;
+    public final ForgeConfigSpec.BooleanValue drawChunkGrid;
+    public final ForgeConfigSpec.IntValue scale;
+    public final ForgeConfigSpec.BooleanValue showInChat;
   
-    private final ForgeConfigSpec.BooleanValue inHotBar;
-    private final ForgeConfigSpec.ConfigValue<String> mapItem;
-    private final ForgeConfigSpec.ConfigValue<String> positionItem;
-    private final ForgeConfigSpec.ConfigValue<String> timeItem;
-    private final ForgeConfigSpec.BooleanValue showItemConfigInGame;
-    private final ForgeConfigSpec.ConfigValue<String> biomeItem;
+    public final ForgeConfigSpec.BooleanValue inHotBar;
+    public final ForgeConfigSpec.ConfigValue<String> mapItem;
+    public final ForgeConfigSpec.ConfigValue<String> positionItem;
+    public final ForgeConfigSpec.ConfigValue<String> timeItem;
+    public final ForgeConfigSpec.BooleanValue showItemConfigInGame;
+    public final ForgeConfigSpec.ConfigValue<String> biomeItem;
   
     public Client(final ForgeConfigSpec.Builder builder)
     {

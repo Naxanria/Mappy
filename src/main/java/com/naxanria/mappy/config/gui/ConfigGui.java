@@ -5,6 +5,7 @@ import com.google.common.base.Strings;
 import com.naxanria.mappy.gui.DrawPosition;
 import com.naxanria.mappy.gui.ScreenBase;
 import com.naxanria.mappy.config.MappyConfig;
+import net.minecraft.client.gui.IGuiEventListener;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraftforge.common.ForgeConfigSpec;
@@ -24,6 +25,9 @@ public class ConfigGui extends ScreenBase
     super(new StringTextComponent("Config"), parent);
   }
   
+  private GuiTooltip tooltip = null;
+  private ConfigGuiEntry<?, ?> lastEntry;
+  
   @Override
   public void init()
   {
@@ -35,9 +39,13 @@ public class ConfigGui extends ScreenBase
     if (entries.size() == 0)
     {
       addEntry(MappyConfig.config.mapSize);
+      lastEntry.tooltip.addInfo("The size of the map.").line().range(16, 256).def("64");
       addEntry(MappyConfig.config.offset);
+      lastEntry.tooltip.addInfo("Offset of the map").range(0, 8).def("4");
       addEntry(MappyConfig.config.drawPosition);
+      lastEntry.tooltip.addInfo("The position of the map").def("TOP_RIGHT");
       addEntry(MappyConfig.config.showMap);
+      lastEntry.tooltip.addInfo("If to show the map").def("True");
     }
     children.clear();
     children.addAll(entries);
@@ -68,7 +76,7 @@ public class ConfigGui extends ScreenBase
   protected ConfigGui addEntry(ConfigGuiEntry<?, ?> entry)
   {
     entries.add(entry);
-    
+    lastEntry = entry;
     return this;
   }
   
@@ -123,6 +131,7 @@ public class ConfigGui extends ScreenBase
   @Override
   public void renderPreChildren()
   {
+    tooltip = null;
     setupEntries();
   }
   
@@ -145,6 +154,36 @@ public class ConfigGui extends ScreenBase
       totHeight += h + spacing;
       
       y += h + spacing;
+    }
+  }
+  
+  @Override
+  protected void processChild(int mouseX, int mouseY, float partialTicks, IGuiEventListener child)
+  {
+    super.processChild(mouseX, mouseY, partialTicks, child);
+    
+    if (child instanceof ConfigGuiEntry)
+    {
+      ConfigGuiEntry entry = (ConfigGuiEntry) child;
+      
+      if (tooltip == null)
+      {
+        tooltip = entry.getTooltip();
+        if (tooltip != null)
+        {
+          tooltip.x = entry.x;
+          tooltip.y = entry.y - tooltip.height - 2;
+        }
+      }
+    }
+  }
+  
+  @Override
+  public void renderForeground()
+  {
+    if (tooltip != null)
+    {
+      tooltip.render(tooltip.x, tooltip.y);
     }
   }
 }

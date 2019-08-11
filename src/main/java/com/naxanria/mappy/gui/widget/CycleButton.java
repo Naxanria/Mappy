@@ -74,7 +74,7 @@ public class CycleButton extends Widget
   
     String val = values[index];
     
-    this.drawCenteredString(fontrenderer, val, this.x + this.width / 2, this.y + (this.height - 8) / 2, colors == null ? 0xffffffff : colors[index & colors.length]);
+    this.drawCenteredString(fontrenderer, val, this.x + this.width / 2, this.y + (this.height - 8) / 2, colors == null ? 0xffffffff : colors[index % colors.length]);
   }
   
   @Override
@@ -114,7 +114,7 @@ public class CycleButton extends Widget
     public Boolean(int x, int y, boolean value)
     {
       super(x, y, value ? 0 : 1, "True", "False");
-      setColors(0xff00ff00, 0xffff0000);
+      setColors(0xff00ff00, 0xff880000);
     }
     
     public Boolean set(boolean value)

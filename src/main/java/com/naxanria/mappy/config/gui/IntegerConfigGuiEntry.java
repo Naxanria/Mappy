@@ -9,7 +9,7 @@ import java.util.function.Predicate;
 public class IntegerConfigGuiEntry extends ConfigGuiEntry<Integer,ForgeConfigSpec.IntValue>
 {
   private TextFieldWidget integerField;
-  private static Predicate<String> validNumber = (s) -> Predicates.or(s, Predicates.isInteger, Predicates.isEmpty);
+  private static Predicate<String> validNumber = (s) -> Predicates.or(s, Predicates.isInteger, Predicates.isEmpty, (s1 -> s.equals("-")));
   
   public IntegerConfigGuiEntry(ForgeConfigSpec configSpec, ForgeConfigSpec.IntValue configValue)
   {
@@ -27,7 +27,7 @@ public class IntegerConfigGuiEntry extends ConfigGuiEntry<Integer,ForgeConfigSpe
       integerField.setValidator(validNumber);
       integerField.setMaxStringLength(11);
       integerField.setText(displayValue.toString());
-      integerField.func_212954_a((s) -> displayValue = getValue());
+      integerField.func_212954_a((s) -> displayValue = getValue()); // callback for when text changed
     }
     
     rightAlign(integerField, resetStartValueButton, 1);
@@ -45,7 +45,7 @@ public class IntegerConfigGuiEntry extends ConfigGuiEntry<Integer,ForgeConfigSpe
     
     try
     {
-      return val.equals("") ? 0 : Integer.parseInt(val);
+      return val.equals("") || val.equals("-") ? 0 : Integer.parseInt(val);
     }
     catch (Exception e)
     {

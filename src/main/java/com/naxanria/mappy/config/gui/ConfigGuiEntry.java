@@ -36,15 +36,17 @@ public class ConfigGuiEntry<CV, CT extends ForgeConfigSpec.ConfigValue<CV>> exte
   protected final CV def;
   protected String name;
   
-  
   protected TextWidget nameWidget;
   protected GuiButtonExt resetDefaultButton;
   protected GuiButtonExt resetStartValueButton;
   
-  
   protected IGuiEventListener focus = null;
   protected boolean dragging = false;
   protected final List<Widget> children = new ArrayList<>();
+  
+  protected GuiTooltip tooltip = new GuiTooltip();
+  
+  boolean hovered = false;
   
   public ConfigGuiEntry(ForgeConfigSpec configSpec, CT configValue)
   {
@@ -142,6 +144,8 @@ public class ConfigGuiEntry<CV, CT extends ForgeConfigSpec.ConfigValue<CV>> exte
   @Override
   public void render(int mouseX, int mouseY, float partialTicks)
   {
+    hovered = isMouseOver(mouseX, mouseY);
+    
     fill(x, y + 1, x + width, y + height - 1, 0xff888888);
 //    drawString(font, name, x + 2, y + 3, 0xffffffff);
 //    int right = resetStartValueButton.x - 2;
@@ -203,5 +207,17 @@ public class ConfigGuiEntry<CV, CT extends ForgeConfigSpec.ConfigValue<CV>> exte
   public boolean isDefault()
   {
     return displayValue == def;
+  }
+  
+  public GuiTooltip getTooltip()
+  {
+    return  (hovered && !tooltip.isEmpty()) ? tooltip : null;
+  }
+  
+  @Override
+  public boolean isMouseOver(double mouseX, double mouseY)
+  {
+    return mouseX >= x && mouseX < x + width
+      && mouseY >= y && mouseY < y + height;
   }
 }
