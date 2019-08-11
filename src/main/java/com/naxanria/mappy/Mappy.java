@@ -5,7 +5,9 @@ import com.naxanria.mappy.gui.DrawPosition;
 import com.naxanria.mappy.config.MappyConfig;
 import com.naxanria.mappy.map.Map;
 import com.naxanria.mappy.map.MapGUI;
+import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.eventbus.api.IEventBus;
+import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
@@ -30,9 +32,21 @@ public class Mappy
   
   public Mappy()
   {
-    IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
-    modEventBus.addListener(this::setupClient);
+    
   
+    DistExecutor.runWhenOn(Dist.CLIENT,
+    () -> () ->
+      {
+        IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
+        modEventBus.addListener(this::setupClient);
+        
+        
+        MapGUI mapGUI = new MapGUI(map, 4, DrawPosition.TOP_RIGHT);
+  
+        MappyConfig.register(ModLoadingContext.get());
+      }
+    );
+    
 //    configFolder = FMLPaths.CONFIGDIR.get().resolve(MODID + "/");
 //    File configFolderFile = configFolder.toFile();
 //    if (!configFolderFile.exists())
@@ -47,9 +61,7 @@ public class Mappy
 //      }
 //    }
   
-    MapGUI mapGUI = new MapGUI(map, 4, DrawPosition.TOP_RIGHT);
-  
-    MappyConfig.register(ModLoadingContext.get());
+
     
   }
   
