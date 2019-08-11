@@ -1,7 +1,7 @@
 package com.naxanria.mappy.config;
 
 import com.naxanria.mappy.Mappy;
-import com.naxanria.mappy.client.DrawPosition;
+import com.naxanria.mappy.gui.DrawPosition;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.config.ModConfig;
@@ -130,11 +130,16 @@ public class MappyConfig
     Mappy.map.onConfigChanged();
   }
   
-  private static class Client
+  public static ForgeConfigSpec getSpec()
   {
-    private final ForgeConfigSpec.IntValue offset;
-    private final ForgeConfigSpec.EnumValue<DrawPosition> drawPosition;
-    private final ForgeConfigSpec.IntValue mapSize;
+    return spec;
+  }
+  
+  public static class Client
+  {
+    public final ForgeConfigSpec.IntValue offset;
+    public final ForgeConfigSpec.EnumValue<DrawPosition> drawPosition;
+    public final ForgeConfigSpec.IntValue mapSize;
   
     private final ForgeConfigSpec.BooleanValue createDeathWayPoints;
     private final ForgeConfigSpec.BooleanValue printDeathPointInChat;

@@ -1,7 +1,7 @@
 package com.naxanria.mappy;
 
 import com.naxanria.mappy.event.EventListener;
-import com.naxanria.mappy.client.DrawPosition;
+import com.naxanria.mappy.gui.DrawPosition;
 import com.naxanria.mappy.config.MappyConfig;
 import com.naxanria.mappy.map.Map;
 import com.naxanria.mappy.map.MapGUI;

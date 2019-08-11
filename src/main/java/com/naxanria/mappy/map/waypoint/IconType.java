@@ -1,7 +1,7 @@
 package com.naxanria.mappy.map.waypoint;
 
 import com.mojang.blaze3d.platform.GlStateManager;
-import com.naxanria.mappy.client.DrawableHelperBase;
+import com.naxanria.mappy.gui.DrawableHelperBase;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.Tessellator;

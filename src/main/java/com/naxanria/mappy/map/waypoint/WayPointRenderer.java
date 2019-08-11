@@ -1,6 +1,6 @@
 package com.naxanria.mappy.map.waypoint;
 
-import com.naxanria.mappy.client.DrawableHelperBase;
+import com.naxanria.mappy.gui.DrawableHelperBase;
 import com.naxanria.mappy.util.MathUtil;
 import net.minecraft.entity.player.PlayerEntity;
 

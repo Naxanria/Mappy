@@ -1,7 +1,7 @@
 package com.naxanria.mappy.map;
 
-import com.naxanria.mappy.client.Alignment;
-import com.naxanria.mappy.client.DrawableHelperBase;
+import com.naxanria.mappy.gui.Alignment;
+import com.naxanria.mappy.gui.DrawableHelperBase;
 
 import net.minecraft.client.gui.FontRenderer;
 

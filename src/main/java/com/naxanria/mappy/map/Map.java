@@ -1,9 +1,8 @@
 package com.naxanria.mappy.map;
 
 import com.naxanria.mappy.Mappy;
-import com.naxanria.mappy.client.Alignment;
+import com.naxanria.mappy.gui.Alignment;
 import com.naxanria.mappy.config.ConfigBase;
-import com.naxanria.mappy.config.MappyConfig;
 import com.naxanria.mappy.config.MappyConfig;
 import com.naxanria.mappy.event.EventListener;
 import com.naxanria.mappy.map.chunk.ChunkCache;
@@ -28,7 +27,6 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
-import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.dimension.DimensionType;
 
 import java.util.ArrayList;

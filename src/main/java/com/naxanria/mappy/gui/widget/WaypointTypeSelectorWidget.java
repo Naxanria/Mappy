@@ -1,6 +1,6 @@
-package com.naxanria.mappy.client.widget;
+package com.naxanria.mappy.gui.widget;
 
-import com.naxanria.mappy.client.DrawableHelperBase;
+import com.naxanria.mappy.gui.DrawableHelperBase;
 import com.naxanria.mappy.map.waypoint.IconType;
 import com.naxanria.mappy.map.waypoint.WayPoint;
 import com.naxanria.mappy.map.waypoint.WayPointEditor;

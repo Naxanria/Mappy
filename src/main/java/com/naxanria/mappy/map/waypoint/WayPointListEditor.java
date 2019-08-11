@@ -1,8 +1,8 @@
 package com.naxanria.mappy.map.waypoint;
 
 import com.naxanria.mappy.Mappy;
-import com.naxanria.mappy.client.DrawableHelperBase;
-import com.naxanria.mappy.client.ScreenBase;
+import com.naxanria.mappy.gui.DrawableHelperBase;
+import com.naxanria.mappy.gui.ScreenBase;
 import com.naxanria.mappy.util.BiValue;
 import com.naxanria.mappy.util.MathUtil;
 import com.naxanria.mappy.util.RandomUtil;
@@ -19,7 +19,6 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextComponent;
 import net.minecraft.world.dimension.DimensionType;
-import net.minecraftforge.fml.ForgeI18n;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -284,27 +283,27 @@ public class WayPointListEditor extends ScreenBase
   }
   
   @Override
-  public void render(int mouseX, int mouseY, float delta)
+  public void render(int mouseX, int mouseY, float partialTicks)
   {
     // background
     fill(x, 0, x + width, height, 0x33444444);
     
     // entries
-    entries.forEach(e -> e.render(mouseX, mouseY, delta));
+    entries.forEach(e -> e.render(mouseX, mouseY, partialTicks));
     
-    drawBorders(mouseX, mouseY, delta);
+    drawBorders(mouseX, mouseY, partialTicks);
 //    System.out.println("RENDER");
     
-    prevDimensionButton.render(mouseX, mouseY, delta);
+    prevDimensionButton.render(mouseX, mouseY, partialTicks);
   
     
     String dimensionName = info == null ? lang("unknown") : I18n.format(info.A);
     drawCenteredString(font, dimensionName, 130 / 2 + prevDimensionButton.x + prevDimensionButton.getWidth(), 15, 0xffffffff);
     
-    nextDimensionButton.render(mouseX, mouseY, delta);
+    nextDimensionButton.render(mouseX, mouseY, partialTicks);
     
-    addButton.render(mouseX, mouseY, delta);
-    closeButton.render(mouseX, mouseY, delta);
+    addButton.render(mouseX, mouseY, partialTicks);
+    closeButton.render(mouseX, mouseY, partialTicks);
     
     drawScrollBar();
   }

@@ -1,7 +1,5 @@
 package com.naxanria.mappy.config;
 
-import com.naxanria.mappy.client.DrawPosition;
-
 public class Settings
 {
 //  public static int offset = 4;

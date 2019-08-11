@@ -1,4 +1,4 @@
-package com.naxanria.mappy.client;
+package com.naxanria.mappy.gui;
 
 import com.mojang.blaze3d.platform.GlStateManager;
 //import com.sun.org.apache.xml.internal.security.utils.I18n;
@@ -11,12 +11,13 @@ import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.TextComponent;
-import net.minecraftforge.fml.ForgeI18n;
 import org.lwjgl.opengl.GL11;
 
 public class ScreenBase extends Screen
 {
   public final Screen parent;
+  protected int mouseX, mouseY;
+  protected int windowWidth, windowHeight;
   
   protected ScreenBase(TextComponent title)
   {
@@ -30,18 +31,49 @@ public class ScreenBase extends Screen
   }
   
   @Override
-  public void render(int int_1, int int_2, float float_1)
+  public void render(int mouseX, int mouseY, float partialTicks)
   {
+    this.mouseX = mouseX;
+    this.mouseY = mouseY;
+    windowWidth = minecraft.mainWindow.getScaledWidth();
+    windowHeight = minecraft.mainWindow.getScaledHeight();
+    
+    renderPre();
+    
     renderBackground();
+    
+    renderPreChildren();
+    
     for (IGuiEventListener listener :
       children)
     {
       if (listener instanceof IRenderable)
       {
-        ((IRenderable) listener).render(int_1, int_2, float_1);
+        ((IRenderable) listener).render(mouseX, mouseY, partialTicks);
       }
     }
+    
+    renderPostChildren();
+    
     renderForeground();
+    
+    renderPost();
+  }
+  
+  public void renderPre()
+  {
+  }
+
+  public void renderPreChildren()
+  {
+  }
+  
+  public void renderPostChildren()
+  {
+  }
+  
+  public void renderPost()
+  {
   }
   
   public void renderForeground()

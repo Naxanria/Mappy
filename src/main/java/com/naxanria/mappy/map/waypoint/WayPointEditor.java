@@ -1,8 +1,8 @@
 package com.naxanria.mappy.map.waypoint;
 
-import com.naxanria.mappy.client.ScreenBase;
-import com.naxanria.mappy.client.widget.TitledWidget;
-import com.naxanria.mappy.client.widget.WaypointTypeSelectorWidget;
+import com.naxanria.mappy.gui.ScreenBase;
+import com.naxanria.mappy.gui.widget.TitledWidget;
+import com.naxanria.mappy.gui.widget.WaypointTypeSelectorWidget;
 import com.naxanria.mappy.util.Predicates;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.TextFieldWidget;

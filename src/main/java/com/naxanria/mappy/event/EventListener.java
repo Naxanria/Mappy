@@ -1,6 +1,7 @@
 package com.naxanria.mappy.event;
 
 import com.naxanria.mappy.Mappy;
+import com.naxanria.mappy.config.gui.ConfigGui;
 import com.naxanria.mappy.config.MappyConfig;
 import com.naxanria.mappy.map.MapGUI;
 import com.naxanria.mappy.map.waypoint.WayPointListEditor;
@@ -101,6 +102,21 @@ public class EventListener
       public boolean isListening()
       {
         return mc.player != null && mc.currentScreen == null;
+      }
+    });
+    
+    KeyHandler.INSTANCE.register(new KeyParser(createKeyBinding("config", GLFW.GLFW_KEY_KP_6, KeyConflictContext.IN_GAME))
+    {
+      @Override
+      public void onKeyUp()
+      {
+        mc.displayGuiScreen(new ConfigGui(null));
+      }
+  
+      @Override
+      public boolean isListening()
+      {
+        return mc.currentScreen == null;
       }
     });
   }

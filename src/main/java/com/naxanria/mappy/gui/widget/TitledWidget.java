@@ -1,4 +1,4 @@
-package com.naxanria.mappy.client.widget;
+package com.naxanria.mappy.gui.widget;
 
 import net.minecraft.client.audio.SoundHandler;
 import net.minecraft.client.gui.FontRenderer;

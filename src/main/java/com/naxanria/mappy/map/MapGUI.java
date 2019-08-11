@@ -2,9 +2,8 @@ package com.naxanria.mappy.map;
 
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.naxanria.mappy.Mappy;
-import com.naxanria.mappy.client.DrawPosition;
-import com.naxanria.mappy.client.DrawableHelperBase;
-import com.naxanria.mappy.config.MappyConfig;
+import com.naxanria.mappy.gui.DrawPosition;
+import com.naxanria.mappy.gui.DrawableHelperBase;
 import com.naxanria.mappy.config.MappyConfig;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screen.ChatScreen;
