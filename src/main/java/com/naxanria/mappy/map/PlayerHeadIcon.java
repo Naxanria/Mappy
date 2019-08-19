@@ -89,20 +89,20 @@ public class PlayerHeadIcon
   
   private static void loadSkin(PlayerHeadIcon icon)
   {
-    System.out.println("Loading player head icon for " + icon.player.getName().getString());
+//    System.out.println("Loading player head icon for " + icon.player.getName().getString());
     MinecraftClient client = MinecraftClient.getInstance();
     PlayerSkinProvider provider = client.getSkinProvider();
     Map<MinecraftProfileTexture.Type, MinecraftProfileTexture> map = provider.getTextures(icon.player.getGameProfile());
   
     if (map.containsKey(MinecraftProfileTexture.Type.SKIN))
     {
-      System.out.println("Loading cached skin for " + icon.player.getName().getString());
+//      System.out.println("Loading cached skin for " + icon.player.getName().getString());
       icon.skinId = provider.loadSkin(map.get(MinecraftProfileTexture.Type.SKIN), MinecraftProfileTexture.Type.SKIN);
       icon.retry = false;
     }
     else
     {
-      System.out.println("Loading default skin for " + icon.player.getName().getString());
+//      System.out.println("Loading default skin for " + icon.player.getName().getString());
       icon.skinId = DefaultSkinHelper.getTexture(icon.uuid);
       icon.retry = true;
       icon.wait *= 2;
