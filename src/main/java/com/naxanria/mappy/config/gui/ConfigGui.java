@@ -56,11 +56,11 @@ public class ConfigGui extends ScreenBase
     
     currentCategory = currentCategory.push("Look and Feel");
     addEntry(MappyConfig.config.moveMapForEffects)
-      .tooltip.addInfo("Should teh map move if there are potion effects.").def(true);
+      .tooltip.addInfo("Should the map move if there are potion effects.").def(true);
     addEntry(MappyConfig.config.shaded)
       .tooltip.addInfo("Shade the map.").def(true);
     addEntry(MappyConfig.config.shadeStrength)
-      .tooltip.addInfo("Strength of teh shading, the lower, teh stronger.").range(2, 16).def(10);
+      .tooltip.addInfo("Strength of the shading, the lower, the stronger.").range(2, 16).def(10);
     addEntry(MappyConfig.config.drawChunkGrid)
       .tooltip.addInfo("The chunk grid").def(false);
     
