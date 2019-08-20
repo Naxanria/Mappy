@@ -28,4 +28,12 @@ public class StringConfigGuiEntry extends ConfigGuiEntry<String, ForgeConfigSpec
     rightAlign(textField, resetStartValueButton, 1);
     children.add(textField);
   }
+  
+  @Override
+  protected void setDisplayValue(String value)
+  {
+    super.setDisplayValue(value);
+    
+    textField.setText(value);
+  }
 }

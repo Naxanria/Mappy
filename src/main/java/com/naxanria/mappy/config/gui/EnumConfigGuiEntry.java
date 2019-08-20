@@ -25,4 +25,11 @@ public class EnumConfigGuiEntry<T extends Enum<T>> extends ConfigGuiEntry<T, For
     enumButton.y = y;
     children.add(rightAlign(enumButton, resetStartValueButton, 1));
   }
+  
+  @Override
+  protected void setDisplayValue(T value)
+  {
+    super.setDisplayValue(value);
+    enumButton.setIndex(value.ordinal());
+  }
 }

@@ -59,4 +59,12 @@ public class IntegerConfigGuiEntry extends ConfigGuiEntry<Integer,ForgeConfigSpe
     Object correct = valueSpec.correct(val);
     return correct == val;
   }
+  
+  @Override
+  protected void setDisplayValue(Integer value)
+  {
+    super.setDisplayValue(value);
+    
+    integerField.setText(value.toString());
+  }
 }

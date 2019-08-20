@@ -2,6 +2,7 @@ package com.naxanria.mappy.gui;
 
 import com.mojang.blaze3d.platform.GlStateManager;
 //import com.sun.org.apache.xml.internal.security.utils.I18n;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.IGuiEventListener;
 import net.minecraft.client.gui.IRenderable;
 import net.minecraft.client.gui.screen.Screen;
@@ -28,6 +29,8 @@ public class ScreenBase extends Screen
   {
     super(title);
     this.parent = parent;
+    minecraft = Minecraft.getInstance();
+    font = minecraft.fontRenderer;
   }
   
   @Override

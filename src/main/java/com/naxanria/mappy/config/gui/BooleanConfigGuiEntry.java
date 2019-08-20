@@ -27,4 +27,12 @@ public class BooleanConfigGuiEntry extends ConfigGuiEntry<Boolean, ForgeConfigSp
     booleanCycle.y = y;
     displayValue = booleanCycle.get();
   }
+  
+  @Override
+  protected void setDisplayValue(Boolean value)
+  {
+    super.setDisplayValue(value);
+    
+    booleanCycle.set(value);
+  }
 }

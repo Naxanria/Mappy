@@ -86,14 +86,19 @@ public class ConfigGuiEntry<CV, CT extends ForgeConfigSpec.ConfigValue<CV>> exte
   
   public void resetToDefault(Button ctx)
   {
-    Mappy.LOGGER.info("DEFAULTS");
+    setDisplayValue(def);
   }
   
   public void resetToStartValue(Button ctx)
   {
-    Mappy.LOGGER.info("START VALUE");
+    setDisplayValue(value);
   }
   
+  protected void setDisplayValue(CV value)
+  {
+    displayValue = value;
+  }
+
   public void save()
   {
     if (displayValue != value)
@@ -146,7 +151,7 @@ public class ConfigGuiEntry<CV, CT extends ForgeConfigSpec.ConfigValue<CV>> exte
   {
     hovered = isMouseOver(mouseX, mouseY);
     
-    fill(x, y + 1, x + width, y + height - 1, 0xff888888);
+    fill(x, y + 1, x + width, y + height - 1, hovered ? 0xaa343434 : 0xaa000000);
 //    drawString(font, name, x + 2, y + 3, 0xffffffff);
 //    int right = resetStartValueButton.x - 2;
 //    drawRightAlignedString(font, displayValue + " [" + def + "]", right, y + 3, 0xffffffff);

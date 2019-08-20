@@ -48,6 +48,16 @@ public class GuiTooltip extends DrawableHelperBase
     return addInfo("Range: [" + min + " - " + max + "]", 0xff33aaee);
   }
   
+  public GuiTooltip def(boolean val)
+  {
+    return addInfo(val ? "True" : "False");
+  }
+  
+  public GuiTooltip def(int val)
+  {
+    return addInfo("" + val);
+  }
+  
   public GuiTooltip def(String val)
   {
     return addInfo("Default: " + val, 0xff008888);
