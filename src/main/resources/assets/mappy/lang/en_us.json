@@ -14,5 +14,36 @@
   "mappy.gui.edit": "Edit",
   "mappy.gui.delete": "Delete",
   "mappy.gui.create": "Create",
-  "mappy.gui.close": "Close"
+  "mappy.gui.close": "Close",
+
+  "mappy.config,map_size": "Map Size",
+  "mappy.config.offset": "Offset",
+  "mappy.config.draw_position": "Draw Position",
+
+  "mappy.config.death_waypoint": "Death Waypoint",
+  "mappy.config.death_print": "Print Death",
+  "mappy.config.death_auto_remove": "Auto Remove",
+  "mappy.config.death_remove_range": "Auto Remove Range",
+
+  "mappy.config.move_map_for_effects": "Move Map For Effects",
+  "mappy.config.shaded": "Shaded",
+  "mappy.config.shade_strength": "Shade Strength",
+  "mappy.config.draw_grid": "Draw Grid",
+  "mappy.config.scale": "Scale",
+  "mappy.config.show_in_chat": "Show While in Chat",
+
+  "mappy.config.show_position": "Show Position",
+  "mappy.config.show_fps": "Show FPS",
+  "mappy.config.show_biome": "Show Biome",
+  "mappy.config.show_time": "Show Time",
+  "mappy.config.show_direction": "Show Direction",
+
+  "mappy.config.show_player_names": "Show Player Names",
+  "mappy.config.show_player_heads": "Show Player Heads",
+  "mappy.config.show_entities": "Show Entities",
+
+  "mappy.config.update_per_cycle": "Update per cycle",
+  "mappy.config.prune_delay": "Prune Delay",
+  "mappy.config.prune_amount": "Prune Amount",
+  "mappy.config.force_heightmap": "Force Heightmap"
 }
