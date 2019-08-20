@@ -50,12 +50,12 @@ public class GuiTooltip extends DrawableHelperBase
   
   public GuiTooltip def(boolean val)
   {
-    return addInfo(val ? "True" : "False");
+    return def(val ? "True" : "False");
   }
   
   public GuiTooltip def(int val)
   {
-    return addInfo("" + val);
+    return def("" + val);
   }
   
   public GuiTooltip def(String val)

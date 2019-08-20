@@ -16,7 +16,7 @@
   "mappy.gui.create": "Create",
   "mappy.gui.close": "Close",
 
-  "mappy.config,map_size": "Map Size",
+  "mappy.config.map_size": "Map Size",
   "mappy.config.offset": "Offset",
   "mappy.config.draw_position": "Draw Position",
 

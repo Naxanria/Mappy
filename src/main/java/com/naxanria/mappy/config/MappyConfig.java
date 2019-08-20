@@ -190,7 +190,7 @@ public class MappyConfig
         
       drawPosition = builder
         .comment("Draw position of the map")
-        .translation(key("draw_postion"))
+        .translation(key("draw_position"))
         .defineEnum("draw_position", DrawPosition.TOP_RIGHT);
       
       mapSize = builder
