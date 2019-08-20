@@ -91,7 +91,7 @@ public class CategoryWidget extends DrawableHelperBase implements IRenderable, I
     }
     
     gui.setNode(node);
-    Mappy.LOGGER.info("Clicked! Depth: " + depth + "[" + currentDepth + "]");
+//    Mappy.LOGGER.info("Clicked! Depth: " + depth + "[" + currentDepth + "]");
   }
   
   @Override
