@@ -4,6 +4,7 @@ import com.naxanria.mappy.Mappy;
 import com.naxanria.mappy.config.gui.ConfigGui;
 import com.naxanria.mappy.config.MappyConfig;
 import com.naxanria.mappy.map.MapGUI;
+import com.naxanria.mappy.map.WorldMapGUI;
 import com.naxanria.mappy.map.waypoint.WayPointListEditor;
 import com.naxanria.mappy.util.Util;
 import net.minecraft.client.Minecraft;
@@ -111,6 +112,21 @@ public class EventListener
       public void onKeyUp()
       {
         mc.displayGuiScreen(new ConfigGui(null));
+      }
+  
+      @Override
+      public boolean isListening()
+      {
+        return mc.currentScreen == null;
+      }
+    });
+    
+    KeyHandler.INSTANCE.register(new KeyParser(createKeyBinding("map", GLFW.GLFW_KEY_M, KeyConflictContext.IN_GAME))
+    {
+      @Override
+      public void onKeyUp()
+      {
+        mc.displayGuiScreen(new WorldMapGUI(null));
       }
   
       @Override

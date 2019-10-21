@@ -8,6 +8,7 @@ import com.naxanria.mappy.map.MapLayerProcessor;
 import com.naxanria.mappy.util.BiValue;
 import com.naxanria.mappy.util.ImageUtil;
 import net.minecraft.client.renderer.texture.NativeImage;
+import net.minecraft.util.math.ChunkPos;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
 
@@ -111,11 +112,16 @@ public class ChunkCache
   
   public void update(Map map, int x, int z)
   {
+    update(map.getImage(), map.getSize(), x, z);
+  }
+  
+  public void update(NativeImage image, int size, int x, int z)
+  {
     updatePerCycle = MappyConfig.updatePerCycle;
     pruneDelay = MappyConfig.pruneDelay * 1000;
     pruneAmount = MappyConfig.pruneAmount;
     
-    int size = map.getSize();
+//    int size = map.getSize();
     int chunksSize = size / 16 + 4;
     int cxStart = x / 16 - 2;
     int cxEnd = cxStart + chunksSize;
@@ -160,7 +166,7 @@ public class ChunkCache
           }
         }
         
-        ImageUtil.writeIntoImage(chunkData.image, map.getImage(), px * 16 + xOff, pz * 16 + zOff);
+        ImageUtil.writeIntoImage(chunkData.image, image, px * 16 + xOff, pz * 16 + zOff);
         pz++;
       }
       
@@ -223,12 +229,30 @@ public class ChunkCache
     BiValue<Integer, Integer> key = new BiValue<>(cx, cz);
     if (data.containsKey(key))
     {
-      return data.get(key);
+      ChunkData data = this.data.get(key);
+      
+      if (update)
+      {
+        ChunkPos pos = data.chunk.getPos();
+        if (pos.x == cx && pos.z == cz)
+        {
+          return data;
+        }
+  
+        data.cx = cx;
+        data.cz = cz;
+//        Mappy.LOGGER.info("Chunk pos not correct! [" + cx + "," + cz + "] != [" + pos.x + "," + pos.z + "]");
+  
+      }
+      else
+      {
+        return data;
+      }
     }
 
     // todo: load from disk.
 
-    Chunk chunk = world.getChunk(cx * 16, cz * 16);
+    Chunk chunk = world.getChunk(cx , cz );
     
     ChunkData chunkData = new ChunkData(chunk, currentLayer);
 

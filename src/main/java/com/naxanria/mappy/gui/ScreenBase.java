@@ -10,6 +10,7 @@ import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.client.resources.I18n;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.TextComponent;
 import org.lwjgl.opengl.GL11;
@@ -162,6 +163,11 @@ public class ScreenBase extends Screen
   public String lang(String key)
   {
     return I18n.format("mappy.gui." + key); //I18n.translate("mappy.gui." + key);
+  }
+ 
+  public PlayerEntity getLocalPlayer()
+  {
+    return minecraft.player;
   }
   
 }

@@ -12,6 +12,7 @@ import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.minecraftforge.fml.loading.FMLLoader;
 
 import java.io.File;
 import java.nio.file.Path;
@@ -28,12 +29,10 @@ public class Mappy
   public static boolean debugMode = false;
   public static boolean showMap = true;
   
-  public static Path configFolder;
+//  public static Path configFolder;
   
   public Mappy()
   {
-    
-  
     DistExecutor.runWhenOn(Dist.CLIENT,
     () -> () ->
       {
@@ -46,105 +45,10 @@ public class Mappy
         MappyConfig.register(ModLoadingContext.get());
       }
     );
-    
-//    configFolder = FMLPaths.CONFIGDIR.get().resolve(MODID + "/");
-//    File configFolderFile = configFolder.toFile();
-//    if (!configFolderFile.exists())
-//    {
-//      if (configFolderFile.mkdir())
-//      {
-//        LOGGER.info("Created config folder");
-//      }
-//      else
-//      {
-//        LOGGER.warn("failed to create config folder");
-//      }
-//    }
-  
-
-    
   }
   
   private void setupClient(final FMLClientSetupEvent event)
   {
     EventListener.setupKeyBinds();
   }
-  
-  //  @Override
-//  public void onInitializeClient()
-//  {
-//    output = new File(FabricLoader.getInstance().getGameDirectory(), "/map/image.png");
-//    output.getParentFile().mkdirs();
-//
-//    KeyBindingRegistry.INSTANCE.addCategory(MODID);
-//
-//    File configFile = new File(FabricLoader.getInstance().getConfigDirectory(), MODID + "/" + MODID + ".cfg");
-//    configFile.getParentFile().mkdirs();
-//    if (!configFile.exists())
-//    {
-//      try
-//      {
-//        configFile.createNewFile();
-//      } catch (IOException e)
-//      {
-//        e.printStackTrace();
-//      }
-//    }
-//
-//    Config.registerListener(map::onConfigChanged);
-//
-//    Config config = new Config(configFile);
-//
-//    showMap = config.getShowMap();
-//
-//    KeyHandler.INSTANCE.register(new KeyParser(createKeyBinding("waypoint_create", GLFW.GLFW_KEY_B))
-//    {
-//      @Override
-//      public void onKeyUp()
-//      {
-//        map.createWayPoint();
-//      }
-//
-//      @Override
-//      public boolean isListening()
-//      {
-//        return mc.player != null && mc.currentScreen == null;
-//      }
-//    });
-//
-//    KeyHandler.INSTANCE.register(new KeyParser(createKeyBinding("hide_map", GLFW.GLFW_KEY_H))
-//    {
-//      @Override
-//      public void onKeyUp()
-//      {
-//        boolean show = !showMap;
-//        showMap = show;
-//        config.setShowMap(show);
-//      }
-//    });
-//
-//    KeyHandler.INSTANCE.register(new KeyParser(createKeyBinding("waypoints_list", GLFW.GLFW_KEY_U))
-//    {
-//      @Override
-//      public void onKeyUp()
-//      {
-//        MinecraftClient.getInstance().openScreen(new WayPointListEditor(null));
-//      }
-//
-//      @Override
-//      public boolean isListening()
-//      {
-//        return mc.player != null && mc.currentScreen == null;
-//      }
-//    });
-//
-//    ClientTickCallback.EVENT.register(EventListener::tick);
-//
-//    MapGUI mapGUI = new MapGUI(map, 4, DrawPosition.TOP_RIGHT);
-//  }
-//
-//  private FabricKeyBinding createKeyBinding(String name, int key)
-//  {
-//    return FabricKeyBinding.Builder.create(new Identifier(MODID, name), InputUtil.Type.KEYSYM, key, MODID).build();
-//  }
 }

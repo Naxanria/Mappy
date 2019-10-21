@@ -26,4 +26,9 @@ public class RandomUtil
   {
     return list.get(getRange(list.size()));
   }
+  
+  public static int getColor()
+  {
+    return ColorUtil.rgb(getRange(255), getRange(255), getRange(255));
+  }
 }

@@ -90,6 +90,12 @@ public class Map
       return;
     }
     
+    if (Minecraft.getInstance().currentScreen instanceof WorldMapGUI)
+    {
+      // dont update while in the worldmap screen
+      return;
+    }
+    
     PlayerEntity player = client.player;
     if (player != null)
     {
