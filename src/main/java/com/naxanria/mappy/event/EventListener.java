@@ -121,20 +121,25 @@ public class EventListener
       }
     });
     
-    KeyHandler.INSTANCE.register(new KeyParser(createKeyBinding("map", GLFW.GLFW_KEY_M, KeyConflictContext.IN_GAME))
+    
+    if (MappyConfig.enableWorldMapKey)
     {
-      @Override
-      public void onKeyUp()
+      KeyHandler.INSTANCE.register(new KeyParser(createKeyBinding("map", GLFW.GLFW_KEY_M, KeyConflictContext.IN_GAME))
       {
-        mc.displayGuiScreen(new WorldMapGUI(null));
-      }
-  
-      @Override
-      public boolean isListening()
-      {
-        return mc.currentScreen == null;
-      }
-    });
+        @Override
+        public void onKeyUp()
+        {
+          mc.displayGuiScreen(new WorldMapGUI(null));
+        }
+    
+        @Override
+        public boolean isListening()
+        {
+          return mc.currentScreen == null;
+        }
+      });
+    }
+    
   }
   
   private static KeyBinding createKeyBinding(String name, int key, KeyConflictContext conflictContext)

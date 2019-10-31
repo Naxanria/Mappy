@@ -172,7 +172,7 @@ public class WorldMapGUI extends ScreenBase
       yp = 0;
       for (int cz = chunkZStart; cz < chunkZEnd; cz++)
       {
-        ChunkData data = preLoader.getChunk(cx, cz, true);
+        ChunkData data = preLoader.getChunk(cx, cz, false);
         
         if (!checkChunkCoords(data, cx, cz))
         {
@@ -185,7 +185,7 @@ public class WorldMapGUI extends ScreenBase
 //        data.image.fillAreaRGBA(0, 0, 1, 16, 0xffffffff);
 //        data.image.fillAreaRGBA(0, 0, 16, 1, 0xffffffff);
 
-        Mappy.LOGGER.info("cx=" + cx + ",cz=" + cz + ",xp=" + xp + ",yp=" + yp + ",chunk pos=" + data.chunk.getPos() + ",check=" + checkChunkCoords(data, cx, cz));
+//        Mappy.LOGGER.info("cx=" + cx + ",cz=" + cz + ",xp=" + xp + ",yp=" + yp + ",chunk pos=" + data.chunk.getPos() + ",check=" + checkChunkCoords(data, cx, cz));
 
         yp += 16;
       }

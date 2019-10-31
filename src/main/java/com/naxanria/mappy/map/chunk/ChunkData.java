@@ -5,6 +5,8 @@ import com.naxanria.mappy.Mappy;
 import com.naxanria.mappy.config.MappyConfig;
 import com.naxanria.mappy.map.MapLayer;
 import com.naxanria.mappy.map.MapLayerProcessor;
+import com.naxanria.mappy.util.BiValue;
+import com.naxanria.mappy.util.MathUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.NativeImage;
 import net.minecraft.nbt.CompoundNBT;
@@ -14,6 +16,7 @@ import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.dimension.DimensionType;
 import net.minecraft.world.gen.Heightmap;
+
 
 import java.util.Arrays;
 
@@ -128,10 +131,65 @@ public class ChunkData
   
   public static ChunkData fromTag(CompoundNBT tag, World world)
   {
-    
+    ChunkData data = new ChunkData();
+    data.cx = tag.getInt("CX");
+    data.cz = tag.getInt("CZ");
+    data.layer = MapLayer.values()[MathUtil.clamp(tag.getInt("MAP_LAYER"), 0, MapLayer.values().length - 1)];
     
     
     return null;
+  }
+  
+  public static CompoundNBT toTag(ChunkData data)
+  {
+    return toTag(data, null);
+  }
+  
+  public static CompoundNBT toTag(ChunkData data, CompoundNBT tag)
+  {
+    if (tag == null)
+    {
+      tag = new CompoundNBT();
+    }
+    
+    tag.putInt("CX", data.cx);
+    tag.putInt("CZ", data.cz);
+    
+    tag.putIntArray("HEIGHTMAP", data.heightmap);
+    tag.putInt("MAP_LAYER", data.layer.ordinal());
+    
+    return tag;
+  }
+  
+  private static int[] getDataArray(int[] heightmap, NativeImage image)
+  {
+    int[] baseData = image.makePixelArray();
+    if (baseData.length != heightmap.length)
+    {
+      return heightmap;
+    }
+    
+    for (int i = 0; i < baseData.length; i++)
+    {
+      baseData[i] = ((baseData[i] >> 8) << 8) | heightmap[i];
+    }
+    
+    return baseData;
+  }
+  
+  private static BiValue<int[], NativeImage> loadDataArray(int[] dataArray)
+  {
+    int[] heightmap = new int[16 * 16];
+    NativeImage image = new NativeImage(NativeImage.PixelFormat.RGBA, 16, 16, true);
+    for (int i = 0; i < heightmap.length; i++)
+    {
+      int data = dataArray[i];
+      int height = data & 0xff;
+      int col = data | 0xff;
+      image.setPixelRGBA(i % 16, i / 16, col);
+    }
+    
+    return new BiValue<>(heightmap, image);
   }
 
   public int cancelUpdate()

@@ -51,6 +51,8 @@ public class MappyConfig
   public static boolean showItemConfigInGame = false;
   public static String biomeItem = "";
   
+  public static boolean enableWorldMapKey = false;
+  
   public static Client config;
   private static ForgeConfigSpec spec;
   
@@ -126,6 +128,8 @@ public class MappyConfig
     positionItem = config.positionItem.get();
     timeItem = config.timeItem.get();
     biomeItem = config.biomeItem.get();
+    
+    enableWorldMapKey = config.enableWorldMapKey.get();
   
     Mappy.map.onConfigChanged();
   }
@@ -177,6 +181,8 @@ public class MappyConfig
     public final ForgeConfigSpec.ConfigValue<String> timeItem;
     public final ForgeConfigSpec.BooleanValue showItemConfigInGame;
     public final ForgeConfigSpec.ConfigValue<String> biomeItem;
+    
+    public final ForgeConfigSpec.BooleanValue enableWorldMapKey;
   
     public Client(final ForgeConfigSpec.Builder builder)
     {
@@ -356,8 +362,13 @@ public class MappyConfig
       showMap = builder
         .comment("Showing the map or not")
         .define("show_map", true);
-    
+      
       builder.pop();
+      
+      enableWorldMapKey = builder.push("Extra settings")
+        .comment("Enable the show world map key, needs restart")
+        .translation(key("enable_world_map_key"))
+        .define("enable_world_map_key", false);
     }
   }
 }

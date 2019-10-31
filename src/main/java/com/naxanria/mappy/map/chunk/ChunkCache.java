@@ -7,11 +7,16 @@ import com.naxanria.mappy.map.MapLayer;
 import com.naxanria.mappy.map.MapLayerProcessor;
 import com.naxanria.mappy.util.BiValue;
 import com.naxanria.mappy.util.ImageUtil;
+import com.naxanria.mappy.util.MappyFileUtil;
 import net.minecraft.client.renderer.texture.NativeImage;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.nbt.CompressedStreamTools;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -210,6 +215,7 @@ public class ChunkCache
     for (BiValue<Integer, Integer> key :
       toRemove)
     {
+      save(data.get(key));
       data.remove(key);
     }
     
@@ -236,13 +242,17 @@ public class ChunkCache
         ChunkPos pos = data.chunk.getPos();
         if (pos.x == cx && pos.z == cz)
         {
+//          save(data);
+//
           return data;
         }
   
         data.cx = cx;
         data.cz = cz;
 //        Mappy.LOGGER.info("Chunk pos not correct! [" + cx + "," + cz + "] != [" + pos.x + "," + pos.z + "]");
-  
+        
+        // save it
+        
       }
       else
       {
@@ -251,18 +261,99 @@ public class ChunkCache
     }
 
     // todo: load from disk.
-
-    Chunk chunk = world.getChunk(cx , cz );
+  
+    ChunkData chunkData;
+  
+    // look if on disk
+    File dataFile = getFile(world.dimension.getType().getId(), cx, cz);
     
-    ChunkData chunkData = new ChunkData(chunk, currentLayer);
-
-    if (update)
+    chunkData = load(dataFile);
+    
+    if (chunkData == null)
     {
-      chunkData.update();
+      Chunk chunk = world.getChunk(cx, cz);
+  
+      chunkData = new ChunkData(chunk, currentLayer);
+  
+      if (update)
+      {
+        chunkData.update();
+        save(chunkData);
+      }
+  
     }
     
-    data.put(key, chunkData);
+//    if (chunkData != null)
+//    {
+      data.put(key, chunkData);
+//    }
     
     return chunkData;
+  }
+  
+  protected File getFile(int worldId, int cx, int cz)
+  {
+    String id = cx + "_" + cz + ".dat";
+    File subDir = MappyFileUtil.createSubDir(MappyFileUtil.getSaveDirectory(), "/data/");
+    if (!subDir.exists())
+    {
+      Mappy.LOGGER.info("Creating folder 'data'");
+      subDir.mkdir();
+    }
+    subDir = new File(subDir, worldId + "/");
+    if (!subDir.exists())
+    {
+      Mappy.LOGGER.info("Creating folder '" + worldId + "'");
+      subDir.mkdir();
+    }
+    return new File(subDir, id);
+  }
+  
+  private ChunkData load(File file)
+  {
+    ChunkData chunkData = null;
+    
+    if (!file.exists())
+    {
+      return null;
+    }
+    
+    try
+    {
+      CompoundNBT tag = CompressedStreamTools.read(file);
+      if (tag != null)
+      {
+        chunkData = ChunkData.fromTag(tag , world);
+      }
+    }
+    catch (IOException e)
+    {
+      e.printStackTrace();
+    }
+    
+    return chunkData;
+  }
+  
+  private void save(ChunkData data)
+  {
+//    Mappy.LOGGER.info("Trying to save chunk " + data.cx + "," + data.cz);
+    
+    File file = getFile(world.dimension.getType().getId(), data.cx, data.cz);
+    
+    CompoundNBT tag = ChunkData.toTag(data);
+    try
+    {
+      if (!file.exists())
+      {
+//        Mappy.LOGGER.info("Creating new file for '" + file + "'");
+        file.createNewFile();
+      }
+      CompressedStreamTools.safeWrite(tag, file);
+    }
+    catch (IOException e)
+    {
+      Mappy.LOGGER.error("Failed to write chunk data to '" + file + "'");
+      e.printStackTrace();
+    }
   }
 }
