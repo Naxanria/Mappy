@@ -5,18 +5,129 @@ import com.naxanria.mappy.map.chunk.ChunkCache;
 import com.naxanria.mappy.map.chunk.ChunkData;
 import com.naxanria.mappy.util.ColorUtil;
 import com.naxanria.mappy.util.StateUtil;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
+import net.minecraft.block.*;
 import net.minecraft.block.material.Material;
+import net.minecraft.item.DyeColor;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.LightType;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
 
+import java.util.HashMap;
+
 public class MapLayerProcessor
 {
   public static final int BLACK = 0xff000000;
   public static final int VOID_COLOR = 0xff676676;
+  
+  public static final HashMap<Block, Integer> colorMap = new HashMap<>();
+  
+  static
+  {
+    addColor(Blocks.LAVA, 0xffff8800);
+    
+    addColor(Blocks.END_ROD, DyeColor.WHITE);
+    addColor(Blocks.TORCH, DyeColor.YELLOW);
+    
+    addColor(Blocks.REDSTONE_TORCH, DyeColor.RED);
+    addColor(Blocks.REDSTONE_WALL_TORCH, DyeColor.RED);
+    addColor(Blocks.LEVER, DyeColor.GRAY);
+    addColor(Blocks.REDSTONE_WIRE, DyeColor.RED);
+    addColor(Blocks.COMPARATOR, DyeColor.RED);
+    addColor(Blocks.REPEATER, DyeColor.RED);
+    
+    addColor(Blocks.RAIL, DyeColor.GRAY);
+    addColor(Blocks.ACTIVATOR_RAIL, DyeColor.GRAY);
+    addColor(Blocks.POWERED_RAIL, DyeColor.GRAY);
+    addColor(Blocks.DETECTOR_RAIL, DyeColor.GRAY);
+    
+    addColor(Blocks.CAKE, DyeColor.WHITE);
+    
+    addColor(Blocks.DANDELION, DyeColor.YELLOW);
+    addColor(Blocks.POPPY, DyeColor.RED);
+    addColor(Blocks.BLUE_ORCHID, DyeColor.BLUE);
+    addColor(Blocks.ALLIUM, DyeColor.PINK);
+    addColor(Blocks.AZURE_BLUET, DyeColor.WHITE);
+    addColor(Blocks.RED_TULIP, DyeColor.RED);
+    addColor(Blocks.ORANGE_TULIP, DyeColor.ORANGE);
+    addColor(Blocks.WHITE_TULIP, DyeColor.WHITE);
+    addColor(Blocks.PINK_TULIP , DyeColor.PINK);
+    addColor(Blocks.OXEYE_DAISY, DyeColor.LIGHT_GRAY);
+    addColor(Blocks.CORNFLOWER , DyeColor.LIGHT_BLUE);
+    addColor(Blocks.WITHER_ROSE, DyeColor.BLACK);
+    addColor(Blocks.LILY_OF_THE_VALLEY, DyeColor.WHITE);
+    addColor(Blocks.BROWN_MUSHROOM, DyeColor.BROWN);
+    addColor(Blocks.RED_MUSHROOM, DyeColor.RED);
+    addColor(Blocks.NETHER_WART, DyeColor.RED);
+    addColor(Blocks.PEONY, DyeColor.PINK);
+    addColor(Blocks.LILAC, DyeColor.MAGENTA);
+    addColor(Blocks.ROSE_BUSH, DyeColor.RED);
+    addColor(Blocks.SUNFLOWER, DyeColor.YELLOW);
+    
+    addColor(Blocks.FLOWER_POT, DyeColor.BROWN);
+    addColor(Blocks.POTTED_OAK_SAPLING, DyeColor.GREEN);
+    addColor(Blocks.POTTED_SPRUCE_SAPLING, DyeColor.GREEN);
+    addColor(Blocks.POTTED_BIRCH_SAPLING, DyeColor.GREEN);
+    addColor(Blocks.POTTED_JUNGLE_SAPLING, DyeColor.GREEN);
+    addColor(Blocks.POTTED_ACACIA_SAPLING, DyeColor.GREEN);
+    addColor(Blocks.POTTED_DARK_OAK_SAPLING, DyeColor.GREEN);
+    addColor(Blocks.POTTED_FERN, DyeColor.GREEN);
+    addColor(Blocks.POTTED_DANDELION, DyeColor.YELLOW);
+    addColor(Blocks.POTTED_POPPY, DyeColor.RED);
+    addColor(Blocks.POTTED_BLUE_ORCHID, DyeColor.BLUE);
+    addColor(Blocks.POTTED_ALLIUM, DyeColor.PINK);
+    addColor(Blocks.POTTED_AZURE_BLUET, DyeColor.WHITE);
+    addColor(Blocks.POTTED_RED_TULIP, DyeColor.RED);
+    addColor(Blocks.POTTED_ORANGE_TULIP, DyeColor.ORANGE);
+    addColor(Blocks.POTTED_WHITE_TULIP, DyeColor.WHITE);
+    addColor(Blocks.POTTED_PINK_TULIP, DyeColor.PINK);
+    addColor(Blocks.POTTED_OXEYE_DAISY, DyeColor.LIGHT_GRAY);
+    addColor(Blocks.POTTED_CORNFLOWER, DyeColor.LIGHT_BLUE);
+    addColor(Blocks.POTTED_LILY_OF_THE_VALLEY, DyeColor.WHITE);
+    addColor(Blocks.POTTED_WITHER_ROSE, DyeColor.BLACK);
+    addColor(Blocks.POTTED_RED_MUSHROOM, DyeColor.RED);
+    addColor(Blocks.POTTED_BROWN_MUSHROOM, DyeColor.BROWN);
+    addColor(Blocks.POTTED_DEAD_BUSH, DyeColor.BROWN);
+    addColor(Blocks.POTTED_CACTUS, DyeColor.GREEN);
+    
+    addColor(Blocks.GLASS, 0xffDEDEDE);
+    addColor(Blocks.GLASS_PANE, 0xffDEDEDE);
+    
+    addStained(Blocks.WHITE_STAINED_GLASS_PANE);
+    addStained(Blocks.ORANGE_STAINED_GLASS_PANE);
+    addStained(Blocks.MAGENTA_STAINED_GLASS_PANE);
+    addStained(Blocks.LIGHT_BLUE_STAINED_GLASS_PANE);
+    addStained(Blocks.YELLOW_STAINED_GLASS_PANE);
+    addStained(Blocks.LIME_STAINED_GLASS_PANE);
+    addStained(Blocks.PINK_STAINED_GLASS_PANE);
+    addStained(Blocks.GRAY_STAINED_GLASS_PANE);
+    addStained(Blocks.LIGHT_GRAY_STAINED_GLASS_PANE);
+    addStained(Blocks.CYAN_STAINED_GLASS_PANE);
+    addStained(Blocks.PURPLE_STAINED_GLASS_PANE);
+    addStained(Blocks.BLUE_STAINED_GLASS_PANE);
+    addStained(Blocks.BROWN_STAINED_GLASS_PANE);
+    addStained(Blocks.GREEN_STAINED_GLASS_PANE);
+    addStained(Blocks.RED_STAINED_GLASS_PANE);
+    addStained(Blocks.BLACK_STAINED_GLASS_PANE);
+  }
+  
+  public static void addStained(Block block)
+  {
+    if (block instanceof StainedGlassPaneBlock)
+    {
+      addColor(block, ((StainedGlassPaneBlock) block).getColor());
+    }
+  }
+  
+  public static void addColor(Block block, DyeColor color)
+  {
+    addColor(block, color.getColorValue());
+  }
+  
+  public static void addColor(Block block, int color)
+  {
+    colorMap.put(block, color);
+  }
   
   // Get effective height for shading purposes.
   public static int effectiveHeight(Chunk chunk, int x, int yStart, int z, boolean skipLiquid)
@@ -266,9 +377,43 @@ public class MapLayerProcessor
 //      brightness = 3;
 //    }
     
+    Block block = state.getBlock();
+    if (colorMap.containsKey(block))
+    {
+      return getMapColor(colorMap.get(block), brightness);
+    }
     
     return state.getMaterialColor(world, pos).getMapColor(brightness);
 //    return state.getMaterial().getColor().getMapColor(2);
+  }
+  
+  public static int getMapColor(int colorValue, int index)
+  {
+    int i = 220;
+    if (index == 3)
+    {
+      i = 135;
+    }
+  
+    if (index == 2)
+    {
+      i = 255;
+    }
+  
+    if (index == 1)
+    {
+      i = 220;
+    }
+  
+    if (index == 0)
+    {
+      i = 180;
+    }
+  
+    int j = (colorValue >> 16 & 255) * i / 255;
+    int k = (colorValue >> 8 & 255) * i / 255;
+    int l = (colorValue & 255) * i / 255;
+    return -16777216 | l << 16 | k << 8 | j;
   }
   
   public static int getHeight(World world, BlockPos pos, boolean ignoreLiquid)
