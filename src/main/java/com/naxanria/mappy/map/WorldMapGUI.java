@@ -82,7 +82,15 @@ public class WorldMapGUI extends ScreenBase
     
     // render icons
     
+    // render WIP
+    drawRightAlignedString(font, "WIP", windowWidth - 5,windowHeight - 20, 0xffffffff);
     
+  }
+  
+  @Override
+  public boolean isPauseScreen()
+  {
+    return false;
   }
   
   private void renderChunkCoords()

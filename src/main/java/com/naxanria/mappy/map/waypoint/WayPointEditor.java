@@ -99,6 +99,12 @@ public class WayPointEditor extends ScreenBase
 //    setInitialFocus(nameField);
   }
   
+  @Override
+  public boolean isPauseScreen()
+  {
+    return false;
+  }
+  
   private void cycleColor(int i)
   {
     colorIndex += i;

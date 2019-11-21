@@ -366,6 +366,12 @@ public class WayPointListEditor extends ScreenBase
     
   }
   
+  @Override
+  public boolean isPauseScreen()
+  {
+    return false;
+  }
+  
   private void edit(WayPoint wayPoint)
   {
     minecraft.displayGuiScreen(new WayPointEditor(wayPoint, this, null));
