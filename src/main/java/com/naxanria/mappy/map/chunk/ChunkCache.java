@@ -5,7 +5,7 @@ import com.naxanria.mappy.config.MappyConfig;
 import com.naxanria.mappy.map.Map;
 import com.naxanria.mappy.map.MapLayer;
 import com.naxanria.mappy.map.MapLayerProcessor;
-import com.naxanria.mappy.util.BiValue;
+import com.naxanria.mappy.util.BiInteger;
 import com.naxanria.mappy.util.ImageUtil;
 import com.naxanria.mappy.util.MappyFileUtil;
 import net.minecraft.client.renderer.texture.NativeImage;
@@ -17,15 +17,14 @@ import net.minecraft.world.chunk.Chunk;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
 public class ChunkCache
 {
   private static final NativeImage BLACK_IMAGE = new NativeImage(NativeImage.PixelFormat.RGBA, 16, 16, false);
   private static MapLayer currentLayer = MapLayer.TOP_VIEW;
   private static HashMap<Integer, HashMap<MapLayer, ChunkCache>> instances = new HashMap<>();
+  private static ChunkIOManager ioManager = new ChunkIOManager();
   
   static
   {
@@ -101,11 +100,14 @@ public class ChunkCache
   public final MapLayer layer;
   public World world;
   
-  private HashMap<BiValue<Integer, Integer>, ChunkData> data = new HashMap<>();
+//  private HashMap<BiValue<Integer, Integer>, ChunkData> data = new HashMap<>();
+  private HashMap<BiInteger, SuperChunk> data = new HashMap<>();
+  
   
   private int updateIndex = 0;
   private int updatePerCycle = 10;
   private long lastPrune = 0;
+  private long lastSave = 0;
   private long pruneDelay = 1000;
   private int pruneAmount = 500;
   
@@ -189,40 +191,68 @@ public class ChunkCache
       prune(pruneAmount);
       lastPrune = now;
     }
+    
+    if (now - lastSave > 1000 * 120)
+    {
+//      Mappy.LOGGER.info("Saving...");
+      ioManager.saveAll();
+      lastSave = now;
+    }
   }
   
   private void prune(int max)
   {
-    int p = 0;
-    long now = System.currentTimeMillis();
+//    int p = 0;
+//    long now = System.currentTimeMillis();
+//
+//    List<BiValue<Integer, Integer>> toRemove = new ArrayList<>();
+//    for (BiValue<Integer, Integer> key :
+//      data.keySet())
+//    {
+//      ChunkData chunkData = data.get(key);
+//      if (now - chunkData.time >= 10000)
+//      {
+//        toRemove.add(key);
+//        p++;
+//        if (p >= max)
+//        {
+//          break;
+//        }
+//      }
+//    }
+//
+//    for (BiValue<Integer, Integer> key :
+//      toRemove)
+//    {
+//      save(data.get(key));
+//      data.remove(key);
+//    }
+//
+//    if (p > 0)
+//    {
+////      System.out.println("Purged " + p + " chunks from cache");
+//    }
+  }
   
-    List<BiValue<Integer, Integer>> toRemove = new ArrayList<>();
-    for (BiValue<Integer, Integer> key :
-      data.keySet())
+  public SuperChunk getSuperChunk(int cx, int cz)
+  {
+    BiInteger key = new BiInteger(cx / 16, cz / 16);
+    if (data.containsKey(key))
     {
-      ChunkData chunkData = data.get(key);
-      if (now - chunkData.time >= 10000)
-      {
-        toRemove.add(key);
-        p++;
-        if (p >= max)
-        {
-          break;
-        }
-      }
-    }
-  
-    for (BiValue<Integer, Integer> key :
-      toRemove)
-    {
-      save(data.get(key));
-      data.remove(key);
+      return data.get(key);
     }
     
-    if (p > 0)
+    // load from disk
+    SuperChunk loaded = ioManager.load(ioManager.getFile(world.dimension.getType().getId(), key.A, key.B));
+    if (loaded == null)
     {
-//      System.out.println("Purged " + p + " chunks from cache");
+      loaded = new SuperChunk(key.A, key.B);
+      ioManager.MarkForSave(loaded);
     }
+  
+    data.put(key, loaded);
+    
+    return loaded;
   }
   
   public ChunkData getChunk(int cx, int cz)
@@ -232,11 +262,12 @@ public class ChunkCache
   
   public ChunkData getChunk(int cx, int cz, boolean update)
   {
-    BiValue<Integer, Integer> key = new BiValue<>(cx, cz);
-    if (data.containsKey(key))
+    SuperChunk superChunk = getSuperChunk(cx, cz);
+  
+    ChunkData data = superChunk.getChunk(cx, cz);
+    
+    if (data != null)
     {
-      ChunkData data = this.data.get(key);
-      
       if (update)
       {
         ChunkPos pos = data.chunk.getPos();
@@ -246,13 +277,13 @@ public class ChunkCache
 //
           return data;
         }
-  
+    
         data.cx = cx;
         data.cz = cz;
 //        Mappy.LOGGER.info("Chunk pos not correct! [" + cx + "," + cz + "] != [" + pos.x + "," + pos.z + "]");
-        
+    
         // save it
-        
+    
       }
       else
       {
@@ -260,32 +291,33 @@ public class ChunkCache
       }
     }
 
-    // todo: load from disk.
-  
-    ChunkData chunkData;
-  
-    // look if on disk
-    File dataFile = getFile(world.dimension.getType().getId(), cx, cz);
-    
-    chunkData = load(dataFile);
-    
-    if (chunkData == null)
-    {
-      Chunk chunk = world.getChunk(cx, cz);
-  
-      chunkData = new ChunkData(chunk, currentLayer);
-  
-      if (update)
-      {
-        chunkData.update();
-        save(chunkData);
-      }
-  
-    }
+//    // todo: load from disk.
+//
+    ChunkData chunkData = new ChunkData(world.getChunk(cx, cz), layer);
+    superChunk.setChunk(chunkData);
+//
+//    // look if on disk
+//    File dataFile = getFile(world.dimension.getType().getId(), cx, cz);
+//
+//    chunkData = load(dataFile);
+//
+//    if (chunkData == null)
+//    {
+//      Chunk chunk = world.getChunk(cx, cz);
+//
+//      chunkData = new ChunkData(chunk, currentLayer);
+//
+//      if (update)
+//      {
+//        chunkData.update();
+//        save(chunkData);
+//      }
+//
+//    }
     
 //    if (chunkData != null)
 //    {
-      data.put(key, chunkData);
+//      data.put(key, chunkData);
 //    }
     
     return chunkData;

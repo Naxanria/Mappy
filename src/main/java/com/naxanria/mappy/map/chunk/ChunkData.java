@@ -1,7 +1,5 @@
 package com.naxanria.mappy.map.chunk;
 
-import com.naxanria.mappy.Logger;
-import com.naxanria.mappy.Mappy;
 import com.naxanria.mappy.config.MappyConfig;
 import com.naxanria.mappy.map.MapLayer;
 import com.naxanria.mappy.map.MapLayerProcessor;
@@ -16,7 +14,6 @@ import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.dimension.DimensionType;
 import net.minecraft.world.gen.Heightmap;
-
 
 import java.util.Arrays;
 
@@ -136,8 +133,18 @@ public class ChunkData
     data.cz = tag.getInt("CZ");
     data.layer = MapLayer.values()[MathUtil.clamp(tag.getInt("MAP_LAYER"), 0, MapLayer.values().length - 1)];
     
+    if (tag.contains("DATA"))
+    {
+      BiValue<int[], NativeImage> unpackedData = loadDataArray(tag.getIntArray("DATA"));
+      data.heightmap = unpackedData.A;
+      data.image = unpackedData.B;
+    }
+    else
+    {
+      return null;
+    }
     
-    return null;
+    return data;
   }
   
   public static CompoundNBT toTag(ChunkData data)
@@ -155,8 +162,9 @@ public class ChunkData
     tag.putInt("CX", data.cx);
     tag.putInt("CZ", data.cz);
     
-    tag.putIntArray("HEIGHTMAP", data.heightmap);
+//    tag.putIntArray("HEIGHTMAP", data.heightmap);
     tag.putInt("MAP_LAYER", data.layer.ordinal());
+    tag.putIntArray("DATA", getDataArray(data.heightmap, data.image));
     
     return tag;
   }
