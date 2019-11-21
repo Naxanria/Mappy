@@ -14,6 +14,7 @@
   "mappy.gui.edit": "Edit",
   "mappy.gui.delete": "Delete",
   "mappy.gui.create": "Create",
+  "mappy.gui.teleport": "Teleport",
   "mappy.gui.close": "Close",
 
   "mappy.config.map_size": "Map Size",

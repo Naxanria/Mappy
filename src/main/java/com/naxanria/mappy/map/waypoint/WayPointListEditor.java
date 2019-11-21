@@ -45,16 +45,21 @@ public class WayPointListEditor extends ScreenBase
     private Button editButton;
     private Button deleteButton;
 //    private ButtonWidget chatButton;
+    private Button teleportButton;
+    private WayPointListEditor wayPointListEditor;
   
     public Entry(WayPointListEditor wayPointListEditor, int x, int y, int width, int height, WayPoint wayPoint)
     {
       this.width = width;
       this.height = height;
       this.wayPoint = wayPoint;
+      this.wayPointListEditor = wayPointListEditor;
       
       editButton = new Button(0, 0, 40, height, wayPointListEditor.lang("edit"), (b) -> wayPointListEditor.edit(wayPoint));
       deleteButton = new Button(0, 0, 40, height, wayPointListEditor.lang("delete"), (b) -> wayPointListEditor.delete(wayPoint));
 //      chatButton = new ButtonWidget(0, 0, 40, height, wayPointListEditor.lang("chat"), (b) -> wayPointListEditor.toChat(wayPoint));
+      
+      teleportButton = new Button(0, 0, 40, height, wayPointListEditor.lang("teleport"), (b) -> wayPointListEditor.teleport(wayPoint));
       
       setPosition(x, y);
     }
@@ -64,8 +69,10 @@ public class WayPointListEditor extends ScreenBase
       this.x = x;
       this.y = y;
       
-      rightAlign(deleteButton, x + width);
+      rightAlign(teleportButton, x + width);
+      rightAlign(deleteButton, teleportButton);
       rightAlign(editButton, deleteButton);
+      
 //      rightAlign(chatButton, editButton);
       
       editButton.y = y;
@@ -73,6 +80,8 @@ public class WayPointListEditor extends ScreenBase
       deleteButton.y = y;
 //      deleteButton.x = x + width - deleteButton.getWidth();
 //      chatButton.y = y;
+      teleportButton.y = y;
+//      teleportButton.active = wayPointListEditor.canTeleport();
     }
     
     
@@ -103,21 +112,23 @@ public class WayPointListEditor extends ScreenBase
       int posX = editButton.x - 2;
       drawRightAlignedString(font, Util.prettyFy(wayPoint.pos), posX, stringY, WHITE);
       
+      teleportButton.render(mouseX, mouseY, delta);
       editButton.render(mouseX, mouseY, delta);
       deleteButton.render(mouseX, mouseY, delta);
+      
 //      chatButton.render(mouseX, mouseY, delta);
     }
   
     @Override
     public boolean mouseClicked(double double_1, double double_2, int int_1)
     {
-      return editButton.mouseClicked(double_1, double_2, int_1) || deleteButton.mouseClicked(double_1, double_2, int_1);// || chatButton.mouseReleased(double_1, double_2, int_1);
+      return editButton.mouseClicked(double_1, double_2, int_1) || deleteButton.mouseClicked(double_1, double_2, int_1) || teleportButton.mouseClicked(double_1, double_2, int_1);// || chatButton.mouseReleased(double_1, double_2, int_1);
     }
   
     @Override
     public boolean mouseReleased(double double_1, double double_2, int int_1)
     {
-      return editButton.mouseReleased(double_1, double_2, int_1) || deleteButton.mouseReleased(double_1, double_2, int_1);// || chatButton.mouseReleased(double_1, double_2, int_1);
+      return editButton.mouseReleased(double_1, double_2, int_1) || deleteButton.mouseReleased(double_1, double_2, int_1) || teleportButton.mouseReleased(double_1, double_2, int_1);// || chatButton.mouseReleased(double_1, double_2, int_1);
     }
   
     @Override
@@ -155,6 +166,7 @@ public class WayPointListEditor extends ScreenBase
   
   private int x, y;
   private int width, height;
+  private boolean canTeleport = false;
   
   public WayPointListEditor(Screen parent)
   {
@@ -187,8 +199,6 @@ public class WayPointListEditor extends ScreenBase
     
     currentDim = minecraft.player.dimension.getId();
     currentDimIndex = getDimIndex(currentDim);
-    
-    
   }
   
   @Override
@@ -323,7 +333,7 @@ public class WayPointListEditor extends ScreenBase
     
     if (key.equals("unknown"))
     {
-      Mappy.LOGGER.warn("Unkown dim: " + dim);
+      Mappy.LOGGER.warn("Unknown dim: " + dim);
     }
     
     return DIMENSION_INFO.getOrDefault(key, new BiValue<>(key, DEFAULT_IDENTIFIER));
@@ -361,12 +371,27 @@ public class WayPointListEditor extends ScreenBase
     minecraft.displayGuiScreen(new WayPointEditor(wayPoint, this, null));
   }
   
-  private void tp(WayPoint wp)
+  private boolean canTeleport()
   {
-    // todo: Teleporting player.
-  
-    
+    // todo: figure out if server allows you to teleport or not
+    return true;
   }
+  
+  private void teleport(WayPoint wayPoint)
+  {
+    Mappy.LOGGER.info("Teleporting");
+    // check if we can teleport
+    if (canTeleport())
+    {
+      // execute teleport
+      BlockPos pos = wayPoint.pos;
+      
+      minecraft.player.sendChatMessage("/tp " + pos.getX() + " " + pos.getY() + " " + pos.getZ());
+      minecraft.displayGuiScreen(null);
+      Mappy.LOGGER.info("Teleported to " + pos.getX() + " " + pos.getY() + " " + pos.getZ());
+    }
+  }
+  
   
   private void toChat(WayPoint wp)
   {
@@ -389,7 +414,7 @@ public class WayPointListEditor extends ScreenBase
     WayPoint wayPoint = new WayPoint();
     wayPoint.dimension = currentDim;
     wayPoint.color = RandomUtil.getElement(WayPoint.WAYPOINT_COLORS);
-    wayPoint.pos = new BlockPos(0, 0, 0);
+    wayPoint.pos = minecraft.player.getPosition();
     wayPoint.name = "Waypoint";
     
     minecraft.displayGuiScreen(new WayPointEditor(wayPoint, this, (manager::add)));
