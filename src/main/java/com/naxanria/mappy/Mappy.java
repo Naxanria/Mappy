@@ -13,6 +13,8 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.fml.loading.FMLLoader;
+import org.apache.commons.logging.impl.Log4JLogger;
+import org.apache.logging.log4j.LogManager;
 
 import java.io.File;
 import java.nio.file.Path;
@@ -21,7 +23,8 @@ import java.nio.file.Path;
 public class Mappy
 {
   public static final String MODID = "mappy";
-  public static final Logger LOGGER = new Logger("[" + MODID + "]");
+//  public static final Logger LOGGER = new Logger("[" +MODID + "]");
+  public static final org.apache.logging.log4j.Logger LOGGER = LogManager.getLogger(MODID);
   
   public static Map map = new Map();
   private File output;
