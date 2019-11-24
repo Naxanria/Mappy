@@ -105,21 +105,23 @@ public class EventListener
         return mc.player != null && mc.currentScreen == null;
       }
     });
+
     
-    KeyHandler.INSTANCE.register(new KeyParser(createKeyBinding("config", GLFW.GLFW_KEY_KP_6, KeyConflictContext.IN_GAME))
-    {
-      @Override
-      public void onKeyUp()
-      {
-        mc.displayGuiScreen(new ConfigGui(null));
-      }
-  
-      @Override
-      public boolean isListening()
-      {
-        return mc.currentScreen == null;
-      }
-    });
+    // Now handled with config button in the mod config
+//    KeyHandler.INSTANCE.register(new KeyParser(createKeyBinding("config", GLFW.GLFW_KEY_KP_6, KeyConflictContext.IN_GAME))
+//    {
+//      @Override
+//      public void onKeyUp()
+//      {
+//        mc.displayGuiScreen(new ConfigGui(null));
+//      }
+//
+//      @Override
+//      public boolean isListening()
+//      {
+//        return mc.currentScreen == null;
+//      }
+//    });
     
     
     if (MappyConfig.enableWorldMapKey)

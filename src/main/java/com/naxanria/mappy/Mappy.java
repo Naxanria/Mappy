@@ -1,13 +1,17 @@
 package com.naxanria.mappy;
 
 import com.naxanria.mappy.config.MappyConfig;
+import com.naxanria.mappy.config.gui.ConfigGui;
 import com.naxanria.mappy.event.EventListener;
 import com.naxanria.mappy.gui.DrawPosition;
 import com.naxanria.mappy.map.Map;
 import com.naxanria.mappy.map.MapGUI;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.screen.Screen;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.DistExecutor;
+import net.minecraftforge.fml.ExtensionPoint;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
@@ -43,8 +47,17 @@ public class Mappy
         MapGUI mapGUI = new MapGUI(map, 4, DrawPosition.TOP_RIGHT);
   
         MappyConfig.register(ModLoadingContext.get());
+        
+        ModLoadingContext ctx = ModLoadingContext.get();
+
+        ctx.registerExtensionPoint(ExtensionPoint.CONFIGGUIFACTORY, () -> this::openConfigScreen);
       }
     );
+  }
+  
+  private Screen openConfigScreen(Minecraft minecraft, Screen parent)
+  {
+    return new ConfigGui(parent);
   }
   
   private void setupClient(final FMLClientSetupEvent event)
