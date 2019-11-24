@@ -196,11 +196,15 @@ public class ChunkCache
 //      lastPrune = now;
 //    }
     
-    if (now - lastSave > 1000 * 120)
+    // only save if we are testing world map
+    if (MappyConfig.enableWorldMapKey)
     {
+      if (now - lastSave > 1000 * 120)
+      {
 //      Mappy.LOGGER.info("Saving...");
-      ioManager.startSave();
-      lastSave = now;
+        ioManager.startSave();
+        lastSave = now;
+      }
     }
   }
   
@@ -247,7 +251,12 @@ public class ChunkCache
     }
     
     // load from disk
-    SuperChunk loaded = ioManager.load(ioManager.getFile(world.dimension.getType().getId(), key.A, key.B));
+    SuperChunk loaded = null;
+    // only load when testing overview map
+    if (MappyConfig.enableWorldMapKey)
+    {
+      loaded = ioManager.load(ioManager.getFile(world.dimension.getType().getId(), key.A, key.B));
+    }
     if (loaded == null)
     {
       loaded = new SuperChunk(key.A, key.B);
@@ -261,8 +270,12 @@ public class ChunkCache
   
   public void markForSave(ChunkData chunkData)
   {
-    SuperChunk superChunk = getSuperChunk(chunkData.cx, chunkData.cz);
-    ioManager.MarkForSave(superChunk);
+    // only save when testing overview map
+    if (MappyConfig.enableWorldMapKey)
+    {
+      SuperChunk superChunk = getSuperChunk(chunkData.cx, chunkData.cz);
+      ioManager.MarkForSave(superChunk);
+    }
   }
   
   public ChunkData getChunk(int cx, int cz)
