@@ -15,7 +15,31 @@ import java.util.List;
 */
 public class ChunkIOManager
 {
+  private static int nextID = 0;
+  private File subDir;
+  
+  private static int getID()
+  {
+    return nextID++;
+  }
+  
+  Thread thread;
   private List<SuperChunk> toSave = new ArrayList<>();
+  private List<SuperChunk> nextToSave = new ArrayList<>();
+  private boolean saving = false;
+  private boolean watching = true;
+  
+  public final int ID = getID();
+  
+  public ChunkIOManager(File subDir)
+  {
+    Mappy.LOGGER.info("Started chunk manager #" + ID);
+    
+    this.subDir = subDir;
+    
+    thread = new Thread(this::run);
+    thread.start();
+  }
   
   public void MarkForSave(SuperChunk chunk)
   {
@@ -28,28 +52,66 @@ public class ChunkIOManager
     toSave.add(chunk);
   }
   
-  public void saveAll()
+  public void startSave()
   {
-    int s = toSave.size();
+    saving = true;
+  }
+  
+  private void run()
+  {
+    while (watching)
+    {
+      if (saving)
+      {
+        saveAll();
+        saving = false;
+      }
+  
+      try
+      {
+        Thread.sleep(10 * 1000);
+      }
+      catch (InterruptedException e)
+      {
+        e.printStackTrace();
+      }
+    }
+  }
+  
+  public void stop()
+  {
+    Mappy.LOGGER.info("Stopping IOManager #" + ID);
+    watching = false;
+  }
+  
+  private void saveAll()
+  {
+    List<SuperChunk> temp = nextToSave;
+    nextToSave = toSave;
+    toSave = temp;
+    
+    int s = nextToSave.size();
     if (s == 0)
     {
       return;
     }
+    long start = System.currentTimeMillis();
     int n = 0;
-    for (int i = 0; i < toSave.size() && n < 100; i++, n++)
+    for (int i = 0; i < nextToSave.size() && n < 100; i++, n++)
     {
-      SuperChunk superChunk = toSave.get(i);
+      SuperChunk superChunk = nextToSave.get(i);
       
       if (superChunk != null)
       {
         save(superChunk);
         superChunk.toSave = false;
       }
-      
-      toSave.remove(i--);
+  
+      nextToSave.remove(i--);
     }
+    long time = System.currentTimeMillis() - start;
     
-    Mappy.LOGGER.info("Saved " + n + " [ " + s + "] chunks");
+    Mappy.LOGGER.info("Saved " + n + " [" + s + "] chunks in " + time + "ms");
   }
   
   private void save(SuperChunk superChunk)
@@ -101,7 +163,9 @@ public class ChunkIOManager
   File getFile(int worldId, int cx, int cz)
   {
     String id = "sc_" + cx + "_" + cz + ".dat";
-    File subDir = MappyFileUtil.createSubDir(MappyFileUtil.getSaveDirectory(), "/data/");
+    
+    File subDir = this.subDir;
+    
     if (!subDir.exists())
     {
       Mappy.LOGGER.info("Creating folder 'data'");

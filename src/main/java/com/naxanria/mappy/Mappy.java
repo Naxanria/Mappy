@@ -1,8 +1,8 @@
 package com.naxanria.mappy;
 
+import com.naxanria.mappy.config.MappyConfig;
 import com.naxanria.mappy.event.EventListener;
 import com.naxanria.mappy.gui.DrawPosition;
-import com.naxanria.mappy.config.MappyConfig;
 import com.naxanria.mappy.map.Map;
 import com.naxanria.mappy.map.MapGUI;
 import net.minecraftforge.api.distmarker.Dist;
@@ -12,12 +12,9 @@ import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
-import net.minecraftforge.fml.loading.FMLLoader;
-import org.apache.commons.logging.impl.Log4JLogger;
 import org.apache.logging.log4j.LogManager;
 
 import java.io.File;
-import java.nio.file.Path;
 
 @Mod(Mappy.MODID)
 public class Mappy

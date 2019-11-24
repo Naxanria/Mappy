@@ -51,16 +51,16 @@ public class ChunkData
     this.chunk = chunk;
   }
   
-  public void update()
+  public boolean update()
   {
     if (updating)
     {
-      return;
+      return false;
     }
     
     long now = System.currentTimeMillis();
     updating = true;
-  
+    boolean change = false;
 //    Mappy.LOGGER.info("Updating " + cx + "," + cz);
     
     for (int x = 0; x < 16; x++)
@@ -68,6 +68,8 @@ public class ChunkData
       for (int z = 0; z < 16; z++)
       {
         int col = MapLayerProcessor.BLACK;
+        int oldCol = image.getPixelRGBA(x, z);
+        int oldHeight = heightmap[x + z * 16];
         switch (layer)
         {
           case TOP_VIEW:
@@ -96,6 +98,10 @@ public class ChunkData
 //
 //              col = ColorUtil.rgb(cols[0] * c, cols[1] * c, cols[2] * c);
             }
+            if (heightmap[x + z * 16] != oldHeight || col != oldCol)
+            {
+              change = true;
+            }
             break;
           case CAVES:
             break;
@@ -104,7 +110,7 @@ public class ChunkData
         if (!updating)
         {
           time = now;
-          return;
+          return false;
         }
         
         image.setPixelRGBA(x, z, col);
@@ -118,6 +124,7 @@ public class ChunkData
     
     time = now;
     updating = false;
+    return change;
   }
   
   public BlockPos getPosition(int xOff, int y, int zOff)
@@ -171,15 +178,11 @@ public class ChunkData
   
   private static int[] getDataArray(int[] heightmap, NativeImage image)
   {
-    int[] baseData = image.makePixelArray();
-    if (baseData.length != heightmap.length)
-    {
-      return heightmap;
-    }
+    int[] baseData = new int[256];
     
     for (int i = 0; i < baseData.length; i++)
     {
-      baseData[i] = ((baseData[i] >> 8) << 8) | heightmap[i];
+      baseData[i] = ((image.getPixelRGBA(i %16, i / 16) >> 8) << 8) | heightmap[i];
     }
     
     return baseData;
@@ -189,12 +192,15 @@ public class ChunkData
   {
     int[] heightmap = new int[16 * 16];
     NativeImage image = new NativeImage(NativeImage.PixelFormat.RGBA, 16, 16, true);
+    
     for (int i = 0; i < heightmap.length; i++)
     {
       int data = dataArray[i];
       int height = data & 0xff;
-      int col = data | 0xff;
+      int col = ((data) << 8) | 0x000000ff;
+      
       image.setPixelRGBA(i % 16, i / 16, col);
+      heightmap[i] = height;
     }
     
     return new BiValue<>(heightmap, image);

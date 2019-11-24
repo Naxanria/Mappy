@@ -206,6 +206,22 @@ public class WorldMapGUI extends ScreenBase
   
   private boolean checkChunkCoords(ChunkData data, int cx, int cz)
   {
+    if (data == null)
+    {
+      return false;
+    }
+    
+    if (data.chunk == null)
+    {
+//      data.chunk = minecraft.player.world.getChunk(cx, cz);
+//      if (data.chunk == null)
+//      {
+//        return false;
+//      }
+      
+      return true;
+    }
+    
     ChunkPos pos = data.chunk.getPos();
     return data.cx == cx && data.cz == cz
       && pos.x == data.cx && pos.z == data.cz;

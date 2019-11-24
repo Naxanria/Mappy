@@ -24,7 +24,6 @@ public class ChunkCache
   private static final NativeImage BLACK_IMAGE = new NativeImage(NativeImage.PixelFormat.RGBA, 16, 16, false);
   private static MapLayer currentLayer = MapLayer.TOP_VIEW;
   private static HashMap<Integer, HashMap<MapLayer, ChunkCache>> instances = new HashMap<>();
-  private static ChunkIOManager ioManager = new ChunkIOManager();
   
   static
   {
@@ -102,7 +101,7 @@ public class ChunkCache
   
 //  private HashMap<BiValue<Integer, Integer>, ChunkData> data = new HashMap<>();
   private HashMap<BiInteger, SuperChunk> data = new HashMap<>();
-  
+  private ChunkIOManager ioManager;
   
   private int updateIndex = 0;
   private int updatePerCycle = 10;
@@ -115,6 +114,8 @@ public class ChunkCache
   {
     this.layer = layer;
     this.world = world;
+    
+    ioManager = new ChunkIOManager(MappyFileUtil.createSubDir(MappyFileUtil.getSaveDirectory(), "/data/"));
   }
   
   public void update(Map map, int x, int z)
@@ -169,7 +170,10 @@ public class ChunkCache
           
           if (!chunkData.chunk.isEmpty())
           {
-            chunkData.update();
+            if (chunkData.update())
+            {
+              markForSave(chunkData);
+            }
           }
         }
         
@@ -185,17 +189,17 @@ public class ChunkCache
     {
       updateIndex = 0;
     }
-    
-    if (now - lastPrune > pruneDelay)
-    {
-      prune(pruneAmount);
-      lastPrune = now;
-    }
+//
+//    if (now - lastPrune > pruneDelay)
+//    {
+//      prune(pruneAmount);
+//      lastPrune = now;
+//    }
     
     if (now - lastSave > 1000 * 120)
     {
 //      Mappy.LOGGER.info("Saving...");
-      ioManager.saveAll();
+      ioManager.startSave();
       lastSave = now;
     }
   }
@@ -255,6 +259,12 @@ public class ChunkCache
     return loaded;
   }
   
+  public void markForSave(ChunkData chunkData)
+  {
+    SuperChunk superChunk = getSuperChunk(chunkData.cx, chunkData.cz);
+    ioManager.MarkForSave(superChunk);
+  }
+  
   public ChunkData getChunk(int cx, int cz)
   {
     return getChunk(cx, cz, true);
@@ -270,6 +280,11 @@ public class ChunkCache
     {
       if (update)
       {
+        if (data.chunk == null)
+        {
+          data.chunk = world.getChunk(cx, cz);
+        }
+        
         ChunkPos pos = data.chunk.getPos();
         if (pos.x == cx && pos.z == cz)
         {
@@ -283,7 +298,7 @@ public class ChunkCache
 //        Mappy.LOGGER.info("Chunk pos not correct! [" + cx + "," + cz + "] != [" + pos.x + "," + pos.z + "]");
     
         // save it
-    
+        ioManager.MarkForSave(superChunk);
       }
       else
       {

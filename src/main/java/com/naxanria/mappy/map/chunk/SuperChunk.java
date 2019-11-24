@@ -1,12 +1,17 @@
 package com.naxanria.mappy.map.chunk;
 
+import com.naxanria.mappy.Mappy;
 import com.naxanria.mappy.util.NBTIds;
 import com.naxanria.mappy.util.Position2D;
 import com.naxanria.mappy.util.Serializable;
+import net.minecraft.client.Minecraft;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.ListNBT;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
+import net.minecraft.world.World;
+import net.minecraft.world.dimension.Dimension;
+import net.minecraft.world.dimension.DimensionType;
 
 /*
   @author: Naxanria
@@ -60,6 +65,7 @@ public class SuperChunk implements Serializable<SuperChunk>
         nbtList.add(ChunkData.toTag(chunkData));
       }
     }
+//    Mappy.LOGGER.info("List tag type: " + nbtList.getTagType());
     tag.put("Chunks", nbtList);
   
     return this;
@@ -75,7 +81,7 @@ public class SuperChunk implements Serializable<SuperChunk>
     
     position = new Position2D(x, z);
     dimension = dim;
-    
+  
     ListNBT chunksList = tag.getList("Chunks", NBTIds.COMPOUND);
     prepareChunksList();
     
@@ -85,6 +91,7 @@ public class SuperChunk implements Serializable<SuperChunk>
       ChunkData chunkData = ChunkData.fromTag(chunkCompound, null);
       if (chunkData != null)
       {
+//        Mappy.LOGGER.info("Loaded chunk " + chunkData.cx + " ," + chunkData.cz);
         setChunk(chunkData);
 //        chunks[getListPosition(chunkData)] = chunkData;
       }
