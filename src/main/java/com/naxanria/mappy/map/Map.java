@@ -365,7 +365,7 @@ public class Map
       BlockPos start = new BlockPos(startX, y - checkHeight / 2, startZ);
       BlockPos end = new BlockPos(endX, y + checkHeight / 2, endZ);
       List<Entity> entities = world.getEntitiesWithinAABB(Entity.class, new AxisAlignedBB(start, end));
-  
+      
       int t = 0;
       
       for (Entity entity :
@@ -415,7 +415,7 @@ public class Map
               if (MappyConfig.autoRemoveDeathWaypoints && distS <= MappyConfig.autoRemoveRange * MappyConfig.autoRemoveRange)
               {
                 // don't want to remove the waypoint we just added
-                if (EventListener.playerAlive && !(Minecraft.getInstance().currentScreen instanceof DeathScreen))
+                if (EventListener.alive && !(Minecraft.getInstance().currentScreen instanceof DeathScreen))
                 {
                   toRemove.add(wp);
                 }

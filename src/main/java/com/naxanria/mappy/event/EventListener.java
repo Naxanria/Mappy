@@ -8,6 +8,7 @@ import com.naxanria.mappy.map.WorldMapGUI;
 import com.naxanria.mappy.map.waypoint.WayPointListEditor;
 import com.naxanria.mappy.util.Util;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.screen.DeathScreen;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.client.util.InputMappings;
 import net.minecraft.entity.player.PlayerEntity;
@@ -30,6 +31,7 @@ import org.lwjgl.glfw.GLFW;
 public class EventListener
 {
   public static final String KEY_BIND_CATEGORY = "mappy";
+  public static boolean alive;
   
   @SubscribeEvent
   public static void clientTick(final TickEvent.ClientTickEvent event)
@@ -40,7 +42,29 @@ public class EventListener
       {
         Mappy.map.update();
       }
+      Minecraft minecraft = Minecraft.getInstance();
+      
+      boolean lastAlive = alive;
+      
+      alive = minecraft.player != null && !(minecraft.currentScreen instanceof DeathScreen);
+      
+      if (lastAlive != alive)
+      {
+        if (minecraft.player != null)
+        {
+          if (lastAlive)
+          {
+//            Mappy.LOGGER.info("Found manual death event");
+            handleDeath(minecraft.player);
+          }
+          else
+          {
+//            Mappy.LOGGER.info("Found manual respawn event");
+          }
+        }
+      }
     }
+    
     KeyHandler.INSTANCE.update();
   }
   
@@ -150,46 +174,78 @@ public class EventListener
     return new KeyBinding(name, conflictContext, InputMappings.Type.KEYSYM, key, KEY_BIND_CATEGORY);
   }
   
-  public static boolean playerAlive = true;
+//  public static boolean playerAlive = true;
   
-  @SubscribeEvent(receiveCanceled = true, priority = EventPriority.HIGHEST)
-  public static void entityDeath(final LivingDeathEvent event)
+//  @SubscribeEvent(receiveCanceled = true, priority = EventPriority.HIGHEST)
+//  public static void death(final PlayerEvent.Clone playerEvent)
+//  {
+//    if (playerEvent.isWasDeath())
+//    {
+//      handleDeath(playerEvent.getPlayer());
+//    }
+//  }
+  
+  private static void handleDeath(PlayerEntity player)
   {
-    if (event.getEntity() instanceof PlayerEntity)
-    {
-      Mappy.LOGGER.info("Detected death");
-      PlayerEntity player = (PlayerEntity) event.getEntity();
-      if (player.getUniqueID() != Minecraft.getInstance().player.getUniqueID())
-      {
-        return;
-      }
-      
-      if (MappyConfig.printDeathPointInChat)
-      {
-        player.sendMessage(new StringTextComponent("You died at " + Util.prettyFy(player.getPosition())));
-      }
-      
-      if (MappyConfig.createDeathWaypoints)
-      {
-        Mappy.map.createWayPoint(true);
-      }
-      
-      playerAlive = false;
-    }
-  }
-  
-  @SubscribeEvent
-  public static void playerRespawn(final PlayerEvent.PlayerRespawnEvent event)
-  {
-    PlayerEntity player = event.getPlayer();
-  
+//    Mappy.LOGGER.info("Detected Player death of " + player.getDisplayName().getString());
+
     if (player.getUniqueID() != Minecraft.getInstance().player.getUniqueID())
     {
       return;
     }
-    
-    Mappy.LOGGER.info("Respawned");
-    
-    playerAlive = true;
+  
+    if (MappyConfig.printDeathPointInChat)
+    {
+      player.sendMessage(new StringTextComponent("You died at " + Util.prettyFy(player.getPosition())));
+    }
+  
+    if (MappyConfig.createDeathWaypoints)
+    {
+      Mappy.map.createWayPoint(true);
+    }
+  
+//    playerAlive = false;
   }
+  
+//  @SubscribeEvent(receiveCanceled = true, priority = EventPriority.HIGHEST)
+//  public static void entityDeath(final LivingDeathEvent event)
+//  {
+//    Mappy.LOGGER.info("Detected death - " + event.getEntity().getClass().getCanonicalName());
+//    if (event.getEntity() instanceof PlayerEntity)
+//    {
+//      Mappy.LOGGER.info("Detected Player death");
+//      PlayerEntity player = (PlayerEntity) event.getEntity();
+////      if (player.getUniqueID() != Minecraft.getInstance().player.getUniqueID())
+////      {
+////        return;
+////      }
+////
+////      if (MappyConfig.printDeathPointInChat)
+////      {
+////        player.sendMessage(new StringTextComponent("You died at " + Util.prettyFy(player.getPosition())));
+////      }
+////
+////      if (MappyConfig.createDeathWaypoints)
+////      {
+////        Mappy.map.createWayPoint(true);
+////      }
+////
+////      playerAlive = false;
+//    }
+//  }
+//
+//  @SubscribeEvent(receiveCanceled = true, priority = EventPriority.HIGHEST)
+//  public static void playerRespawn(final PlayerEvent.PlayerRespawnEvent event)
+//  {
+//    PlayerEntity player = event.getPlayer();
+//
+//    if (player.getUniqueID() != Minecraft.getInstance().player.getUniqueID())
+//    {
+//      return;
+//    }
+//
+//    Mappy.LOGGER.info("Respawned");
+//
+//    playerAlive = true;
+//  }
 }
