@@ -202,7 +202,7 @@ public class MappyConfig
       mapSize = builder
         .comment("The map size")
         .translation(key("map_size"))
-        .defineInRange("map_size", 64, 16, 256);
+        .defineInRange("map_size", 128, 16, 256);
       
       builder.comment("Death waypoints for when you die.").push("death");
   
