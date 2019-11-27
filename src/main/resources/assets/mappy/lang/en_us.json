@@ -14,12 +14,16 @@
   "mappy.gui.edit": "Edit",
   "mappy.gui.delete": "Delete",
   "mappy.gui.create": "Create",
-  "mappy.gui.teleport": "Teleport",
+  "mappy.gui.teleport": "TP",
+  "mappy.gui.chat": "Chat",
   "mappy.gui.close": "Close",
 
   "mappy.config.map_size": "Map Size",
   "mappy.config.offset": "Offset",
   "mappy.config.draw_position": "Draw Position",
+
+  "mappy.config.teleport_button": "Show Teleport Button",
+  "mappy.config.chat_button": "Show Chat Button",
 
   "mappy.config.death_waypoint": "Death Waypoint",
   "mappy.config.death_print": "Print Death",

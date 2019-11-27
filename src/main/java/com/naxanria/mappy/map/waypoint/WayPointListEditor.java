@@ -1,12 +1,10 @@
 package com.naxanria.mappy.map.waypoint;
 
 import com.naxanria.mappy.Mappy;
+import com.naxanria.mappy.config.MappyConfig;
 import com.naxanria.mappy.gui.DrawableHelperBase;
 import com.naxanria.mappy.gui.ScreenBase;
-import com.naxanria.mappy.util.BiValue;
-import com.naxanria.mappy.util.MathUtil;
-import com.naxanria.mappy.util.RandomUtil;
-import com.naxanria.mappy.util.Util;
+import com.naxanria.mappy.util.*;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
@@ -46,7 +44,10 @@ public class WayPointListEditor extends ScreenBase
     private Button deleteButton;
 //    private ButtonWidget chatButton;
     private Button teleportButton;
+    private Button chatButton;
     private WayPointListEditor wayPointListEditor;
+    
+    private List<Button> buttons = new ArrayList<>();
   
     public Entry(WayPointListEditor wayPointListEditor, int x, int y, int width, int height, WayPoint wayPoint)
     {
@@ -56,32 +57,70 @@ public class WayPointListEditor extends ScreenBase
       this.wayPointListEditor = wayPointListEditor;
       
       editButton = new Button(0, 0, 40, height, wayPointListEditor.lang("edit"), (b) -> wayPointListEditor.edit(wayPoint));
-      deleteButton = new Button(0, 0, 40, height, wayPointListEditor.lang("delete"), (b) -> wayPointListEditor.delete(wayPoint));
-//      chatButton = new ButtonWidget(0, 0, 40, height, wayPointListEditor.lang("chat"), (b) -> wayPointListEditor.toChat(wayPoint));
+      buttons.add(editButton);
       
-      teleportButton = new Button(0, 0, 40, height, wayPointListEditor.lang("teleport"), (b) -> wayPointListEditor.teleport(wayPoint));
+      deleteButton = new Button(0, 0, 40, height, wayPointListEditor.lang("delete"), (b) -> wayPointListEditor.delete(wayPoint));
+      buttons.add(deleteButton);
+      
+      if (MappyConfig.showChatButton)
+      {
+        chatButton = new Button(0, 0, 40, height, wayPointListEditor.lang("chat"), (b) -> wayPointListEditor.toChat(wayPoint));
+        buttons.add(chatButton);
+      }
+      
+      if (MappyConfig.showTeleportButton)
+      {
+        teleportButton = new Button(0, 0, 17, height, wayPointListEditor.lang("teleport"), (b) -> wayPointListEditor.teleport(wayPoint));
+        buttons.add(teleportButton);
+      }
       
       setPosition(x, y);
     }
   
     public void setPosition(int x, int y)
     {
+      boolean tp = MappyConfig.showTeleportButton;
+      boolean chat = MappyConfig.showChatButton;
+      
       this.x = x;
       this.y = y;
       
-      rightAlign(teleportButton, x + width);
-      rightAlign(deleteButton, teleportButton);
+      if (chat)
+      {
+        rightAlign(chatButton, x + width);
+      }
+      
+      if (tp)
+      {
+        if (chat)
+        {
+          rightAlign(teleportButton, chatButton);
+        }
+        else
+        {
+          rightAlign(teleportButton, x + width);
+        }
+        
+        rightAlign(deleteButton, teleportButton);
+      }
+      else
+      {
+        if (chat)
+        {
+          rightAlign(deleteButton, chatButton);
+        }
+        else
+        {
+          rightAlign(deleteButton, x + width);
+        }
+      }
+      
       rightAlign(editButton, deleteButton);
       
-//      rightAlign(chatButton, editButton);
-      
-      editButton.y = y;
-//      editButton.x = x + width - editButton.getWidth() - deleteButton.getWidth();
-      deleteButton.y = y;
-//      deleteButton.x = x + width - deleteButton.getWidth();
-//      chatButton.y = y;
-      teleportButton.y = y;
-//      teleportButton.active = wayPointListEditor.canTeleport();
+      for(Button b : buttons)
+      {
+        b.y = y;
+      }
     }
     
     
@@ -112,9 +151,14 @@ public class WayPointListEditor extends ScreenBase
       int posX = editButton.x - 2;
       drawRightAlignedString(font, Util.prettyFy(wayPoint.pos), posX, stringY, WHITE);
       
-      teleportButton.render(mouseX, mouseY, delta);
-      editButton.render(mouseX, mouseY, delta);
-      deleteButton.render(mouseX, mouseY, delta);
+      for (Button b : buttons)
+      {
+        b.render(mouseX, mouseY, delta);
+      }
+//
+//      teleportButton.render(mouseX, mouseY, delta);
+//      editButton.render(mouseX, mouseY, delta);
+//      deleteButton.render(mouseX, mouseY, delta);
       
 //      chatButton.render(mouseX, mouseY, delta);
     }
@@ -122,15 +166,29 @@ public class WayPointListEditor extends ScreenBase
     @Override
     public boolean mouseClicked(double double_1, double double_2, int int_1)
     {
-      return editButton.mouseClicked(double_1, double_2, int_1) || deleteButton.mouseClicked(double_1, double_2, int_1) || teleportButton.mouseClicked(double_1, double_2, int_1);// || chatButton.mouseReleased(double_1, double_2, int_1);
+      for(Button b : buttons)
+      {
+        if (b.mouseClicked(double_1, double_2, int_1))
+        {
+          return true;
+        }
+      }
+      return false;
     }
   
     @Override
     public boolean mouseReleased(double double_1, double double_2, int int_1)
     {
-      return editButton.mouseReleased(double_1, double_2, int_1) || deleteButton.mouseReleased(double_1, double_2, int_1) || teleportButton.mouseReleased(double_1, double_2, int_1);// || chatButton.mouseReleased(double_1, double_2, int_1);
+      for(Button b : buttons)
+      {
+        if (b.mouseReleased(double_1, double_2, int_1))
+        {
+          return true;
+        }
+      }
+      return false;
     }
-  
+    
     @Override
     public boolean isMouseOver(double mouseX, double mouseY)
     {
@@ -401,18 +459,9 @@ public class WayPointListEditor extends ScreenBase
   
   private void toChat(WayPoint wp)
   {
-//    StringTextComponent text = new StringTextComponent(Util.prettyFy(wp.pos));
-//    Style style = text.getStyle();
-//    style.setColor(TextFormat.AQUA);
-//    style.setBold(true);
-//    style.setClickEvent(
-//      new ClickEvent(
-//        ClickEvent.Action.SUGGEST_COMMAND, "/wp " + wp.pos.getX() + " " + wp.pos.getY() + " " + wp.pos.getZ() + " " + wp.dimension
-//    ));
-//
-//    onClose();
-//
-//    minecraft.player.sendMessage(text);
+    BlockPos pos = wp.pos;
+    minecraft.player.sendChatMessage("[" + wp.name + " " + pos.getX() + " " + pos.getY() + " " + pos.getZ() + "]");
+    minecraft.displayGuiScreen(null);
   }
   
   private void add()

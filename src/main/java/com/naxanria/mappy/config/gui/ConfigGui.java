@@ -69,6 +69,12 @@ public class ConfigGui extends ScreenBase
     addEntry(MappyConfig.config.showInChat)
       .tooltip.addInfo("Show the map while chat is open").def(true);
     
+    currentCategory = currentCategory.pop().push("Waypoints");
+    addEntry(MappyConfig.config.chatButton);
+    lastEntry.tooltip.addInfo("Show button to print the waypoint to chat");
+    addEntry(MappyConfig.config.teleportButton);
+    lastEntry.tooltip.addInfo("Show button to teleport to waypoint");
+    
     currentCategory = currentCategory.pop().push("Death");
     addEntry(MappyConfig.config.createDeathWayPoints);
     lastEntry.tooltip.addInfo("Create a way point on death").def(true);
@@ -102,10 +108,10 @@ public class ConfigGui extends ScreenBase
     currentCategory = currentCategory.getTop().push("Optimization");
     addEntry(MappyConfig.config.updatePerCycle)
       .tooltip.addInfo("How many chunks on the map to update per tick").range(1, 100).def(10);
-    addEntry(MappyConfig.config.pruneDelay)
-      .tooltip.addInfo("Delay before pruning cached chunks (in seconds)").range(20, 600).def(60);
-    addEntry(MappyConfig.config.pruneAmount)
-      .tooltip.addInfo("The max amount of chunks to prune from the cache").range(100, 6000).def(1500);
+//    addEntry(MappyConfig.config.pruneDelay)
+//      .tooltip.addInfo("Delay before pruning cached chunks (in seconds)").range(20, 600).def(60);
+//    addEntry(MappyConfig.config.pruneAmount)
+//      .tooltip.addInfo("The max amount of chunks to prune from the cache").range(100, 6000).def(1500);
     addEntry(MappyConfig.config.forceHeightmapUse)
       .tooltip.addInfo("Forces use of heightmap for height checking,").addInfo("this is more performing but can be less accurate").def(true);
     

@@ -14,6 +14,9 @@ public class MappyConfig
   public static DrawPosition drawPosition = DrawPosition.TOP_RIGHT;
   public static int mapSize = 64;
   
+  public static boolean showChatButton = true;
+  public static boolean showTeleportButton = false;
+  
   public static boolean createDeathWaypoints = true;
   public static boolean autoRemoveDeathWaypoints = true;
   public static int autoRemoveRange = 5;
@@ -90,6 +93,9 @@ public class MappyConfig
     offset = config.offset.get();
     drawPosition = config.drawPosition.get();
     mapSize = config.mapSize.get();
+    
+    showTeleportButton = config.teleportButton.get();
+    showChatButton = config.chatButton.get();
   
     createDeathWaypoints = config.createDeathWayPoints.get();
     autoRemoveDeathWaypoints = config.autoRemoveDeathWaypoint.get();
@@ -107,8 +113,8 @@ public class MappyConfig
     showEntities = config.showEntities.get();
   
     updatePerCycle = config.updatePerCycle.get();
-    pruneDelay = config.pruneDelay.get();
-    pruneAmount = config.pruneAmount.get();
+//    pruneDelay = config.pruneDelay.get();
+//    pruneAmount = config.pruneAmount.get();
     forceHeightmap = config.forceHeightmapUse.get();
     
     showMap = config.showMap.get();
@@ -144,6 +150,9 @@ public class MappyConfig
     public final ForgeConfigSpec.IntValue offset;
     public final ForgeConfigSpec.EnumValue<DrawPosition> drawPosition;
     public final ForgeConfigSpec.IntValue mapSize;
+    
+    public final ForgeConfigSpec.BooleanValue teleportButton;
+    public final ForgeConfigSpec.BooleanValue chatButton;
   
     public final ForgeConfigSpec.BooleanValue createDeathWayPoints;
     public final ForgeConfigSpec.BooleanValue printDeathPointInChat;
@@ -161,8 +170,8 @@ public class MappyConfig
     public final ForgeConfigSpec.BooleanValue showEntities;
   
     public final ForgeConfigSpec.IntValue updatePerCycle;
-    public final ForgeConfigSpec.IntValue pruneDelay;
-    public final ForgeConfigSpec.IntValue pruneAmount;
+//    public final ForgeConfigSpec.IntValue pruneDelay;
+//    public final ForgeConfigSpec.IntValue pruneAmount;
     public final ForgeConfigSpec.BooleanValue forceHeightmapUse;
   
     public final ForgeConfigSpec.BooleanValue showMap;
@@ -203,6 +212,20 @@ public class MappyConfig
         .comment("The map size")
         .translation(key("map_size"))
         .defineInRange("map_size", 128, 16, 256);
+      
+      builder.comment("Extra waypoint buttons").push("waypoints");
+      
+      teleportButton = builder
+        .comment("Show the teleport button")
+        .translation(key("teleport_button"))
+        .define("teleport_button", false);
+      
+      chatButton = builder
+        .comment("Show chat button")
+        .translation(key("chat_button"))
+        .define("chat_button", true);
+      
+      builder.pop();
       
       builder.comment("Death waypoints for when you die.").push("death");
   
@@ -309,15 +332,15 @@ public class MappyConfig
         .translation(key("update_per_cycle"))
         .defineInRange("update_per_cycle", 10, 1, 100);
       
-      pruneDelay = builder
-        .comment("Delay before pruning old not visited chunks")
-        .translation(key("prune_delay"))
-        .defineInRange("prune_delay", 60, 20, 600);
-      
-      pruneAmount = builder
-        .comment("Max amount to purge per prune cycle")
-        .translation(key("prune_amount"))
-        .defineInRange("prune_amount", 1500, 100, 6000);
+//      pruneDelay = builder
+//        .comment("Delay before pruning old not visited chunks")
+//        .translation(key("prune_delay"))
+//        .defineInRange("prune_delay", 60, 20, 600);
+//
+//      pruneAmount = builder
+//        .comment("Max amount to purge per prune cycle")
+//        .translation(key("prune_amount"))
+//        .defineInRange("prune_amount", 1500, 100, 6000);
       
       forceHeightmapUse = builder
         .comment("Forces use of heightmap for height checking, this is more performing but can be less accurate")
