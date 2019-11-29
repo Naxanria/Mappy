@@ -447,7 +447,11 @@ public class Map
         }
       }
 
-      toRemove.forEach(WayPointManager.INSTANCE::remove);
+      if (toRemove.size() > 0)
+      {
+        toRemove.forEach(WayPointManager.INSTANCE::remove);
+        WayPointManager.INSTANCE.save();
+      }
       
 //      wps.stream()
 //        .filter
