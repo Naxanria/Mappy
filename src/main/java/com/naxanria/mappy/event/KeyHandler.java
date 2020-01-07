@@ -2,6 +2,7 @@ package com.naxanria.mappy.event;
 
 
 
+import net.minecraft.client.MainWindow;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.util.InputMappings;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
@@ -28,7 +29,11 @@ public enum KeyHandler
     ClientRegistry.registerKeyBinding(parser.keyBinding);
     parsers.add(parser);
   }
-
+  
+  private MainWindow getWindow()
+  {
+    return Minecraft.getInstance().func_228018_at_();
+  }
   void update()
   {
     previousStates = keyStates;
@@ -36,7 +41,7 @@ public enum KeyHandler
   
     for (int code : toWatch)
     {
-      keyStates.put(code, InputMappings.isKeyDown(Minecraft.getInstance().mainWindow.getHandle(), code));
+      keyStates.put(code, InputMappings.isKeyDown(getWindow().getHandle(), code));
     }
     
     for (KeyParser kp :
@@ -76,7 +81,7 @@ public enum KeyHandler
     
     toWatch.add(keyCode);
     
-    return InputMappings.isKeyDown(Minecraft.getInstance().mainWindow.getHandle(), keyCode);
+    return InputMappings.isKeyDown(getWindow().getHandle(), keyCode);
   }
   
   public boolean isKeyUp(int keyCode)

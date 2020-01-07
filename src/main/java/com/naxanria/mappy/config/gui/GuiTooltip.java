@@ -2,6 +2,7 @@ package com.naxanria.mappy.config.gui;
 
 import com.naxanria.mappy.gui.DrawableHelperBase;
 import com.naxanria.mappy.util.BiValue;
+import net.minecraft.client.MainWindow;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 
@@ -71,8 +72,10 @@ public class GuiTooltip extends DrawableHelperBase
   public void render(int x, int y)
   {
     Minecraft minecraft = Minecraft.getInstance();
-    int windowWidth = minecraft.mainWindow.getScaledWidth();
-    int windowHeight = minecraft.mainWindow.getScaledHeight();
+    MainWindow mainWindow = minecraft.func_228018_at_();
+
+    int windowWidth = mainWindow.getScaledWidth();
+    int windowHeight = mainWindow.getScaledHeight();
     
     if (x + width > windowWidth)
     {

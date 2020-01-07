@@ -27,7 +27,7 @@ public class IntegerConfigGuiEntry extends ConfigGuiEntry<Integer,ForgeConfigSpe
       integerField.setValidator(validNumber);
       integerField.setMaxStringLength(11);
       integerField.setText(displayValue.toString());
-      integerField.func_212954_a((s) -> displayValue = getValue()); // callback for when text changed
+      integerField.setResponder((s) -> displayValue = getValue()); // callback for when text changed
     }
     
     rightAlign(integerField, resetStartValueButton, 1);

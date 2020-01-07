@@ -2,6 +2,8 @@ package com.naxanria.mappy.gui;
 
 import com.mojang.blaze3d.platform.GlStateManager;
 //import com.sun.org.apache.xml.internal.security.utils.I18n;
+import com.mojang.blaze3d.systems.RenderSystem;
+import net.minecraft.client.MainWindow;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.IGuiEventListener;
 import net.minecraft.client.gui.IRenderable;
@@ -39,8 +41,9 @@ public class ScreenBase extends Screen
   {
     this.mouseX = mouseX;
     this.mouseY = mouseY;
-    windowWidth = minecraft.mainWindow.getScaledWidth();
-    windowHeight = minecraft.mainWindow.getScaledHeight();
+    MainWindow mainWindow = minecraft.func_228018_at_();
+    windowWidth = mainWindow.getScaledWidth();
+    windowHeight = mainWindow.getScaledHeight();
     
     renderPre();
     
@@ -110,13 +113,13 @@ public class ScreenBase extends Screen
     Tessellator tessellator = Tessellator.getInstance();
     BufferBuilder builder = tessellator.getBuffer();
     minecraft.getTextureManager().bindTexture(id);
-    GlStateManager.color4f(1, 1, 1, 1);
+    RenderSystem.color4f(1, 1, 1, 1);
     builder.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX_COLOR);
     
-    builder.pos(x, y + height, 0).tex(0f, 1f).color(255, 255, 255, 255).endVertex();
-    builder.pos(x + width, y + height, 0).tex(1f, 1f).color(255, 255, 255, 255).endVertex();
-    builder.pos(x + width, y, 0).tex(1f, 0f).color(255, 255, 255, 255).endVertex();
-    builder.pos(x, y, 0).tex(0f, 0f).color(255, 255, 255, 255).endVertex();
+    builder.func_225582_a_(x, y + height, 0).func_225583_a_(0f, 1f).func_227885_a_(255, 255, 255, 255).endVertex();
+    builder.func_225582_a_(x + width, y + height, 0).func_225583_a_(1f, 1f).func_227885_a_(255, 255, 255, 255).endVertex();
+    builder.func_225582_a_(x + width, y, 0).func_225583_a_(1f, 0f).func_227885_a_(255, 255, 255, 255).endVertex();
+    builder.func_225582_a_(x, y, 0).func_225583_a_(0f, 0f).func_227885_a_(255, 255, 255, 255).endVertex();
     
     tessellator.draw();
   }
@@ -126,13 +129,13 @@ public class ScreenBase extends Screen
     Tessellator tessellator = Tessellator.getInstance();
     BufferBuilder builder = tessellator.getBuffer();
     minecraft.getTextureManager().bindTexture(id);
-    GlStateManager.color4f(1, 1, 1, 1);
+    RenderSystem.color4f(1, 1, 1, 1);
     builder.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX_COLOR);
   
-    builder.pos(x, y + height, 0).tex(0f, v).color(r, g, b, a).endVertex();
-    builder.pos(x + width, y + height, 0).tex(u, v).color(r, g, b, a).endVertex();
-    builder.pos(x + width, y, 0).tex(u, 0f).color(r, g, b, a).endVertex();
-    builder.pos(x, y, 0).tex(0f, 0f).color(r, g, b, a).endVertex();
+    builder.func_225582_a_(x, y + height, 0).func_225583_a_(0f, v).func_227885_a_(r, g, b, a).endVertex();
+    builder.func_225582_a_(x + width, y + height, 0).func_225583_a_(u, v).func_227885_a_(r, g, b, a).endVertex();
+    builder.func_225582_a_(x + width, y, 0).func_225583_a_(u, 0f).func_227885_a_(r, g, b, a).endVertex();
+    builder.func_225582_a_(x, y, 0).func_225583_a_(0f, 0f).func_227885_a_(r, g, b, a).endVertex();
   
     tessellator.draw();
   }

@@ -1,14 +1,11 @@
 package com.naxanria.mappy.map;
 
-import com.naxanria.mappy.Logger;
 import com.naxanria.mappy.Mappy;
 import com.naxanria.mappy.event.KeyHandler;
 import com.naxanria.mappy.gui.ScreenBase;
 import com.naxanria.mappy.map.chunk.ChunkCache;
 import com.naxanria.mappy.map.chunk.ChunkData;
-import com.naxanria.mappy.util.ColorUtil;
 import com.naxanria.mappy.util.ImageUtil;
-import com.naxanria.mappy.util.RandomUtil;
 import net.minecraft.client.entity.player.ClientPlayerEntity;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.renderer.texture.DynamicTexture;
@@ -17,12 +14,12 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.util.text.TextComponent;
 import org.lwjgl.glfw.GLFW;
 
 public class WorldMapGUI extends ScreenBase
 {
-  private BlockPos.MutableBlockPos center;
+  
+  private BlockPos.Mutable center;
   private ClientPlayerEntity player;
   private ChunkCache preLoader;
   private NativeImage backingImage;
@@ -36,7 +33,7 @@ public class WorldMapGUI extends ScreenBase
     
     player = (ClientPlayerEntity) getLocalPlayer();
     
-    center = new BlockPos.MutableBlockPos(player.getPosition());
+    center = new BlockPos.Mutable(player.getPosition());
     
     preLoader = ChunkCache.getPreLoader(player.world);
     

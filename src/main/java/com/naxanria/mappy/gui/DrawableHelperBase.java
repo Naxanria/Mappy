@@ -1,6 +1,7 @@
 package com.naxanria.mappy.gui;
 
 import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.Minecraft;
 
 import net.minecraft.client.gui.AbstractGui;
@@ -23,9 +24,9 @@ public class DrawableHelperBase extends AbstractGui
   
   public void fillNoDepth(int x, int y, int right, int left, int color)
   {
-    GlStateManager.disableDepthTest();
+    RenderSystem.disableDepthTest();
     fill(x, y, right, left, color);
-    GlStateManager.enableDepthTest();
+    RenderSystem.enableDepthTest();
   }
   
   public void drawStringCenteredBound(FontRenderer font, String string, int x, int y, int leftBound, int rightBound, int color)
@@ -78,17 +79,17 @@ public class DrawableHelperBase extends AbstractGui
   
     Tessellator tessellator = Tessellator.getInstance();
     BufferBuilder builder = tessellator.getBuffer();
-    GlStateManager.enableBlend();
-    GlStateManager.disableTexture();
-    GlStateManager.blendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
-    GlStateManager.color4f(r, g, b, a);
+    RenderSystem.enableBlend();
+    RenderSystem.disableTexture();
+    RenderSystem.blendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
+    RenderSystem.color4f(r, g, b, a);
     builder.begin(GL11.GL_TRIANGLES, DefaultVertexFormats.POSITION);
-    builder.pos(x1, y1, 0).endVertex();
-    builder.pos(x2, y2, 0).endVertex();
-    builder.pos(x3, y3, 0).endVertex();
+    builder.func_225582_a_(x1, y1, 0).endVertex();
+    builder.func_225582_a_(x2, y2, 0).endVertex();
+    builder.func_225582_a_(x3, y3, 0).endVertex();
     tessellator.draw();
-    GlStateManager.enableTexture();
-    GlStateManager.disableBlend();
+    RenderSystem.enableTexture();
+    RenderSystem.disableBlend();
   }
   
   public static void line(int x1, int y1, int x2, int y2, int color)
@@ -100,16 +101,16 @@ public class DrawableHelperBase extends AbstractGui
   
     Tessellator tessellator = Tessellator.getInstance();
     BufferBuilder builder = tessellator.getBuffer();
-    GlStateManager.enableBlend();
-    GlStateManager.disableTexture();
-    GlStateManager.blendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
-    GlStateManager.color4f(r, g, b, a);
+    RenderSystem.enableBlend();
+    RenderSystem.disableTexture();
+    RenderSystem.blendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
+    RenderSystem.color4f(r, g, b, a);
     builder.begin(GL11.GL_LINES, DefaultVertexFormats.POSITION);
-    builder.pos(x1, y1, 0).endVertex();
-    builder.pos(x2, y2, 0).endVertex();
+    builder.func_225582_a_(x1, y1, 0).endVertex();
+    builder.func_225582_a_(x2, y2, 0).endVertex();
     tessellator.draw();
-    GlStateManager.enableTexture();
-    GlStateManager.disableBlend();
+    RenderSystem.enableTexture();
+    RenderSystem.disableBlend();
   }
   
   public static void rect(int x, int y, int size, int color)
@@ -126,27 +127,27 @@ public class DrawableHelperBase extends AbstractGui
   
     Tessellator tessellator = Tessellator.getInstance();
     BufferBuilder builder = tessellator.getBuffer();
-    GlStateManager.enableBlend();
-    GlStateManager.disableTexture();
-    GlStateManager.blendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
-    GlStateManager.color4f(r, g, b, a);
+   RenderSystem.enableBlend();
+   RenderSystem.disableTexture();
+   RenderSystem.blendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
+   RenderSystem.color4f(r, g, b, a);
     builder.begin(GL11.GL_LINES, DefaultVertexFormats.POSITION);
-    builder.pos(x, y, 0).endVertex();
-    builder.pos(x + width, y, 0).endVertex();
+    builder.func_225582_a_(x, y, 0).endVertex();
+    builder.func_225582_a_(x + width, y, 0).endVertex();
     
-    builder.pos(x + width, y, 0).endVertex();
-    builder.pos(x + width, y + height, 0).endVertex();
+    builder.func_225582_a_(x + width, y, 0).endVertex();
+    builder.func_225582_a_(x + width, y + height, 0).endVertex();
     
-    builder.pos(x + width, y + height, 0).endVertex();
-    builder.pos(x, y + height, 0).endVertex();
+    builder.func_225582_a_(x + width, y + height, 0).endVertex();
+    builder.func_225582_a_(x, y + height, 0).endVertex();
   
-    builder.pos(x, y, 0).endVertex();
-    builder.pos(x, y + height, 0).endVertex();
+    builder.func_225582_a_(x, y, 0).endVertex();
+    builder.func_225582_a_(x, y + height, 0).endVertex();
     
     tessellator.draw();
     
-    GlStateManager.enableTexture();
-    GlStateManager.disableBlend();
+    RenderSystem.enableTexture();
+    RenderSystem.disableBlend();
   }
   
 }

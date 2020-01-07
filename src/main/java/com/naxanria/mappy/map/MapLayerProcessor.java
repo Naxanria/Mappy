@@ -424,7 +424,7 @@ public class MapLayerProcessor
   public static int getHeight(World world, BlockPos pos, boolean ignoreLiquid, int startHeight)
   {
 
-    BlockPos.MutableBlockPos checkPos = new BlockPos.MutableBlockPos(pos.getX(), startHeight, pos.getZ());
+    BlockPos.Mutable checkPos = new BlockPos.Mutable(pos.getX(), startHeight, pos.getZ());
     
     while (checkPos.getY() > 0)
     {

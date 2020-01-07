@@ -25,6 +25,7 @@ import net.minecraft.potion.EffectInstance;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.dimension.DimensionType;
@@ -226,7 +227,9 @@ public class Map
     
     if (MappyConfig.showFPS)
     {
-      fpsInfo.setText(Minecraft.getDebugFPS() + " fps");
+      String debug = client.debug;
+      String fpsString = debug.substring(0, debug.indexOf(' ', debug.indexOf(' ') + 1));
+      fpsInfo.setText(fpsString);
       manager.add(fpsInfo);
     }
     
@@ -310,7 +313,8 @@ public class Map
     World world = player.world;
     BlockPos pos = player.getPosition();
   
-    biome = world.getBiome(pos);
+    biome = world.func_226691_t_(pos);
+//    biome = world.getBiome(pos);
     DimensionType type = world.dimension.getType();
     
 //    boolean nether = type == DimensionType.THE_NETHER;
@@ -338,7 +342,7 @@ public class Map
         continue;
       }
       
-      if (p.isSneaking() || p.isSpectator())
+      if (p.isCrouching() || p.isSpectator())
       {
         continue;
       }
@@ -376,8 +380,9 @@ public class Map
           t++;
           LivingEntity livingEntity = (LivingEntity) entity;
           MapIcon.Entity mie = new MapIcon.Entity(this, entity, livingEntity instanceof MonsterEntity);
-          
-          mie.setPosition(MapIcon.getScaled((int) entity.posX, startX, endX, size), MapIcon.getScaled((int) entity.posZ, startZ, endZ, size));
+  
+          Vec3d vec = entity.getPositionVec();
+          mie.setPosition(MapIcon.getScaled((int) vec.x, startX, endX, size), MapIcon.getScaled((int) vec.z, startZ, endZ, size));
           
           this.entities.add(mie);
         }

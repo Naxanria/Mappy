@@ -21,7 +21,7 @@ public class StringConfigGuiEntry extends ConfigGuiEntry<String, ForgeConfigSpec
     {
       textField = new TextFieldWidget(font, 0, 0, font.getStringWidth("W") * 12, height, value);
       textField.setText(displayValue);
-      textField.func_212954_a((s) -> displayValue = textField.getText());
+      textField.setResponder((s) -> displayValue = textField.getText());
     }
     
     textField.y = y;

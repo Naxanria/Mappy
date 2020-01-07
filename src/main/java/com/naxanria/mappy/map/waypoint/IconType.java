@@ -1,6 +1,7 @@
 package com.naxanria.mappy.map.waypoint;
 
 import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.systems.RenderSystem;
 import com.naxanria.mappy.gui.DrawableHelperBase;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BufferBuilder;
@@ -36,7 +37,7 @@ public enum IconType
     int size = type.size;
     int hsize = size / 2;
     
-    GlStateManager.pushMatrix();
+    RenderSystem.pushMatrix();
     switch (type)
     {
       case DIAMOND:
@@ -68,15 +69,15 @@ public enum IconType
         x -= hsize;
         y -= hsize;
   
-        builder.pos(x, y + size, z).tex(0, 1).color(255, 255, 255, 255).endVertex();
-        builder.pos(x + size, y + size, z).tex(1, 1).color(255, 255, 255, 255).endVertex();
-        builder.pos(x + size, y, z).tex(1, 0).color(255, 255, 255, 255).endVertex();
-        builder.pos(x, y, z).tex(0, 0).color(255, 255, 255, 255).endVertex();
+        builder.func_225582_a_(x, y + size, z).func_225583_a_(0, 1).func_227885_a_(255, 255, 255, 255).endVertex();
+        builder.func_225582_a_(x + size, y + size, z).func_225583_a_(1, 1).func_227885_a_(255, 255, 255, 255).endVertex();
+        builder.func_225582_a_(x + size, y, z).func_225583_a_(1, 0).func_227885_a_(255, 255, 255, 255).endVertex();
+        builder.func_225582_a_(x, y, z).func_225583_a_(0, 0).func_227885_a_(255, 255, 255, 255).endVertex();
         
         tessellator.draw();
         
         break;
     }
-    GlStateManager.popMatrix();
+    RenderSystem.popMatrix();
   }
 }

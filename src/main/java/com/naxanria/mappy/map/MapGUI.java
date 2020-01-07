@@ -1,10 +1,12 @@
 package com.naxanria.mappy.map;
 
 import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.systems.RenderSystem;
 import com.naxanria.mappy.Mappy;
 import com.naxanria.mappy.gui.DrawPosition;
 import com.naxanria.mappy.gui.DrawableHelperBase;
 import com.naxanria.mappy.config.MappyConfig;
+import net.minecraft.client.MainWindow;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screen.ChatScreen;
 import net.minecraft.client.renderer.BufferBuilder;
@@ -100,8 +102,9 @@ public class MapGUI extends DrawableHelperBase
     
     int x = offset;
     int y = offset;
-    int w = client.mainWindow.getScaledWidth();
-    int h = client.mainWindow.getScaledHeight();
+    MainWindow mainWindow = client.func_228018_at_();
+    int w = mainWindow.getScaledWidth();
+    int h = mainWindow.getScaledHeight();
   
     int scale = MappyConfig.scale;
     int iw = backingImage.getWidth() / scale;
@@ -154,7 +157,7 @@ public class MapGUI extends DrawableHelperBase
       drawMap(client, x, y, iw, ih);
   
       // draw the icons
-      GlStateManager.disableDepthTest();
+      RenderSystem.disableDepthTest();
       for (MapIcon.Player player :
         map.getPlayerIcons())
       {
@@ -174,7 +177,7 @@ public class MapGUI extends DrawableHelperBase
       }
   
   
-      GlStateManager.enableDepthTest();
+      RenderSystem.enableDepthTest();
     }
     // draw info for the map
     manager.draw();
@@ -198,10 +201,10 @@ public class MapGUI extends DrawableHelperBase
     
     double z = 0.09;
     
-    builder.pos(x, y + ih, z).tex(0, 1).color(255, 255, 255, 255).endVertex();
-    builder.pos(x + iw, y + ih, z).tex(1, 1).color(255, 255, 255, 255).endVertex();
-    builder.pos(x + iw, y, z).tex(1, 0).color(255, 255, 255, 255).endVertex();
-    builder.pos(x, y, z).tex(0, 0).color(255, 255, 255, 255).endVertex();
+    builder.func_225582_a_(x, y + ih, z).func_225583_a_(0, 1).func_227885_a_(255, 255, 255, 255).endVertex();
+    builder.func_225582_a_(x + iw, y + ih, z).func_225583_a_(1, 1).func_227885_a_(255, 255, 255, 255).endVertex();
+    builder.func_225582_a_(x + iw, y, z).func_225583_a_(1, 0).func_227885_a_(255, 255, 255, 255).endVertex();
+    builder.func_225582_a_(x, y, z).func_225583_a_(0, 0).func_227885_a_(255, 255, 255, 255).endVertex();
     tessellator.draw();
     if (MappyConfig.drawChunkGrid)
     {
@@ -217,7 +220,7 @@ public class MapGUI extends DrawableHelperBase
     int xOff = ((px / 16) * 16) - px;
     int yOff = ((pz / 16) * 16) - pz;
     
-    GlStateManager.disableDepthTest();
+    RenderSystem.disableDepthTest();
     for (int h = yOff; h < ih; h += 16)
     {
       int yp = y + h;
@@ -238,6 +241,6 @@ public class MapGUI extends DrawableHelperBase
       
       line(xp, y, xp, y + ih, col);
     }
-    GlStateManager.enableDepthTest();
+    RenderSystem.enableDepthTest();
   }
 }

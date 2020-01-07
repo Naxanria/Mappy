@@ -6,6 +6,7 @@ import com.naxanria.mappy.gui.DrawableHelperBase;
 import com.naxanria.mappy.gui.ScreenBase;
 import com.naxanria.mappy.util.*;
 
+import net.minecraft.client.MainWindow;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.IGuiEventListener;
@@ -262,10 +263,11 @@ public class WayPointListEditor extends ScreenBase
   @Override
   protected void init()
   {
-    width = Math.max(300, minecraft.mainWindow.getScaledWidth() / 2);
-    height = minecraft.mainWindow.getScaledHeight();
+    MainWindow mainWindow = minecraft.func_228018_at_();
+    width = Math.max(300, mainWindow.getScaledWidth() / 2);
+    height = mainWindow.getScaledHeight();
   
-    x = minecraft.mainWindow.getScaledWidth() / 2 - width / 2;
+    x = mainWindow.getScaledWidth() / 2 - width / 2;
     
     prevDimensionButton = new Button(x + 10, 10, 20, 20, "<", (b) -> cycleDimension(-1));
     nextDimensionButton = new Button(x + width - 20 - 10, 10, 20, 20, ">", (b) -> cycleDimension(1));

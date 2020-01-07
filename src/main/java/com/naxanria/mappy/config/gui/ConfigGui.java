@@ -5,6 +5,7 @@ import com.google.common.base.Strings;
 import com.naxanria.mappy.config.ConfigCategoryNode;
 import com.naxanria.mappy.gui.ScreenBase;
 import com.naxanria.mappy.config.MappyConfig;
+import net.minecraft.client.MainWindow;
 import net.minecraft.client.gui.IGuiEventListener;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.button.Button;
@@ -146,8 +147,9 @@ public class ConfigGui extends ScreenBase
   @Override
   public void init()
   {
-    windowWidth = minecraft.mainWindow.getScaledWidth();
-    windowHeight = minecraft.mainWindow.getScaledHeight();
+    MainWindow mainWindow = minecraft.func_228018_at_();
+    windowWidth = mainWindow.getScaledWidth();
+    windowHeight = mainWindow.getScaledHeight();
 
     children.clear();
   

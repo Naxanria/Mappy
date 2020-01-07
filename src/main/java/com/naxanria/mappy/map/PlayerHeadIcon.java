@@ -3,6 +3,7 @@ package com.naxanria.mappy.map;
 import com.mojang.authlib.minecraft.MinecraftProfileTexture;
 import com.mojang.blaze3d.platform.GlStateManager;
 
+import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.AbstractGui;
 import net.minecraft.client.resources.DefaultPlayerSkin;
@@ -78,7 +79,7 @@ public class PlayerHeadIcon
     PlayerHeadIcon icon = getIcon(player);
     
     Minecraft.getInstance().getTextureManager().bindTexture(icon.skinId);
-    GlStateManager.color4f(1.0F, 1.0F, 1.0F, 1.0F);
+    RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
     
     AbstractGui.blit(x, y, 8, 8, 8.0F, 8.0F, 8, 8, 64, 64);
   }
