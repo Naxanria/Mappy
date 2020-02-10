@@ -55,7 +55,7 @@ public class WayPointRenderer extends DrawableHelperBase
     
     float angle = (waypointAngle % (angleEnd - angleStart)) + angleStart;
   
-    MainWindow mainWindow = client.func_228018_at_();
+    MainWindow mainWindow = client.getMainWindow();
     float scale = angle / (viewFov);
     int size = 12;
     int x = (int) MathUtil.clamp(mainWindow.getScaledWidth() * scale - size / 2, 0, mainWindow.getScaledWidth() - size);

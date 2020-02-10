@@ -313,7 +313,7 @@ public class Map
     World world = player.world;
     BlockPos pos = player.getPosition();
   
-    biome = world.func_226691_t_(pos);
+    biome = world.getBiome(pos);
 //    biome = world.getBiome(pos);
     DimensionType type = world.dimension.getType();
     

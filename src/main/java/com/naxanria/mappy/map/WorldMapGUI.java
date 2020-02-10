@@ -2,6 +2,7 @@ package com.naxanria.mappy.map;
 
 import com.naxanria.mappy.Mappy;
 import com.naxanria.mappy.event.KeyHandler;
+import com.naxanria.mappy.gui.DrawableHelperBase;
 import com.naxanria.mappy.gui.ScreenBase;
 import com.naxanria.mappy.map.chunk.ChunkCache;
 import com.naxanria.mappy.map.chunk.ChunkData;
@@ -69,7 +70,7 @@ public class WorldMapGUI extends ScreenBase
     }
     
     // render map
-    renderTexture(0, 0, windowWidth, windowHeight, textureIdentifier);
+    DrawableHelperBase.renderTexture(0, 0, windowWidth, windowHeight, textureIdentifier);
     
     // debug: render chunk coords
     if (Screen.hasControlDown())

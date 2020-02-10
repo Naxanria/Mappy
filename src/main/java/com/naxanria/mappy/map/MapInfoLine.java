@@ -41,7 +41,7 @@ public class MapInfoLine extends DrawableHelperBase
   {
     FontRenderer font = client.fontRenderer;
     
-    int width = client.func_228018_at_().getScaledWidth();
+    int width = client.getMainWindow().getScaledWidth();
     
     switch (alignment)
     {

@@ -9,7 +9,8 @@ import net.minecraft.client.gui.IGuiEventListener;
 import net.minecraft.client.gui.INestedGuiEventHandler;
 import net.minecraft.client.gui.IRenderable;
 import net.minecraft.client.gui.widget.button.Button;
-import net.minecraftforge.fml.client.config.GuiButtonExt;
+import net.minecraftforge.fml.client.gui.widget.ExtendedButton;
+
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -30,7 +31,7 @@ public class CategoryWidget extends DrawableHelperBase implements IRenderable, I
   protected ConfigCategoryNode node;
   protected ConfigGui gui;
   
-  protected List<GuiButtonExt> categoryButtons = new ArrayList<>();
+  protected List<ExtendedButton> categoryButtons = new ArrayList<>();
   
   protected final int currentDepth;
   
@@ -53,7 +54,7 @@ public class CategoryWidget extends DrawableHelperBase implements IRenderable, I
     {
       int w = font.getStringWidth(name) + 8;
       int d = cats.length - 1 - depth;
-      GuiButtonExt b = new GuiButtonExt(xp, y, w, height, name, button -> clicked(d));
+      ExtendedButton b = new ExtendedButton(xp, y, w, height, name, button -> clicked(d));
       if (d == 0)
       {
         b.active = false;

@@ -41,7 +41,7 @@ public class ScreenBase extends Screen
   {
     this.mouseX = mouseX;
     this.mouseY = mouseY;
-    MainWindow mainWindow = minecraft.func_228018_at_();
+    MainWindow mainWindow = minecraft.getMainWindow();
     windowWidth = mainWindow.getScaledWidth();
     windowHeight = mainWindow.getScaledHeight();
     
@@ -103,65 +103,65 @@ public class ScreenBase extends Screen
     minecraft.displayGuiScreen(parent);
   }
   
-  public void renderTexture(int x, int y, int width, int height, String id)
-  {
-    renderTexture(x, y, width, height, new ResourceLocation(id));
-  }
+//  public void renderTexture(int x, int y, int width, int height, String id)
+//  {
+//    renderTexture(x, y, width, height, new ResourceLocation(id));
+//  }
   
-  public void renderTexture(int x, int y, int width, int height, ResourceLocation id)
-  {
-    Tessellator tessellator = Tessellator.getInstance();
-    BufferBuilder builder = tessellator.getBuffer();
-    minecraft.getTextureManager().bindTexture(id);
-    RenderSystem.color4f(1, 1, 1, 1);
-    builder.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX_COLOR);
-    
-    builder.func_225582_a_(x, y + height, 0).func_225583_a_(0f, 1f).func_227885_a_(255, 255, 255, 255).endVertex();
-    builder.func_225582_a_(x + width, y + height, 0).func_225583_a_(1f, 1f).func_227885_a_(255, 255, 255, 255).endVertex();
-    builder.func_225582_a_(x + width, y, 0).func_225583_a_(1f, 0f).func_227885_a_(255, 255, 255, 255).endVertex();
-    builder.func_225582_a_(x, y, 0).func_225583_a_(0f, 0f).func_227885_a_(255, 255, 255, 255).endVertex();
-    
-    tessellator.draw();
-  }
-  
-  public void renderTexture(int x, int y, int width, int height, float u, float v, int r, int g, int b, int a, ResourceLocation id)
-  {
-    Tessellator tessellator = Tessellator.getInstance();
-    BufferBuilder builder = tessellator.getBuffer();
-    minecraft.getTextureManager().bindTexture(id);
-    RenderSystem.color4f(1, 1, 1, 1);
-    builder.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX_COLOR);
-  
-    builder.func_225582_a_(x, y + height, 0).func_225583_a_(0f, v).func_227885_a_(r, g, b, a).endVertex();
-    builder.func_225582_a_(x + width, y + height, 0).func_225583_a_(u, v).func_227885_a_(r, g, b, a).endVertex();
-    builder.func_225582_a_(x + width, y, 0).func_225583_a_(u, 0f).func_227885_a_(r, g, b, a).endVertex();
-    builder.func_225582_a_(x, y, 0).func_225583_a_(0f, 0f).func_227885_a_(r, g, b, a).endVertex();
-  
-    tessellator.draw();
-  }
-  
-  public void renderTextureModal(int x, int y, int width, int height, int textureWidth, int textureHeight, ResourceLocation id)
-  {
-    renderTexture(x, y, width, height, (float) width / (float) textureWidth, (float) height / (float) textureHeight, 255, 255, 255, 255, id);
-  }
-  
-  public void renderTextureRepeating(int x, int y, int width, int height, int textureHeight, int textureWidth, String id)
-  {
-    renderTextureRepeating(x, y, width, height, textureHeight, textureWidth, new ResourceLocation(id));
-  }
-  
-  public void renderTextureRepeating(int x, int y, int width, int height, int textureHeight, int textureWidth, ResourceLocation id)
-  {
-    for (int xp = 0; xp < width; xp += textureWidth)
-    {
-      int w = (xp + textureWidth < width) ? textureWidth : width - xp;
-      for (int yp = 0; yp < height; yp += textureHeight)
-      {
-        int h = (yp + textureHeight < height) ? textureHeight : height - yp;
-        renderTextureModal(x + xp, y + yp, w, h, textureWidth, textureHeight, id);
-      }
-    }
-  }
+//  public void renderTexture(int x, int y, int width, int height, ResourceLocation id)
+//  {
+//    Tessellator tessellator = Tessellator.getInstance();
+//    BufferBuilder builder = tessellator.getBuffer();
+//    minecraft.getTextureManager().bindTexture(id);
+//    RenderSystem.color4f(1, 1, 1, 1);
+//    builder.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_COLOR_TEX);
+//
+//    builder.pos(x, y + height, 0).color(255, 255, 255, 255).tex(0f, 1f).endVertex();
+//    builder.pos(x + width, y + height, 0).color(255, 255, 255, 255).tex(1f, 1f).endVertex();
+//    builder.pos(x + width, y, 0).color(255, 255, 255, 255).tex(1f, 0f).endVertex();
+//    builder.pos(x, y, 0).color(255, 255, 255, 255).tex(0f, 0f).endVertex();
+//
+//    tessellator.draw();
+//  }
+//
+//  public void renderTexture(int x, int y, int width, int height, float u, float v, int r, int g, int b, int a, ResourceLocation id)
+//  {
+//    Tessellator tessellator = Tessellator.getInstance();
+//    BufferBuilder builder = tessellator.getBuffer();
+//    minecraft.getTextureManager().bindTexture(id);
+//    RenderSystem.color4f(1, 1, 1, 1);
+//    builder.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_COLOR_TEX);
+//
+//    builder.pos(x, y + height, 0).color(r, g, b, a).tex(0f, v).endVertex();
+//    builder.pos(x + width, y + height, 0).color(r, g, b, a).tex(u, v).endVertex();
+//    builder.pos(x + width, y, 0).color(r, g, b, a).tex(u, 0f).endVertex();
+//    builder.pos(x, y, 0).color(r, g, b, a).tex(0f, 0f).endVertex();
+//
+//    tessellator.draw();
+//  }
+//
+//  public void renderTextureModal(int x, int y, int width, int height, int textureWidth, int textureHeight, ResourceLocation id)
+//  {
+//    renderTexture(x, y, width, height, (float) width / (float) textureWidth, (float) height / (float) textureHeight, 255, 255, 255, 255, id);
+//  }
+//
+//  public void renderTextureRepeating(int x, int y, int width, int height, int textureHeight, int textureWidth, String id)
+//  {
+//    renderTextureRepeating(x, y, width, height, textureHeight, textureWidth, new ResourceLocation(id));
+//  }
+//
+//  public void renderTextureRepeating(int x, int y, int width, int height, int textureHeight, int textureWidth, ResourceLocation id)
+//  {
+//    for (int xp = 0; xp < width; xp += textureWidth)
+//    {
+//      int w = (xp + textureWidth < width) ? textureWidth : width - xp;
+//      for (int yp = 0; yp < height; yp += textureHeight)
+//      {
+//        int h = (yp + textureHeight < height) ? textureHeight : height - yp;
+//        renderTextureModal(x + xp, y + yp, w, h, textureWidth, textureHeight, id);
+//      }
+//    }
+//  }
   
   public String lang(String key)
   {

@@ -12,7 +12,8 @@ import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraftforge.common.ForgeConfigSpec;
-import net.minecraftforge.fml.client.config.GuiButtonExt;
+import net.minecraftforge.fml.client.gui.widget.ExtendedButton;
+
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -35,9 +36,9 @@ public class ConfigGui extends ScreenBase
   private List<String> subCategories;
   
   private CategoryWidget categoryWidget;
-  private List<GuiButtonExt> subCategoryButtons = new ArrayList<>();
-  private GuiButtonExt saveButton;
-  private GuiButtonExt cancelButton;
+  private List<ExtendedButton> subCategoryButtons = new ArrayList<>();
+  private ExtendedButton saveButton;
+  private ExtendedButton cancelButton;
   
   
   public ConfigGui(Screen parent)
@@ -135,11 +136,11 @@ public class ConfigGui extends ScreenBase
     
     String s = I18n.format("mappy.gui.save");
     int w = font.getStringWidth(s);
-    saveButton = new GuiButtonExt(8, 0, w + 8, 20, s, this::save);
+    saveButton = new ExtendedButton(8, 0, w + 8, 20, s, this::save);
     
     s = I18n.format("mappy.gui.cancel");
     w = font.getStringWidth(s);
-    cancelButton = new GuiButtonExt(8 + saveButton.getWidth(), 0, w + 8, 20, s, this::cancel);
+    cancelButton = new ExtendedButton(8 + saveButton.getWidth(), 0, w + 8, 20, s, this::cancel);
     
     setupCategory();
   }
@@ -147,7 +148,7 @@ public class ConfigGui extends ScreenBase
   @Override
   public void init()
   {
-    MainWindow mainWindow = minecraft.func_228018_at_();
+    MainWindow mainWindow = minecraft.getMainWindow();
     windowWidth = mainWindow.getScaledWidth();
     windowHeight = mainWindow.getScaledHeight();
 
@@ -162,7 +163,7 @@ public class ConfigGui extends ScreenBase
       }
       
       int w = font.getStringWidth(subCat) + 8;
-      GuiButtonExt subButton = new GuiButtonExt(x, 22, w, 20, subCat, this::subCat);
+      ExtendedButton subButton = new ExtendedButton(x, 22, w, 20, subCat, this::subCat);
       x += w + 1;
       subCategoryButtons.add(subButton);
     }
@@ -315,7 +316,7 @@ public class ConfigGui extends ScreenBase
       categoryWidget.render(mouseX, mouseY, 0);
     }
     
-    for (GuiButtonExt button : subCategoryButtons)
+    for (ExtendedButton button : subCategoryButtons)
     {
       button.renderButton(mouseX, mouseY, 0);
     }

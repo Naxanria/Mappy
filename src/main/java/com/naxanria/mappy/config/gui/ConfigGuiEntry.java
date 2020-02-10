@@ -13,7 +13,8 @@ import net.minecraft.client.gui.widget.Widget;
 import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.client.resources.I18n;
 import net.minecraftforge.common.ForgeConfigSpec;
-import net.minecraftforge.fml.client.config.GuiButtonExt;
+import net.minecraftforge.fml.client.gui.widget.ExtendedButton;
+
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -37,8 +38,8 @@ public class ConfigGuiEntry<CV, CT extends ForgeConfigSpec.ConfigValue<CV>> exte
   protected String name;
   
   protected TextWidget nameWidget;
-  protected GuiButtonExt resetDefaultButton;
-  protected GuiButtonExt resetStartValueButton;
+  protected ExtendedButton resetDefaultButton;
+  protected ExtendedButton resetStartValueButton;
   
   protected IGuiEventListener focus = null;
   protected boolean dragging = false;
@@ -60,8 +61,8 @@ public class ConfigGuiEntry<CV, CT extends ForgeConfigSpec.ConfigValue<CV>> exte
     name = (key != null) ? I18n.format(key) : StringUtil.combine(configValue.getPath(), ".");
     
     int bWidth = 45;
-    resetDefaultButton = new GuiButtonExt(0, 0, bWidth, height, "default", this::resetToDefault);
-    resetStartValueButton = new GuiButtonExt(0, 0, bWidth, height, "reset", this::resetToStartValue);
+    resetDefaultButton = new ExtendedButton(0, 0, bWidth, height, "default", this::resetToDefault);
+    resetStartValueButton = new ExtendedButton(0, 0, bWidth, height, "reset", this::resetToStartValue);
     nameWidget = new TextWidget(0, 0, name);
     
     init();

@@ -102,7 +102,7 @@ public class MapGUI extends DrawableHelperBase
     
     int x = offset;
     int y = offset;
-    MainWindow mainWindow = client.func_228018_at_();
+    MainWindow mainWindow = client.getMainWindow();
     int w = mainWindow.getScaledWidth();
     int h = mainWindow.getScaledHeight();
   
@@ -190,22 +190,23 @@ public class MapGUI extends DrawableHelperBase
     
 //    client.getTextureManager().bindTexture(textureIdentifier);
     
+    DrawableHelperBase.renderTexture(x, y, iw, ih, textureIdentifier);
     
-    client.getTextureManager().bindTexture(textureIdentifier);
-    
-    
-    
-    Tessellator tessellator = Tessellator.getInstance();
-    BufferBuilder builder = tessellator.getBuffer();
-    builder.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX_COLOR);
-    
-    double z = 0.09;
-    
-    builder.func_225582_a_(x, y + ih, z).func_225583_a_(0, 1).func_227885_a_(255, 255, 255, 255).endVertex();
-    builder.func_225582_a_(x + iw, y + ih, z).func_225583_a_(1, 1).func_227885_a_(255, 255, 255, 255).endVertex();
-    builder.func_225582_a_(x + iw, y, z).func_225583_a_(1, 0).func_227885_a_(255, 255, 255, 255).endVertex();
-    builder.func_225582_a_(x, y, z).func_225583_a_(0, 0).func_227885_a_(255, 255, 255, 255).endVertex();
-    tessellator.draw();
+//    client.getTextureManager().bindTexture(textureIdentifier);
+//
+//
+//
+//    Tessellator tessellator = Tessellator.getInstance();
+//    BufferBuilder builder = tessellator.getBuffer();
+//    builder.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX_COLOR);
+//
+//    double z = 0.09;
+//
+//    builder.func_225582_a_(x, y + ih, z).func_225583_a_(0, 1).func_227885_a_(255, 255, 255, 255).endVertex();
+//    builder.func_225582_a_(x + iw, y + ih, z).func_225583_a_(1, 1).func_227885_a_(255, 255, 255, 255).endVertex();
+//    builder.func_225582_a_(x + iw, y, z).func_225583_a_(1, 0).func_227885_a_(255, 255, 255, 255).endVertex();
+//    builder.func_225582_a_(x, y, z).func_225583_a_(0, 0).func_227885_a_(255, 255, 255, 255).endVertex();
+//    tessellator.draw();
     if (MappyConfig.drawChunkGrid)
     {
       drawGrid(client, x, y, iw, ih);

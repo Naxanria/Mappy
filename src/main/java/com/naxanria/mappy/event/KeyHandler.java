@@ -32,7 +32,7 @@ public enum KeyHandler
   
   private MainWindow getWindow()
   {
-    return Minecraft.getInstance().func_228018_at_();
+    return Minecraft.getInstance().getMainWindow();
   }
   void update()
   {

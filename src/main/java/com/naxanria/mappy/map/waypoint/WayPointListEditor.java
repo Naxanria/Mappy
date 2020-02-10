@@ -263,7 +263,7 @@ public class WayPointListEditor extends ScreenBase
   @Override
   protected void init()
   {
-    MainWindow mainWindow = minecraft.func_228018_at_();
+    MainWindow mainWindow = minecraft.getMainWindow();
     width = Math.max(300, mainWindow.getScaledWidth() / 2);
     height = mainWindow.getScaledHeight();
   
@@ -421,8 +421,8 @@ public class WayPointListEditor extends ScreenBase
     }
     
 
-    renderTextureRepeating(x, 0, width, 40, 16, 16, id);
-    renderTextureRepeating(x, height - 40, width, 40, 16, 16, id);
+    DrawableHelperBase.renderTextureRepeating(x, 0, width, 40, 16, 16, id);
+    DrawableHelperBase.renderTextureRepeating(x, height - 40, width, 40, 16, 16, id);
     
   }
   

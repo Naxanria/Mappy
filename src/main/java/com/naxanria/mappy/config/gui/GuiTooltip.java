@@ -72,7 +72,7 @@ public class GuiTooltip extends DrawableHelperBase
   public void render(int x, int y)
   {
     Minecraft minecraft = Minecraft.getInstance();
-    MainWindow mainWindow = minecraft.func_228018_at_();
+    MainWindow mainWindow = minecraft.getMainWindow();
 
     int windowWidth = mainWindow.getScaledWidth();
     int windowHeight = mainWindow.getScaledHeight();
