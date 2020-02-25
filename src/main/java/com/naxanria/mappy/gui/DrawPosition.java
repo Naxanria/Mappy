@@ -10,7 +10,7 @@ public enum DrawPosition
   BOTTOM_LEFT,
   BOTTOM_RIGHT;
   
-  public static DrawPosition get(Integer i)
+  public static DrawPosition get(int i)
   {
     i = MathHelper.clamp(i, 0, values().length - 1);
     return values()[i];
