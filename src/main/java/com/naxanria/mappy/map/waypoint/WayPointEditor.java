@@ -48,7 +48,13 @@ public class WayPointEditor extends ScreenBase
     
     int x = halfWidth - halfW;
     
-    nameField = new TitledWidget<>(font, new TextFieldWidget(font, 0, 0, 100, 12, "Name"), x, 50, 180, h, "", lang("name"));
+    String defName = "";
+    if (nameField != null)
+    {
+      defName = nameField.widget.getText();
+    }
+    
+    nameField = new TitledWidget<>(font, new TextFieldWidget(font, 0, 0, 100, 12, "Name"), x, 50, 180, h, defName, lang("name"));
     nameField.changeFocus(true);
     nameField.widget.setMaxStringLength(12);
     nameField.widget.setText(wayPoint.name);
