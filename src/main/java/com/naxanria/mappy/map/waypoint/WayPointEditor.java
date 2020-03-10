@@ -29,6 +29,8 @@ public class WayPointEditor extends ScreenBase
   private Button saveButton, cancelButton;
   private Consumer<WayPoint> onSaveCallback;
   
+  private final int maxColorBarSize = 65;
+  
   public WayPointEditor(WayPoint wayPoint, Screen parent, Consumer<WayPoint> onSaveCallback)
   {
     super(title, parent);
@@ -87,8 +89,8 @@ public class WayPointEditor extends ScreenBase
     int bw = 20;
     prevColorButton = new Button(x, 92, bw, h, "<", (b) -> cycleColor(-1));
     children.add(prevColorButton);
-    
-    nextColorButton = new Button(x + halfWidth - bw - 30, 92, bw, h, ">", (b) -> cycleColor(1));
+    int nX = Math.min(x + maxColorBarSize, x + halfWidth - bw - 30);
+    nextColorButton = new Button(nX, 92, bw, h, ">", (b) -> cycleColor(1));
     children.add(nextColorButton);
     
     typeSelectorWidget = new WaypointTypeSelectorWidget(x, 92 + 2 + 20, "", this);
@@ -155,7 +157,7 @@ public class WayPointEditor extends ScreenBase
   public void renderForeground()
   {
     int x = prevColorButton.x + prevColorButton.getWidth() + 2;
-    int w = nextColorButton.x - x - 2;
+    int w = (nextColorButton.x - x - 2);
     int y = prevColorButton.y + 3;
     int h = 12;
     int col = getPreviewColor();
