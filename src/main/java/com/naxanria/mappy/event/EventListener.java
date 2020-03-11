@@ -91,7 +91,9 @@ public class EventListener
       public void onKeyUp()
       {
         Mappy.showMap = !Mappy.showMap;
-        // todo: save in config
+        
+        MappyConfig.config.showMap.set(Mappy.showMap);
+        MappyConfig.config.showMap.save();
       }
   
       @Override
