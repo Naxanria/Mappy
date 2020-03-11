@@ -50,7 +50,7 @@ public class ConfigGui extends ScreenBase
     currentCategory = categories.push("General");
     
     addEntry(MappyConfig.config.mapSize)
-      .tooltip.addInfo("The size of the map.").range(16, 256).def(64);
+      .tooltip.addInfo("The size of the map.").range(16, 256).def(128);
     addEntry(MappyConfig.config.offset)
       .tooltip.addInfo("Offset of the map").range(0, 8).def(4);
     addEntry(MappyConfig.config.drawPosition)
