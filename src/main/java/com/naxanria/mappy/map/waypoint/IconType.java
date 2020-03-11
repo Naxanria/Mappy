@@ -56,11 +56,13 @@ public enum IconType
         ResourceLocation texture = type.texture;
         if (texture == null)
         {
-          draw(IconType.SQUARE, x, y, 0xffff00ff);
+          draw(IconType.SQUARE, x - hsize, y - hsize, 0xffff00ff);
           break;
         }
         
-        DrawableHelperBase.renderTexture(x, y, size, size, texture);
+        RenderSystem.enableAlphaTest();
+        DrawableHelperBase.renderTexture(x - hsize, y - hsize, size, size, texture);
+        RenderSystem.disableAlphaTest();
         
 //        Minecraft.getInstance().getTextureManager().bindTexture(texture);
 //        Tessellator tessellator = Tessellator.getInstance();
