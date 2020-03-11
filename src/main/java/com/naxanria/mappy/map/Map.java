@@ -96,7 +96,13 @@ public class Map
       // dont update while in the worldmap screen
       return;
     }
-    
+  
+    Integer newSize = MappyConfig.config.mapSize.get();
+    if (newSize != size || size != image.getWidth())
+    {
+      resize(newSize);
+    }
+  
     PlayerEntity player = client.player;
     if (player != null)
     {
@@ -179,6 +185,7 @@ public class Map
   {
     image = new NativeImage(NativeImage.PixelFormat.RGBA, newSize, newSize, false);
     System.out.println("Map resized to " + newSize + "x" + newSize);
+    size = newSize;
   }
   
   public void onConfigChanged()
