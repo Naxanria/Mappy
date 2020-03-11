@@ -6,6 +6,8 @@ import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.CompressedStreamTools;
 import net.minecraft.nbt.ListNBT;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.world.dimension.DimensionType;
+import net.minecraftforge.event.world.WorldEvent;
 
 import java.io.File;
 import java.io.IOException;
@@ -93,8 +95,19 @@ public enum WayPointManager
     }
   }
   
+  public static void onWorldEnterEvent(final WorldEvent.Load event)
+  {
+    if (event.getWorld().getDimension().getType() == DimensionType.OVERWORLD)
+    {
+      INSTANCE.load();
+    }
+  }
+  
   public void load()
   {
+    // clear our old waypoints
+    wayPoints.clear();
+    
     try
     {
       CompoundNBT tag = CompressedStreamTools.read(getSaveFile());

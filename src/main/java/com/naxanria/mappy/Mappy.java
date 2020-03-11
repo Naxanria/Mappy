@@ -6,9 +6,12 @@ import com.naxanria.mappy.event.EventListener;
 import com.naxanria.mappy.gui.DrawPosition;
 import com.naxanria.mappy.map.Map;
 import com.naxanria.mappy.map.MapGUI;
+import com.naxanria.mappy.map.waypoint.WayPointManager;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.common.ForgeMod;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.ExtensionPoint;
@@ -42,15 +45,16 @@ public class Mappy
       {
         IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
         modEventBus.addListener(this::setupClient);
-        
-        
-        MapGUI mapGUI = new MapGUI(map, 4, DrawPosition.TOP_RIGHT);
   
         MappyConfig.register(ModLoadingContext.get());
+        
+        MapGUI mapGUI = new MapGUI(map, 4, DrawPosition.TOP_RIGHT);
         
         ModLoadingContext ctx = ModLoadingContext.get();
 
         ctx.registerExtensionPoint(ExtensionPoint.CONFIGGUIFACTORY, () -> this::openConfigScreen);
+  
+        MinecraftForge.EVENT_BUS.addListener(WayPointManager::onWorldEnterEvent);
       }
     );
   }

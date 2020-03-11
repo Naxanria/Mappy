@@ -111,9 +111,9 @@ public class Map
         playerIcon = new MapIcon.Player(this, player, true);
       }
       
-      if (locPlayer == null)
+      if (locPlayer == null || locPlayer != player)
       {
-        WayPointManager.INSTANCE.load();
+//        WayPointManager.INSTANCE.load();
         locPlayer = player;
       }
       
