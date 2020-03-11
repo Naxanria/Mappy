@@ -63,7 +63,7 @@ public class WayPointEditor extends ScreenBase
     
     children.add(nameField);
     
-    Predicate<String> validNumber = (s) -> Predicates.or(s, Predicates.isInteger, Predicates.isEmpty);
+    Predicate<String> validNumber = (s) -> s.equals("-") || Predicates.or(s, Predicates.isInteger, Predicates.isEmpty);
     
     int pw = 60;
     
