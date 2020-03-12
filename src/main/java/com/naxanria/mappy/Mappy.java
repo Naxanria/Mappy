@@ -67,5 +67,6 @@ public class Mappy
   private void setupClient(final FMLClientSetupEvent event)
   {
     EventListener.setupKeyBinds();
+    showMap = MappyConfig.showMap;
   }
 }
