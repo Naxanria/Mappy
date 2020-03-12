@@ -1,8 +1,8 @@
 package com.naxanria.mappy.event;
 
 import com.naxanria.mappy.Mappy;
-import com.naxanria.mappy.config.gui.ConfigGui;
 import com.naxanria.mappy.config.MappyConfig;
+import com.naxanria.mappy.config.gui.ConfigGui;
 import com.naxanria.mappy.map.MapGUI;
 import com.naxanria.mappy.map.WorldMapGUI;
 import com.naxanria.mappy.map.waypoint.WayPointListEditor;
@@ -12,28 +12,18 @@ import net.minecraft.client.gui.screen.DeathScreen;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.client.util.InputMappings;
 import net.minecraft.entity.player.PlayerEntity;
-
 import net.minecraft.util.text.StringTextComponent;
-import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.settings.KeyConflictContext;
 import net.minecraftforge.event.TickEvent;
-import net.minecraftforge.event.entity.living.LivingDeathEvent;
-import net.minecraftforge.event.entity.player.PlayerEvent;
-import net.minecraftforge.eventbus.api.EventPriority;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
-
-//import net.minecraftforge.fml.common.gameevent.TickEvent;
 import org.lwjgl.glfw.GLFW;
 
-@Mod.EventBusSubscriber(value = Dist.CLIENT, modid = Mappy.MODID)
 public class EventListener
 {
   public static final String KEY_BIND_CATEGORY = "mappy";
   public static boolean alive;
   
-  @SubscribeEvent
+  
   public static void clientTick(final TickEvent.ClientTickEvent event)
   {
     if (event.phase == TickEvent.Phase.END)
@@ -68,7 +58,7 @@ public class EventListener
     KeyHandler.INSTANCE.update();
   }
   
-  @SubscribeEvent
+  
   public static void hudUpdate(final RenderGameOverlayEvent.Post event)
   {
     if (event.getType() != RenderGameOverlayEvent.ElementType.ALL)
@@ -176,20 +166,8 @@ public class EventListener
     return new KeyBinding(name, conflictContext, InputMappings.Type.KEYSYM, key, KEY_BIND_CATEGORY);
   }
   
-//  public static boolean playerAlive = true;
-  
-//  @SubscribeEvent(receiveCanceled = true, priority = EventPriority.HIGHEST)
-//  public static void death(final PlayerEvent.Clone playerEvent)
-//  {
-//    if (playerEvent.isWasDeath())
-//    {
-//      handleDeath(playerEvent.getPlayer());
-//    }
-//  }
-  
   private static void handleDeath(PlayerEntity player)
   {
-//    Mappy.LOGGER.info("Detected Player death of " + player.getDisplayName().getString());
 
     if (player.getUniqueID() != Minecraft.getInstance().player.getUniqueID())
     {

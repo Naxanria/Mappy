@@ -54,7 +54,10 @@ public class Mappy
 
         ctx.registerExtensionPoint(ExtensionPoint.CONFIGGUIFACTORY, () -> this::openConfigScreen);
   
-        MinecraftForge.EVENT_BUS.addListener(WayPointManager::onWorldEnterEvent);
+        IEventBus eventBus = MinecraftForge.EVENT_BUS;
+        eventBus.addListener(WayPointManager::onWorldEnterEvent);
+        eventBus.addListener(EventListener::clientTick);
+        eventBus.addListener(EventListener::hudUpdate);
       }
     );
   }
