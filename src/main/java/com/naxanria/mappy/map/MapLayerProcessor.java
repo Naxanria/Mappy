@@ -7,10 +7,14 @@ import com.naxanria.mappy.util.ColorUtil;
 import com.naxanria.mappy.util.StateUtil;
 import net.minecraft.block.*;
 import net.minecraft.block.material.Material;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.color.BlockColors;
 import net.minecraft.item.DyeColor;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.LightType;
 import net.minecraft.world.World;
+import net.minecraft.world.biome.Biome;
+import net.minecraft.world.biome.BiomeColors;
 import net.minecraft.world.chunk.Chunk;
 
 import java.util.HashMap;
@@ -383,7 +387,41 @@ public class MapLayerProcessor
       return getMapColor(colorMap.get(block), brightness);
     }
     
+    if (MappyConfig.useBiomeColouring)
+    {
+      int x = pos.getX();
+      int y = pos.getY();
+      int z = pos.getZ();
+      Biome biome = world.getBiome(pos);
+      
+      if (block instanceof GrassBlock)
+      {
+        int c = BiomeColors.GRASS_COLOR.getColor(biome, x, z);
+        return getMapColor(c, brightness);
+      }
+      
+      if (block == Blocks.WATER)
+      {
+        int c = BiomeColors.WATER_COLOR.getColor(biome, x, z);
+        return getMapColor(c, brightness);
+      }
+      
+      if (block == Blocks.GRASS || block == Blocks.TALL_GRASS)
+      {
+        int c = BiomeColors.FOLIAGE_COLOR.getColor(biome, x, z);
+        return getMapColor(c, brightness);
+      }
+      // fixme: also make leaves work
+//      if (block instanceof LeavesBlock)
+//      {
+//        int c = Minecraft.getInstance().getBlockColors().getColorOrMaterialColor(state, world, pos);
+//        return getMapColor(c, brightness);
+//      }
+    }
+    
     return state.getMaterialColor(world, pos).getMapColor(brightness);
+    
+    
 //    return state.getMaterial().getColor().getMapColor(2);
   }
   

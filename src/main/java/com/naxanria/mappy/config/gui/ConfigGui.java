@@ -65,6 +65,8 @@ public class ConfigGui extends ScreenBase
       .tooltip.addInfo("Strength of the shading, the lower, the stronger.").range(2, 16).def(10);
     addEntry(MappyConfig.config.drawChunkGrid)
       .tooltip.addInfo("The chunk grid").def(false);
+    addEntry(MappyConfig.config.biomeBlending)
+      .tooltip.addInfo("Biome blending").def(true);
     
     // still WIP so not showing here for now.
 //    addEntry(MappyConfig.config.scale);
@@ -347,7 +349,7 @@ public class ConfigGui extends ScreenBase
   private void save(Button button)
   {
     entries.forEach(ConfigGuiEntry::save);
-    
+    MappyConfig.getSpec().save();
     onClose();
   }
   

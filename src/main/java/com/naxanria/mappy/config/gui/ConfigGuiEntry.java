@@ -105,6 +105,7 @@ public class ConfigGuiEntry<CV, CT extends ForgeConfigSpec.ConfigValue<CV>> exte
     if (displayValue != value)
     {
       configValue.set(displayValue);
+      
     }
   }
   

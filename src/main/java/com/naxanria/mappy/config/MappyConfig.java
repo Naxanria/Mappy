@@ -27,6 +27,7 @@ public class MappyConfig
   public static boolean showBiome = true;
   public static boolean showTime = true;
   public static boolean showDirection = false;
+  public static boolean useBiomeColouring = true;
   
   public static boolean showPlayerNames = true;
   public static boolean showPlayerHeads = true;
@@ -127,6 +128,7 @@ public class MappyConfig
     // todo: implement scale
     scale = config.scale.get();
     showInChat = config.showInChat.get();
+    useBiomeColouring = config.biomeBlending.get();
   
     showItemConfigInGame = config.showItemConfigInGame.get();
     inHotBar = config.inHotBar.get();
@@ -164,6 +166,7 @@ public class MappyConfig
     public final ForgeConfigSpec.BooleanValue showBiome;
     public final ForgeConfigSpec.BooleanValue showTime;
     public final ForgeConfigSpec.BooleanValue showDirection;
+    public final ForgeConfigSpec.BooleanValue biomeBlending;
   
     public final ForgeConfigSpec.BooleanValue showPlayerNames;
     public final ForgeConfigSpec.BooleanValue showPlayerHeads;
@@ -255,6 +258,11 @@ public class MappyConfig
         .comment("Show the map shaded")
         .translation(key("shaded"))
         .define("shaded", true);
+      
+      biomeBlending = builder
+        .comment("Blending colors based on biome (e.g: Grass)")
+        .translation(key("biome_blending"))
+        .define("biomeBlend", true);
         
       shadeStrength = builder
 //        .comment("The strength for the shading")
