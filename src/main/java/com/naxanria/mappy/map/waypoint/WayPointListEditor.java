@@ -139,7 +139,7 @@ public class WayPointListEditor extends ScreenBase
       
       int size = height - 2;
       
-      wayPoint.iconType.draw(x + size / 2, y + 1 + size / 2, wayPoint.color);
+      wayPoint.iconType.draw(x + size / 2 - wayPoint.iconType.size / 2, y + 1 + size / 2 - wayPoint.iconType.size / 2, wayPoint.color);
 //
 //      int diamondSize = height - 2;
 //      diamond(x, y + 1, diamondSize, diamondSize, wayPoint.color);
