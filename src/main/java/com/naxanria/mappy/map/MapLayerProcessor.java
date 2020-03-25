@@ -245,7 +245,8 @@ public class MapLayerProcessor
       base_color = 0xDDDDDD;
     }
 
-    int maxDiff = MappyConfig.maxDifference;
+    // todo: make this look nicer
+    int maxDiff = MappyConfig.getConfig().shadeStrength.get();
     
     if (y_diff > maxDiff)
     {
@@ -263,18 +264,6 @@ public class MapLayerProcessor
     World world = worldChunk.getWorld();
  
     int y = chunkData.heightmap[x + z * 16];
-//
-//    if (y < 0)
-//    {
-//      return 0xffff00ff;
-//    }
-//    int c = y * 25;
-//
-//    BlockPos worldPos = new BlockPos(x + worldChunk.getPos().x * 16, y, z + worldChunk.getPos().z * 16);
-//
-//    BlockState state = world.getBlockState(worldPos);
-//
-//    return color(world, state, worldPos);
     
     if (y < 0)
     {
@@ -387,7 +376,7 @@ public class MapLayerProcessor
       return getMapColor(colorMap.get(block), brightness);
     }
     
-    if (MappyConfig.useBiomeColouring)
+    if (MappyConfig.getConfig().biomeBlending.get())
     {
       int x = pos.getX();
       int y = pos.getY();

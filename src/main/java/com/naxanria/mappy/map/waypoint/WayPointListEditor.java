@@ -62,14 +62,15 @@ public class WayPointListEditor extends ScreenBase
       
       deleteButton = new Button(0, 0, 40, height, wayPointListEditor.lang("delete"), (b) -> wayPointListEditor.delete(wayPoint));
       buttons.add(deleteButton);
-      
-      if (MappyConfig.showChatButton)
+  
+      MappyConfig.Client config = MappyConfig.getConfig();
+      if (config.chatButton.get())
       {
         chatButton = new Button(0, 0, 40, height, wayPointListEditor.lang("chat"), (b) -> wayPointListEditor.toChat(wayPoint));
         buttons.add(chatButton);
       }
       
-      if (MappyConfig.showTeleportButton)
+      if (config.teleportButton.get())
       {
         teleportButton = new Button(0, 0, 17, height, wayPointListEditor.lang("teleport"), (b) -> wayPointListEditor.teleport(wayPoint));
         buttons.add(teleportButton);
@@ -80,8 +81,8 @@ public class WayPointListEditor extends ScreenBase
   
     public void setPosition(int x, int y)
     {
-      boolean tp = MappyConfig.showTeleportButton;
-      boolean chat = MappyConfig.showChatButton;
+      boolean tp = MappyConfig.getConfig().teleportButton.get();
+      boolean chat = MappyConfig.getConfig().showInChat.get();
       
       this.x = x;
       this.y = y;

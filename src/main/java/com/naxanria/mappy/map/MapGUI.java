@@ -75,7 +75,8 @@ public class MapGUI extends DrawableHelperBase
     boolean canShowMap = map.canShowMap();
     
     Minecraft client = Minecraft.getInstance();
-    
+    MappyConfig.Client config = MappyConfig.getConfig();
+  
     if (client.player == null)
     {
       return;
@@ -83,14 +84,14 @@ public class MapGUI extends DrawableHelperBase
     
     if (client.currentScreen != null)
     {
-      if (!(MappyConfig.showInChat && client.currentScreen instanceof ChatScreen))
+      if (!(config.showInChat.get() && client.currentScreen instanceof ChatScreen))
       {
         return;
       }
     }
   
-    offset = MappyConfig.offset;
-    drawPosition = MappyConfig.drawPosition;
+    offset = config.offset.get();
+    drawPosition = config.drawPosition.get();
     
     if (texture == null)
     {
@@ -106,7 +107,7 @@ public class MapGUI extends DrawableHelperBase
     int w = mainWindow.getScaledWidth();
     int h = mainWindow.getScaledHeight();
   
-    int scale = MappyConfig.scale;
+    int scale = config.scale.get();
     int iw = backingImage.getWidth() / scale;
     int ih = backingImage.getHeight() / scale;
     
@@ -122,7 +123,7 @@ public class MapGUI extends DrawableHelperBase
         break;
       case TOP_RIGHT:
         x = w - offset - iw;
-        if (MappyConfig.moveMapForEffects)
+        if (config.moveMapForEffects.get())
         {
           /*
            * Based on code by ThexXTURBOXx in pull request #5
@@ -185,32 +186,15 @@ public class MapGUI extends DrawableHelperBase
   
   private void drawMap(Minecraft client, int x, int y, int iw, int ih)
   {
-    
-//    fillNoDepth(x, y, x + iw, y + ih, 0xffff00ff);
-    
-//    client.getTextureManager().bindTexture(textureIdentifier);
-    
+  
     DrawableHelperBase.renderTexture(x, y, iw, ih, textureIdentifier);
-    
-//    client.getTextureManager().bindTexture(textureIdentifier);
-//
-//
-//
-//    Tessellator tessellator = Tessellator.getInstance();
-//    BufferBuilder builder = tessellator.getBuffer();
-//    builder.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX_COLOR);
-//
-//    double z = 0.09;
-//
-//    builder.func_225582_a_(x, y + ih, z).func_225583_a_(0, 1).func_227885_a_(255, 255, 255, 255).endVertex();
-//    builder.func_225582_a_(x + iw, y + ih, z).func_225583_a_(1, 1).func_227885_a_(255, 255, 255, 255).endVertex();
-//    builder.func_225582_a_(x + iw, y, z).func_225583_a_(1, 0).func_227885_a_(255, 255, 255, 255).endVertex();
-//    builder.func_225582_a_(x, y, z).func_225583_a_(0, 0).func_227885_a_(255, 255, 255, 255).endVertex();
-//    tessellator.draw();
-    if (MappyConfig.drawChunkGrid)
+  
+    if (MappyConfig.getConfig().drawChunkGrid.get())
     {
       drawGrid(client, x, y, iw, ih);
     }
+    
+    // todo: implement FTB Chunks compat
   }
   
   private void drawGrid(Minecraft client, int x, int y, int iw, int ih)

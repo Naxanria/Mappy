@@ -46,91 +46,92 @@ public class ConfigGui extends ScreenBase
     super(new StringTextComponent("Config"), parent);
   
     spec = MappyConfig.getSpec();
-    
+    MappyConfig.Client config = MappyConfig.getConfig();
+  
     currentCategory = categories.push("General");
     
-    addEntry(MappyConfig.config.mapSize)
+    addEntry(config.mapSize)
       .tooltip.addInfo("The size of the map.").range(16, 256).def(128);
-    addEntry(MappyConfig.config.offset)
+    addEntry(config.offset)
       .tooltip.addInfo("Offset of the map").range(0, 8).def(4);
-    addEntry(MappyConfig.config.drawPosition)
+    addEntry(config.drawPosition)
       .tooltip.addInfo("The position of the map").def("TOP_RIGHT");
     
     currentCategory = currentCategory.push("Look and Feel");
-    addEntry(MappyConfig.config.moveMapForEffects)
+    addEntry(config.moveMapForEffects)
       .tooltip.addInfo("Should the map move if there are potion effects.").def(true);
-    addEntry(MappyConfig.config.shaded)
+    addEntry(config.shaded)
       .tooltip.addInfo("Shade the map.").def(true);
-    addEntry(MappyConfig.config.shadeStrength)
+    addEntry(config.shadeStrength)
       .tooltip.addInfo("Strength of the shading, the lower, the stronger.").range(2, 16).def(10);
-    addEntry(MappyConfig.config.drawChunkGrid)
+    addEntry(config.drawChunkGrid)
       .tooltip.addInfo("The chunk grid").def(false);
-    addEntry(MappyConfig.config.biomeBlending)
+    addEntry(config.biomeBlending)
       .tooltip.addInfo("Biome blending").def(true);
     
     // still WIP so not showing here for now.
 //    addEntry(MappyConfig.config.scale);
-    addEntry(MappyConfig.config.showInChat)
+    addEntry(config.showInChat)
       .tooltip.addInfo("Show the map while chat is open").def(true);
     
     currentCategory = currentCategory.pop().push("Waypoints");
-    addEntry(MappyConfig.config.chatButton);
+    addEntry(config.chatButton);
     lastEntry.tooltip.addInfo("Show button to print the waypoint to chat");
-    addEntry(MappyConfig.config.teleportButton);
+    addEntry(config.teleportButton);
     lastEntry.tooltip.addInfo("Show button to teleport to waypoint");
     
     currentCategory = currentCategory.pop().push("Death");
-    addEntry(MappyConfig.config.createDeathWayPoints);
+    addEntry(config.createDeathWayPoints);
     lastEntry.tooltip.addInfo("Create a way point on death").def(true);
-    addEntry(MappyConfig.config.printDeathPointInChat);
+    addEntry(config.printDeathPointInChat);
     lastEntry.tooltip.addInfo("Print the death position into your chat.").def(false);
-    addEntry(MappyConfig.config.autoRemoveDeathWaypoint);
+    addEntry(config.autoRemoveDeathWaypoint);
     lastEntry.tooltip.addInfo("Remove the death-waypoint when you are close").def(true);
-    addEntry(MappyConfig.config.autoRemoveRange);
+    addEntry(config.autoRemoveRange);
     lastEntry.tooltip.addInfo("Distance for when the death-waypoint will be automatically removed.").def(5);
     
     currentCategory = currentCategory.getTop().push("Info");
-    addEntry(MappyConfig.config.showPosition)
+    addEntry(config.showPosition)
       .tooltip.addInfo("Show the current position").def(true);
-    addEntry(MappyConfig.config.showFPS)
+    addEntry(config.showFPS)
       .tooltip.addInfo("Show the current FPS").def(false);
-    addEntry(MappyConfig.config.showBiome)
+    addEntry(config.showBiome)
       .tooltip.addInfo("Show biome name").def(true);
-    addEntry(MappyConfig.config.showTime)
+    addEntry(config.showTime)
       .tooltip.addInfo("Show in game time").def(true);
-    addEntry(MappyConfig.config.showDirection)
+    addEntry(config.showDirection)
       .tooltip.addInfo("Show current direction").def(false);
     
     currentCategory = currentCategory.push("Map");
-    addEntry(MappyConfig.config.showPlayerNames)
+    addEntry(config.showPlayerNames)
       .tooltip.addInfo("Show player names of other players").def(true);
-    addEntry(MappyConfig.config.showPlayerHeads)
+    addEntry(config.showPlayerHeads)
       .tooltip.addInfo("Show the player heads instead of dots").def(true);
-    addEntry(MappyConfig.config.showEntities)
+    addEntry(config.showEntities)
       .tooltip.addInfo("Show entities nearby").def(true);
     
     currentCategory = currentCategory.getTop().push("Optimization");
-    addEntry(MappyConfig.config.updatePerCycle)
+    addEntry(config.updatePerCycle)
       .tooltip.addInfo("How many chunks on the map to update per tick").range(1, 100).def(10);
 //    addEntry(MappyConfig.config.pruneDelay)
 //      .tooltip.addInfo("Delay before pruning cached chunks (in seconds)").range(20, 600).def(60);
 //    addEntry(MappyConfig.config.pruneAmount)
 //      .tooltip.addInfo("The max amount of chunks to prune from the cache").range(100, 6000).def(1500);
-    addEntry(MappyConfig.config.forceHeightmapUse)
+    addEntry(config.forceHeightmapUse)
       .tooltip.addInfo("Forces use of heightmap for height checking,").addInfo("this is more performing but can be less accurate").def(true);
     
-    if (MappyConfig.showItemConfigInGame)
+    if (config.showItemConfigInGame.get())
     {
       currentCategory = currentCategory.getTop().push("Items");
-      addEntry(MappyConfig.config.inHotBar)
+      addEntry(config.inHotBar)
         .tooltip.addInfo("Require the items to be in the hotbar").def(false);
-      addEntry(MappyConfig.config.mapItem)
+      addEntry(config.mapItem)
         .tooltip.addInfo("The item required for showing the map");
-      addEntry(MappyConfig.config.positionItem)
+      addEntry(config.positionItem)
         .tooltip.addInfo("The item required for showing current position");
-      addEntry(MappyConfig.config.biomeItem)
+      addEntry(config.biomeItem)
         .tooltip.addInfo("The item required for showing current biome");
-      addEntry(MappyConfig.config.timeItem)
+      addEntry(config.timeItem)
         .tooltip.addInfo("The item required for showing current in game time");
     }
     

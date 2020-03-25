@@ -74,7 +74,7 @@ public abstract class MapIcon<T extends MapIcon<T>> extends DrawableHelperBase
       }
       else
       {
-        if (MappyConfig.showPlayerHeads)
+        if (MappyConfig.getConfig().showPlayerHeads.get())
         {
           PlayerHeadIcon.drawHead(player, drawX, drawY);
         }
@@ -84,7 +84,7 @@ public abstract class MapIcon<T extends MapIcon<T>> extends DrawableHelperBase
         }
       }
       
-      if (!self && MappyConfig.showPlayerNames)
+      if (!self && MappyConfig.getConfig().showPlayerNames.get())
       {
         drawStringCenteredBound(client.fontRenderer, player.getName().getString(), drawX + size / 2, drawY - size / 2 - 10, 0, client.getMainWindow().getScaledWidth(), WHITE);
       }

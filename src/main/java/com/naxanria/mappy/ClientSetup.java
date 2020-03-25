@@ -48,6 +48,6 @@ public class ClientSetup
   private static void setupClient(final FMLClientSetupEvent event)
   {
     EventListener.setupKeyBinds();
-    Mappy.showMap = MappyConfig.showMap;
+    Mappy.showMap = MappyConfig.getConfig().showMap.get();
   }
 }

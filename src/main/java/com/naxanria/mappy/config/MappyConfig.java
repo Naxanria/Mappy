@@ -1,63 +1,15 @@
 package com.naxanria.mappy.config;
 
-import com.naxanria.mappy.Mappy;
 import com.naxanria.mappy.gui.DrawPosition;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.config.ModConfig;
-import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import org.apache.commons.lang3.tuple.Pair;
 
 public class MappyConfig
 {
-  public static int offset = 4;
-  public static DrawPosition drawPosition = DrawPosition.TOP_RIGHT;
-  public static int mapSize = 64;
   
-  public static boolean showChatButton = true;
-  public static boolean showTeleportButton = false;
-  
-  public static boolean createDeathWaypoints = true;
-  public static boolean autoRemoveDeathWaypoints = true;
-  public static int autoRemoveRange = 5;
-  public static boolean printDeathPointInChat = false;
-  
-  public static boolean showPosition = true;
-  public static boolean showFPS = false;
-  public static boolean showBiome = true;
-  public static boolean showTime = true;
-  public static boolean showDirection = false;
-  public static boolean useBiomeColouring = true;
-  
-  public static boolean showPlayerNames = true;
-  public static boolean showPlayerHeads = true;
-  public static boolean showEntities = true;
-  
-  public static int updatePerCycle = 4;
-  public static int pruneDelay = 60;
-  public static int pruneAmount = 1500;
-  public static boolean forceHeightmap = true;
-  
-  public static boolean showMap = true;
-  
-  public static boolean moveMapForEffects = true;
-  
-  public static boolean shaded = true;
-  public static int maxDifference = 10;
-  public static boolean drawChunkGrid = false;
-  public static int scale = 1;
-  public static boolean showInChat = true;
-  
-  public static boolean inHotBar = false;
-  public static String mapItem = "";
-  public static String positionItem = "";
-  public static String timeItem = "";
-  public static boolean showItemConfigInGame = false;
-  public static String biomeItem = "";
-  
-  public static boolean enableWorldMapKey = false;
-  
-  public static Client config;
+  private static Client config;
   private static ForgeConfigSpec spec;
   
   static
@@ -67,6 +19,11 @@ public class MappyConfig
     config = specPair.getLeft();
   }
   
+  public static Client getConfig()
+  {
+    return config;
+  }
+  
   private static String key(String key)
   {
     return "mappy.config." + key;
@@ -74,72 +31,7 @@ public class MappyConfig
   
   public static void register(final ModLoadingContext context)
   {
-    FMLJavaModLoadingContext.get().getModEventBus().addListener(MappyConfig::reload);
-    
     context.registerConfig(ModConfig.Type.CLIENT, spec);
-  }
-  
-  public static void reload(ModConfig.ModConfigEvent event)
-  {
-    ModConfig config = event.getConfig();
-    
-    if (config.getSpec() == spec)
-    {
-      reloadClient();
-    }
-  }
-  
-  private static void reloadClient()
-  {
-    offset = config.offset.get();
-    drawPosition = config.drawPosition.get();
-    mapSize = config.mapSize.get();
-    
-    showTeleportButton = config.teleportButton.get();
-    showChatButton = config.chatButton.get();
-  
-    createDeathWaypoints = config.createDeathWayPoints.get();
-    autoRemoveDeathWaypoints = config.autoRemoveDeathWaypoint.get();
-    autoRemoveRange = config.autoRemoveRange.get();
-    printDeathPointInChat = config.printDeathPointInChat.get();
-  
-    showPosition = config.showPosition.get();
-    showFPS = config.showFPS.get();
-    showBiome = config.showBiome.get();
-    showTime = config.showTime.get();
-    showDirection = config.showDirection.get();
-  
-    showPlayerNames = config.showPlayerNames.get();
-    showPlayerHeads = config.showPlayerHeads.get();
-    showEntities = config.showEntities.get();
-  
-    updatePerCycle = config.updatePerCycle.get();
-//    pruneDelay = config.pruneDelay.get();
-//    pruneAmount = config.pruneAmount.get();
-    forceHeightmap = config.forceHeightmapUse.get();
-    
-    showMap = config.showMap.get();
-    moveMapForEffects = config.moveMapForEffects.get();
-  
-    shaded = config.shaded.get();
-    // todo: see if this needs inverting to make more sense
-    maxDifference = config.shadeStrength.get();
-    drawChunkGrid = config.drawChunkGrid.get();
-    // todo: implement scale
-    scale = config.scale.get();
-    showInChat = config.showInChat.get();
-    useBiomeColouring = config.biomeBlending.get();
-  
-    showItemConfigInGame = config.showItemConfigInGame.get();
-    inHotBar = config.inHotBar.get();
-    mapItem = config.mapItem.get();
-    positionItem = config.positionItem.get();
-    timeItem = config.timeItem.get();
-    biomeItem = config.biomeItem.get();
-    
-    enableWorldMapKey = config.enableWorldMapKey.get();
-  
-    Mappy.map.onConfigChanged();
   }
   
   public static ForgeConfigSpec getSpec()

@@ -82,8 +82,8 @@ public class EventListener
       {
         Mappy.showMap = !Mappy.showMap;
         
-        MappyConfig.config.showMap.set(Mappy.showMap);
-        MappyConfig.config.showMap.save();
+        MappyConfig.getConfig().showMap.set(Mappy.showMap);
+        MappyConfig.getConfig().showMap.save();
       }
   
       @Override
@@ -141,7 +141,7 @@ public class EventListener
     });
     
     
-    if (MappyConfig.enableWorldMapKey)
+    if (MappyConfig.getConfig().enableWorldMapKey.get())
     {
       KeyHandler.INSTANCE.register(new KeyParser(createKeyBinding("map", GLFW.GLFW_KEY_M, KeyConflictContext.IN_GAME))
       {
@@ -168,18 +168,20 @@ public class EventListener
   
   private static void handleDeath(PlayerEntity player)
   {
-
+    
     if (player.getUniqueID() != Minecraft.getInstance().player.getUniqueID())
     {
       return;
     }
   
-    if (MappyConfig.printDeathPointInChat)
+    MappyConfig.Client config = MappyConfig.getConfig();
+  
+    if (config.printDeathPointInChat.get())
     {
       player.sendMessage(new StringTextComponent("You died at " + Util.prettyFy(player.getPosition())));
     }
   
-    if (MappyConfig.createDeathWaypoints)
+    if (config.createDeathWayPoints.get())
     {
       Mappy.map.createWayPoint(true);
     }

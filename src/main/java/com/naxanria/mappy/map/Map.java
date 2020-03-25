@@ -97,7 +97,7 @@ public class Map
       return;
     }
   
-    Integer newSize = MappyConfig.config.mapSize.get();
+    int newSize = MappyConfig.getConfig().mapSize.get();
     if (newSize != size || size != image.getWidth())
     {
       resize(newSize);
@@ -139,11 +139,12 @@ public class Map
   
   private void itemCheck()
   {
-    boolean inHotBar = MappyConfig.inHotBar;
-    showMap = MappyConfig.mapItem.equals("") || StackUtil.contains(locPlayer.inventory, inHotBar, MappyConfig.mapItem);
-    showPosition = MappyConfig.showPosition && (MappyConfig.positionItem.equals("") || StackUtil.contains(locPlayer.inventory, inHotBar, MappyConfig.positionItem));
-    showTime = MappyConfig.showTime && (MappyConfig.timeItem.equals("") || StackUtil.contains(locPlayer.inventory, inHotBar, MappyConfig.timeItem));
-    showBiome = MappyConfig.showBiome && (MappyConfig.biomeItem.equals("") || StackUtil.contains(locPlayer.inventory, inHotBar, MappyConfig.biomeItem));
+    MappyConfig.Client config = MappyConfig.getConfig();
+    boolean inHotBar = config.inHotBar.get();
+    showMap = config.mapItem.get().equals("") || StackUtil.contains(locPlayer.inventory, inHotBar, config.mapItem.get());
+    showPosition = config.showPosition.get() && (config.positionItem.get().equals("") || StackUtil.contains(locPlayer.inventory, inHotBar, config.positionItem.get()));
+    showTime = config.showTime.get() && (config.timeItem.get().equals("") || StackUtil.contains(locPlayer.inventory, inHotBar, config.timeItem.get()));
+    showBiome = config.showBiome.get() && (config.biomeItem.get().equals("") || StackUtil.contains(locPlayer.inventory, inHotBar, config.biomeItem.get()));
   }
   
   private void updateStatusEffects()
@@ -190,8 +191,8 @@ public class Map
   
   public void onConfigChanged()
   {
-    int configScale = MappyConfig.scale;
-    int configSize = MappyConfig.mapSize;
+    int configScale = MappyConfig.getConfig().scale.get();
+    int configSize = MappyConfig.getConfig().mapSize.get();
     
     boolean resize = false;
     
@@ -232,7 +233,7 @@ public class Map
       manager.add(biomeInfo);
     }
     
-    if (MappyConfig.showFPS)
+    if (MappyConfig.getConfig().showFPS.get())
     {
       String debug = client.debug;
       String fpsString = debug.substring(0, debug.indexOf(' ', debug.indexOf(' ') + 1));
@@ -246,7 +247,7 @@ public class Map
       manager.add(inGameTimeInfo);
     }
     
-    if (MappyConfig.showDirection)
+    if (MappyConfig.getConfig().showDirection.get())
     {
       //todo: check if correct
       Direction direction = player.getHorizontalFacing();
@@ -254,37 +255,6 @@ public class Map
       directionInfo.setText(direction.toString());
       manager.add(directionInfo);
     }
-//
-//    if (Mappy.debugMode)
-//    {
-//      manager.add(new MapInfoLine(Alignment.Center, (locPlayer.headYaw * -1 % 360) + ""));
-//    }
-    
-//    World world = player.world;
-//    BlockPos pos = player.getPosition();
-//    BiInteger cpos = MathUtil.getXZInChunk(pos);
-//
-//    int h = MapLayerProcessor.getHeight(world, pos, false);
-//    int h2 = MapLayerProcessor.effectiveHeight((Chunk) world.getChunk(pos), cpos.A, 255, cpos.B, false);
-//
-//    BlockPos pos2 = new BlockPos(pos.getX(), h, pos.getZ());
-//    BlockState state = world.getBlockState(pos2);
-//
-//
-//
-//    int col = ColorUtil.ABGRtoARGB(MapLayerProcessor.color(world, state, pos2));
-//
-//    float[] f = ColorUtil.toFloats(col);//ColorUtil.BGRAtoARGB(ColorUtil.rgb(1, 2, 3)));
-//    int r = (int)(f[0] * 255);
-//    int g = (int)(f[1] * 255);
-//    int b = (int)(f[2] * 255);
-//    String info = "Current height: " + h + ":"+ h2 + " state: " + state + " col: " + r + "," + g + "," + b;
-//
-////    col = ColorUtil.rgb(b, g, r);
-//
-//    MapInfoLine infoLine = new MapInfoLine(Alignment.Center, info);
-//    infoLine.color = col;
-//    manager.add(infoLine);
   }
   
   public EffectState getEffects()
@@ -317,6 +287,7 @@ public class Map
   
   public void generate(PlayerEntity player)
   {
+    MappyConfig.Client config = MappyConfig.getConfig();
     World world = player.world;
     BlockPos pos = player.getPosition();
   
@@ -367,7 +338,7 @@ public class Map
       }
     }
     
-    if (MappyConfig.showEntities)
+    if (config.showEntities.get())
     {
       entities.clear();
       
@@ -424,7 +395,8 @@ public class Map
 
             if (wp.deathPoint)
             {
-              if (MappyConfig.autoRemoveDeathWaypoints && distS <= MappyConfig.autoRemoveRange * MappyConfig.autoRemoveRange)
+              
+              if (config.autoRemoveDeathWaypoint.get() && distS <= config.autoRemoveRange.get() * config.autoRemoveRange.get())
               {
                 // don't want to remove the waypoint we just added
                 if (EventListener.alive && !(Minecraft.getInstance().currentScreen instanceof DeathScreen))

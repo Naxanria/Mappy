@@ -125,9 +125,10 @@ public class ChunkCache
   
   public void update(NativeImage image, int size, int x, int z)
   {
-    updatePerCycle = MappyConfig.updatePerCycle;
-    pruneDelay = MappyConfig.pruneDelay * 1000;
-    pruneAmount = MappyConfig.pruneAmount;
+    MappyConfig.Client config = MappyConfig.getConfig();
+    updatePerCycle = config.updatePerCycle.get();
+//    pruneDelay = config.pruneDelay * 1000;
+//    pruneAmount = config.pruneAmount;
     
 //    int size = map.getSize();
     int chunksSize = size / 16 + 4;
@@ -197,7 +198,7 @@ public class ChunkCache
 //    }
     
     // only save if we are testing world map
-    if (MappyConfig.enableWorldMapKey)
+    if (config.enableWorldMapKey.get())
     {
       if (now - lastSave > 1000 * 120)
       {
@@ -206,40 +207,6 @@ public class ChunkCache
         lastSave = now;
       }
     }
-  }
-  
-  private void prune(int max)
-  {
-//    int p = 0;
-//    long now = System.currentTimeMillis();
-//
-//    List<BiValue<Integer, Integer>> toRemove = new ArrayList<>();
-//    for (BiValue<Integer, Integer> key :
-//      data.keySet())
-//    {
-//      ChunkData chunkData = data.get(key);
-//      if (now - chunkData.time >= 10000)
-//      {
-//        toRemove.add(key);
-//        p++;
-//        if (p >= max)
-//        {
-//          break;
-//        }
-//      }
-//    }
-//
-//    for (BiValue<Integer, Integer> key :
-//      toRemove)
-//    {
-//      save(data.get(key));
-//      data.remove(key);
-//    }
-//
-//    if (p > 0)
-//    {
-////      System.out.println("Purged " + p + " chunks from cache");
-//    }
   }
   
   public SuperChunk getSuperChunk(int cx, int cz)
@@ -253,7 +220,7 @@ public class ChunkCache
     // load from disk
     SuperChunk loaded = null;
     // only load when testing overview map
-    if (MappyConfig.enableWorldMapKey)
+    if (MappyConfig.getConfig().enableWorldMapKey.get())
     {
       loaded = ioManager.load(ioManager.getFile(world.dimension.getType().getId(), key.A, key.B));
     }
@@ -271,7 +238,7 @@ public class ChunkCache
   public void markForSave(ChunkData chunkData)
   {
     // only save when testing overview map
-    if (MappyConfig.enableWorldMapKey)
+    if (MappyConfig.getConfig().enableWorldMapKey.get())
     {
       SuperChunk superChunk = getSuperChunk(chunkData.cx, chunkData.cz);
       ioManager.MarkForSave(superChunk);
@@ -323,30 +290,6 @@ public class ChunkCache
 //
     ChunkData chunkData = new ChunkData(world.getChunk(cx, cz), layer);
     superChunk.setChunk(chunkData);
-//
-//    // look if on disk
-//    File dataFile = getFile(world.dimension.getType().getId(), cx, cz);
-//
-//    chunkData = load(dataFile);
-//
-//    if (chunkData == null)
-//    {
-//      Chunk chunk = world.getChunk(cx, cz);
-//
-//      chunkData = new ChunkData(chunk, currentLayer);
-//
-//      if (update)
-//      {
-//        chunkData.update();
-//        save(chunkData);
-//      }
-//
-//    }
-    
-//    if (chunkData != null)
-//    {
-//      data.put(key, chunkData);
-//    }
     
     return chunkData;
   }
@@ -396,8 +339,6 @@ public class ChunkCache
   
   private void save(ChunkData data)
   {
-//    Mappy.LOGGER.info("Trying to save chunk " + data.cx + "," + data.cz);
-    
     File file = getFile(world.dimension.getType().getId(), data.cx, data.cz);
     
     CompoundNBT tag = ChunkData.toTag(data);
@@ -405,7 +346,6 @@ public class ChunkCache
     {
       if (!file.exists())
       {
-//        Mappy.LOGGER.info("Creating new file for '" + file + "'");
         file.createNewFile();
       }
       CompressedStreamTools.safeWrite(tag, file);

@@ -57,7 +57,9 @@ public class ChunkData
     {
       return false;
     }
-    
+  
+    MappyConfig.Client config = MappyConfig.getConfig();
+  
     long now = System.currentTimeMillis();
     updating = true;
     boolean change = false;
@@ -80,7 +82,7 @@ public class ChunkData
             else
             {
 //              int h = heightmap[x + z * 16];
-              if (MappyConfig.forceHeightmap)
+              if (config.forceHeightmapUse.get())
               {
                 heightmap[x + z * 16] = chunk.getWorld().getHeight(Heightmap.Type.WORLD_SURFACE, cx * 16 + x, cz * 16 + z) - 1;
               }
@@ -115,7 +117,7 @@ public class ChunkData
         
         image.setPixelRGBA(x, z, col);
         
-        if (MappyConfig.shaded)
+        if (config.shaded.get())
         {
           image.blendPixel(x, z, MapLayerProcessor.shadeTopView(this, x, z));
         }
