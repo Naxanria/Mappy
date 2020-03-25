@@ -75,7 +75,9 @@ public enum WayPointManager
     {
       return;
     }
+    
     int[] dimList = tag.getIntArray("dimensions");
+    boolean converted = false;
   
     for (int dim :
       dimList)
@@ -90,8 +92,14 @@ public enum WayPointManager
       {
         CompoundNBT wpsTag = wps.getCompound(i);
         WayPoint wayPoint = new WayPoint().readFromNBT(wpsTag);
+        converted |= wayPoint.converted;
         add(wayPoint);
       }
+    }
+    
+    if (converted)
+    {
+      save();
     }
   }
   

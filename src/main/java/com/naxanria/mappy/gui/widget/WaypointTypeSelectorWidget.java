@@ -7,6 +7,8 @@ import com.naxanria.mappy.map.waypoint.WayPointEditor;
 import net.minecraft.client.gui.widget.Widget;
 import net.minecraft.util.math.MathHelper;
 
+import java.util.List;
+
 public class WaypointTypeSelectorWidget extends Widget
 {
   private final WayPoint wayPoint;
@@ -24,7 +26,14 @@ public class WaypointTypeSelectorWidget extends Widget
     
     this.editor = editor;
     this.wayPoint = editor.getWaypoint();
-    selectedIndex = wayPoint.iconType.ordinal();
+  
+    List<String> iconNames = IconType.getIconNames();
+    int i = iconNames.indexOf(wayPoint.iconType.name);
+    if (i < 0)
+    {
+      i = 0;
+    }
+    selectedIndex = i;
   }
   
   @Override
@@ -34,8 +43,8 @@ public class WaypointTypeSelectorWidget extends Widget
     
     int col = editor.getPreviewColor();
     int hoveredIndex = getMouseOverIndex(mouseX, mouseY);
-    IconType[] types = IconType.values();
-    for (int i = 0; i < types.length; i++)
+    List<String> iconNames = IconType.getIconNames();
+    for (int i = 0; i < iconNames.size(); i++)
     {
       int xp = x + spacing * i + spacing / 2;
       int yp = y + 5;
@@ -44,8 +53,8 @@ public class WaypointTypeSelectorWidget extends Widget
       {
         DrawableHelperBase.rect(xp - 5, yp - 5, height, selectedBoxColor);
       }
-      
-      types[i].draw(xp, yp, col);
+  
+      IconType.getIcon(iconNames.get(i)).draw(xp - 4, yp - 4, col);
     }
   }
   
@@ -63,7 +72,7 @@ public class WaypointTypeSelectorWidget extends Widget
   {
     if (isInside(mouseX, mouseY))
     {
-      return MathHelper.clamp((mouseX - x) / spacing, 0, IconType.values().length - 1);
+      return MathHelper.clamp((mouseX - x) / spacing, 0, IconType.getIconNames().size() - 1);
     }
     
     return -1;
@@ -77,6 +86,6 @@ public class WaypointTypeSelectorWidget extends Widget
   
   public IconType getSelectedType()
   {
-    return IconType.values()[selectedIndex];
+    return IconType.getIcon(IconType.getIconNames().get(selectedIndex));
   }
 }
