@@ -3,7 +3,6 @@ package com.naxanria.mappy.map.chunk;
 import com.naxanria.mappy.config.MappyConfig;
 import com.naxanria.mappy.map.MapLayer;
 import com.naxanria.mappy.map.MapLayerProcessor;
-import com.naxanria.mappy.util.BiValue;
 import com.naxanria.mappy.util.MathUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.NativeImage;
@@ -142,11 +141,19 @@ public class ChunkData
     data.cz = tag.getInt("CZ");
     data.layer = MapLayer.values()[MathUtil.clamp(tag.getInt("MAP_LAYER"), 0, MapLayer.values().length - 1)];
     
-    if (tag.contains("DATA"))
+    if (tag.contains("PIXELS") && tag.contains("HEIGHT_MAP"))
     {
-      BiValue<int[], NativeImage> unpackedData = loadDataArray(tag.getIntArray("DATA"));
-      data.heightmap = unpackedData.A;
-      data.image = unpackedData.B;
+      byte[] pixels = tag.getByteArray("PIXELS");
+      byte[] heightMap = tag.getByteArray("HEIGHT_MAP");
+
+      data.image = new NativeImage(NativeImage.PixelFormat.RGBA, 16, 16, true);
+      data.heightmap = new int[256];
+
+      for(int i = 0; i < 256; i++)
+      {
+        data.heightmap[i] = heightMap[i] & 0xFF;
+        data.image.setPixelRGBA(i % 16, i / 16, NativeImage.getCombined(255, pixels[i * 3 + 2], pixels[i * 3 + 1], pixels[i * 3 + 0]));
+      }
     }
     else
     {
@@ -171,43 +178,26 @@ public class ChunkData
     tag.putInt("CX", data.cx);
     tag.putInt("CZ", data.cz);
     
-//    tag.putIntArray("HEIGHTMAP", data.heightmap);
     tag.putInt("MAP_LAYER", data.layer.ordinal());
-    tag.putIntArray("DATA", getDataArray(data.heightmap, data.image));
+
+    byte[] pixels = new byte[256 * 3];
+    byte[] heightMap = new byte[256];
+
+    for (int i = 0; i < 256; i++)
+    {
+      int col = data.image.getPixelRGBA(i %16, i / 16);
+      pixels[i * 3 + 0] = (byte)NativeImage.getRed(col);
+      pixels[i * 3 + 1] = (byte)NativeImage.getGreen(col);
+      pixels[i * 3 + 2] = (byte)NativeImage.getBlue(col);
+      heightMap[i] = (byte)Math.min(255, data.heightmap[i]);
+    }
+    
+    tag.putByteArray("PIXELS", pixels);
+    tag.putByteArray("HEIGHT_MAP", heightMap);
     
     return tag;
   }
   
-  private static int[] getDataArray(int[] heightmap, NativeImage image)
-  {
-    int[] baseData = new int[256];
-    
-    for (int i = 0; i < baseData.length; i++)
-    {
-      baseData[i] = ((image.getPixelRGBA(i %16, i / 16) >> 8) << 8) | heightmap[i];
-    }
-    
-    return baseData;
-  }
-  
-  private static BiValue<int[], NativeImage> loadDataArray(int[] dataArray)
-  {
-    int[] heightmap = new int[16 * 16];
-    NativeImage image = new NativeImage(NativeImage.PixelFormat.RGBA, 16, 16, true);
-    
-    for (int i = 0; i < heightmap.length; i++)
-    {
-      int data = dataArray[i];
-      int height = data & 0xff;
-      int col = ((data) << 8) | 0x000000ff;
-      
-      image.setPixelRGBA(i % 16, i / 16, col);
-      heightmap[i] = height;
-    }
-    
-    return new BiValue<>(heightmap, image);
-  }
-
   public int cancelUpdate()
   {
     updating = false;

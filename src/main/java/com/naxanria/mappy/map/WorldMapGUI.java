@@ -118,10 +118,29 @@ public class WorldMapGUI extends ScreenBase
     
   }
   
+  private int prevMouseX = -1;
+  private int prevMouseY = -1;
+  
   @Override
   public void tick()
   {
     boolean update = false;
+    if(prevMouseX == -1 || prevMouseY == -1)
+    {
+      prevMouseX = mouseX;
+      prevMouseY = mouseY;
+    }
+    else if(prevMouseX != mouseX || prevMouseY != mouseY)
+    {
+      if(GLFW.glfwGetMouseButton(getMinecraft().getMainWindow().getHandle(), 0) == 1)
+      {
+        center.setPos(center.getX() + (prevMouseX - mouseX), 0, center.getZ() + (prevMouseY - mouseY));
+        update = true;
+      }
+      prevMouseX = mouseX;
+      prevMouseY = mouseY;
+    }
+    
     if (keyHandler.isKeyPressed(GLFW.GLFW_KEY_LEFT) || keyHandler.isKeyPressed(GLFW.GLFW_KEY_A))
     {
       center.setPos(center.getX() - 16, 0, center.getZ());
