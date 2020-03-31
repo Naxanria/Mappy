@@ -6,20 +6,28 @@ import com.naxanria.mappy.gui.DrawableHelperBase;
 import com.naxanria.mappy.gui.ScreenBase;
 import com.naxanria.mappy.map.chunk.ChunkCache;
 import com.naxanria.mappy.map.chunk.ChunkData;
+import com.naxanria.mappy.map.waypoint.WayPoint;
+import com.naxanria.mappy.map.waypoint.WayPointManager;
 import com.naxanria.mappy.util.ImageUtil;
+import com.naxanria.mappy.util.MathUtil;
+import com.naxanria.mappy.util.Util;
 import net.minecraft.client.entity.player.ClientPlayerEntity;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.renderer.texture.DynamicTexture;
 import net.minecraft.client.renderer.texture.NativeImage;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.text.StringTextComponent;
 import org.lwjgl.glfw.GLFW;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
+
 public class WorldMapGUI extends ScreenBase
 {
-  
   private BlockPos.Mutable center;
   private ClientPlayerEntity player;
   private ChunkCache preLoader;
@@ -27,6 +35,18 @@ public class WorldMapGUI extends ScreenBase
   private DynamicTexture texture;
   private ResourceLocation textureIdentifier;
   private KeyHandler keyHandler;
+  private int prevMouseX = -1;
+  private int prevMouseY = -1;
+  
+  private List<PlayerEntity> players = new ArrayList<>();
+  private List<WayPoint> wayPoints = new ArrayList<>();
+  private int chunkXStart;
+  private int chunkZStart;
+  private int chunkXEnd;
+  private int chunkZEnd;
+  
+  private int mouseWorldPosX;
+  private int mouseWorldPosZ;
   
   public WorldMapGUI(Screen parent)
   {
@@ -72,17 +92,42 @@ public class WorldMapGUI extends ScreenBase
     // render map
     DrawableHelperBase.renderTexture(0, 0, windowWidth, windowHeight, textureIdentifier);
     
-    // debug: render chunk coords
-    if (Screen.hasControlDown())
-    {
-      renderChunkCoords();
-    }
     
     // render icons
+    int xStart = chunkXStart << 4;
+    int zStart = chunkZStart << 4;
+    int xEnd = chunkXEnd << 4;
+    int zEnd = chunkZEnd << 4;
+    
+    for (WayPoint wayPoint : wayPoints)
+    {
+      wayPoint.iconType.draw(getScaledX(wayPoint.pos.getX()), getScaledY(wayPoint.pos.getZ()), wayPoint.color);
+    }
+    
+    for (PlayerEntity playerEntity : players)
+    {
+      PlayerHeadIcon.drawHead(playerEntity, getScaledX(playerEntity.getPosition().getX()), getScaledY(playerEntity.getPosition().getZ()));
+    }
+    
+    if (Util.isInside(player.getPosition(), xStart, zStart, xEnd, zEnd))
+    {
+      PlayerHeadIcon.drawHead(player, getScaledX(player.getPosition().getX()), getScaledY(player.getPosition().getZ()));
+    }
+    
+    drawString(font, "X: " + mouseWorldPosX + ", Z:" + mouseWorldPosZ, 0 + 5, windowHeight - 20, 0xffffffff);
     
     // render WIP
     drawRightAlignedString(font, "WIP", windowWidth - 5,windowHeight - 20, 0xffffffff);
-    
+  }
+  
+  private int getScaledX(int x)
+  {
+    return MathUtil.clamp(MapIcon.getScaled(x, chunkXStart << 4, chunkXEnd << 4, windowWidth), 0, windowWidth);
+  }
+  
+  private int getScaledY(int y)
+  {
+    return MathUtil.clamp(MapIcon.getScaled(y, chunkZStart << 4, chunkZEnd << 4, windowHeight), 0, windowHeight);
   }
   
   @Override
@@ -91,35 +136,7 @@ public class WorldMapGUI extends ScreenBase
     return false;
   }
   
-  private void renderChunkCoords()
-  {
-    int centerChunkX = center.getX() / 16;
-    int centerChunkZ = center.getZ() / 16;
-    int xRadius = windowWidth / 16 / 2 + 1;
-    int zRadius = windowHeight / 16 / 2+ 1;
-    int chunkXStart = centerChunkX - xRadius;
-    int chunkZStart = centerChunkZ - zRadius;
-    int chunkXEnd = centerChunkX + xRadius;
-    int chunkZEnd = centerChunkZ + zRadius;
-  
-    int xp = 0;
-    int yp = 0;
-    for (int cx = chunkXStart; cx <= chunkXEnd; cx++)
-    {
-      yp = 0;
-      for (int cz = chunkZStart; cz < chunkZEnd; cz++)
-      {
-        drawCenteredString(font, cx + "," + cz, xp + 8, yp + 8, 0xffffffff);
-        
-        yp += 16;
-      }
-      xp += 16;
-    }
-    
-  }
-  
-  private int prevMouseX = -1;
-  private int prevMouseY = -1;
+
   
   @Override
   public void tick()
@@ -166,6 +183,22 @@ public class WorldMapGUI extends ScreenBase
     {
       update();
     }
+    
+    updatePlayers();
+    
+    updateMouseWorldPos();
+  }
+  
+  private void updateMouseWorldPos()
+  {
+    int xRange = (chunkXEnd - chunkXStart) << 4;
+    int zRange = (chunkZEnd - chunkZStart) << 4;
+    
+    float xScale = windowWidth / (float) xRange;
+    float zScale = windowHeight / (float) zRange;
+  
+    mouseWorldPosX = (int) (mouseX * xScale + (chunkXStart << 4));
+    mouseWorldPosZ = (int) (mouseY * zScale + (chunkZStart << 4));
   }
   
   private void update()
@@ -174,23 +207,17 @@ public class WorldMapGUI extends ScreenBase
   
     preLoader = ChunkCache.getPreLoader(player.world);
     
-    Mappy.LOGGER.info("Update");
-    
     int centerChunkX = center.getX() / 16;
     int centerChunkZ = center.getZ() / 16;
     int xRadius = windowWidth / 16 / 2 + 1;
     int zRadius = windowHeight / 16 / 2+ 1;
-    int chunkXStart = centerChunkX - xRadius;
-    int chunkZStart = centerChunkZ - zRadius;
-    int chunkXEnd = centerChunkX + xRadius;
-    int chunkZEnd = centerChunkZ + zRadius;
+    chunkXStart = centerChunkX - xRadius;
+    chunkZStart = centerChunkZ - zRadius;
+    chunkXEnd = centerChunkX + xRadius;
+    chunkZEnd = centerChunkZ + zRadius;
   
     int xp = 0;
     int yp = 0;
-  
-    Mappy.LOGGER.info("StartX=" + chunkXStart + " StartZ=" + chunkZStart + " xRadius=" + xRadius + "zRadius=" + zRadius );
-    
-//    preLoader.update(backingImage ,xRadius > zRadius ? xRadius : zRadius, center.getX(), center.getZ());
     
     for (int cx = chunkXStart; cx <= chunkXEnd; cx++)
     {
@@ -207,10 +234,6 @@ public class WorldMapGUI extends ScreenBase
         {
           ImageUtil.writeIntoImage(data.image, backingImage, xp, yp);
         }
-//        data.image.fillAreaRGBA(0, 0, 1, 16, 0xffffffff);
-//        data.image.fillAreaRGBA(0, 0, 16, 1, 0xffffffff);
-
-//        Mappy.LOGGER.info("cx=" + cx + ",cz=" + cz + ",xp=" + xp + ",yp=" + yp + ",chunk pos=" + data.chunk.getPos() + ",check=" + checkChunkCoords(data, cx, cz));
 
         yp += 16;
       }
@@ -218,7 +241,22 @@ public class WorldMapGUI extends ScreenBase
       xp += 16;
     }
   
+    updateWaypoints(chunkXStart << 4, chunkZStart << 4, chunkXEnd << 4, chunkZEnd << 4);
+    
     texture.updateDynamicTexture();
+  }
+  
+  private void updateWaypoints(int xStart, int zStart, int xEnd, int zEnd)
+  {
+    wayPoints = WayPointManager.INSTANCE.getWaypointsToRender(player.world.dimension.getType().getId())
+      .stream().filter(wp -> Util.isInside(wp.pos.getX(), wp.pos.getZ(), xStart, zStart, xEnd, zEnd)).collect(Collectors.toList());
+  }
+  
+  private void updatePlayers()
+  {
+    players = player.world.getPlayers().stream()
+      .filter(p -> Util.isInside(p.getPosition(), chunkXStart << 4, chunkZStart << 4, chunkXEnd << 4, chunkZEnd << 4))
+      .collect(Collectors.toList());
   }
   
   private boolean checkChunkCoords(ChunkData data, int cx, int cz)
