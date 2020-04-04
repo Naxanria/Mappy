@@ -23,9 +23,10 @@ public class SuperChunk implements Serializable<SuperChunk>
   private int dimension;
   boolean toSave = false;
   
-  public SuperChunk(int x, int z)
+  public SuperChunk(int x, int z, int dimension)
   {
     position = new Position2D(x, z);
+    this.dimension = dimension;
     prepareChunksList();
   }
   

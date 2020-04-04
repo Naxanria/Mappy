@@ -226,7 +226,7 @@ public class ChunkCache
     }
     if (loaded == null)
     {
-      loaded = new SuperChunk(key.A, key.B);
+      loaded = new SuperChunk(key.A, key.B, world.dimension.getType().getId());
       ioManager.MarkForSave(loaded);
     }
   
